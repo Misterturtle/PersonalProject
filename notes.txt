@@ -1,0 +1,6 @@
+End turn story
+
+Configuration
+    IRC host
+    twitch port
+
