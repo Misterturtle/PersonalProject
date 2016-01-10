@@ -71,6 +71,7 @@ object Vote {
 object CommandExecutor {
   def execute(command:Command): Unit = {
     // execute the command
+
   }
 }
 

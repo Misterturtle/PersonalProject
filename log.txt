@@ -1,0 +1,324 @@
+16:20:05.693 [atcher-2] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
+16:20:06.653 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Emperor Thaurissan id=10 zone=HAND zonePos=2 cardId=BRM_028 player=1] pos from 0 -> 2
+16:20:06.658 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Dr. Boom id=16 zone=HAND zonePos=1 cardId=GVG_110 player=1] pos from 0 -> 1
+16:20:06.659 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Big Game Hunter id=22 zone=HAND zonePos=3 cardId=EX1_005 player=1] pos from 0 -> 3
+16:20:06.659 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=2 local=False [name=Brann Bronzebeard id=21 zone=HAND zonePos=1 cardId=LOE_077 player=1] pos from 0 -> 1
+16:20:06.660 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=2 local=False [name=Sludge Belcher id=15 zone=HAND zonePos=2 cardId=FP1_012 player=1] pos from 0 -> 2
+16:20:06.661 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=3 local=False [name=Antique Healbot id=33 zone=HAND zonePos=4 cardId=GVG_069 player=1] pos from 0 -> 4
+16:20:06.661 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=5 local=False [name=Feugen id=25 zone=HAND zonePos=5 cardId=FP1_015 player=1] pos from 0 -> 5
+16:20:06.662 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=6 local=False [name=Imp Gang Boss id=8 zone=HAND zonePos=6 cardId=BRM_006 player=1] pos from 0 -> 6
+16:20:06.662 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=8 local=False [name=Reno Jackson id=28 zone=HAND zonePos=7 cardId=LOE_011 player=1] pos from 0 -> 7
+16:20:06.663 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=17 local=False [name=Stalagg id=27 zone=HAND zonePos=7 cardId=FP1_014 player=1] pos from 0 -> 7
+16:20:07.076 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=23 local=False [name=Loatheb id=7 zone=HAND zonePos=7 cardId=FP1_030 player=1] pos from 0 -> 7
+16:20:07.076 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Imp Gang Boss id=14 zone=HAND zonePos=4 cardId=BRM_006 player=1] pos from 0 -> 4
+16:20:07.077 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Ironbeak Owl id=20 zone=HAND zonePos=2 cardId=CS2_203 player=1] pos from 0 -> 2
+16:20:07.077 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Demonwrath id=30 zone=HAND zonePos=3 cardId=BRM_005 player=1] pos from 0 -> 3
+16:20:07.078 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Mind Control Tech id=31 zone=HAND zonePos=1 cardId=EX1_085 player=1] pos from 0 -> 1
+16:20:07.078 [atcher-3] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=The Coin id=68 zone=HAND zonePos=5 cardId=GAME_005 player=1] pos from 0 -> 5
+16:20:07.165 [atcher-6] INFO     tph.LogFileReader - [Zone] ZoneChangeList.ProcessChanges() - id=4 local=False [name=Sludge Belcher id=16 zone=HAND zonePos=6 cardId=FP1_012 player=1] pos from 0 -> 6
+16:20:07.592 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:07.652 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:07.694 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:12.724 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:12.753 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:12.783 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:17.796 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:17.823 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:17.852 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:22.876 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:22.902 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:22.933 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:27.961 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:27.994 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:28.025 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:33.049 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:33.083 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:33.111 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:38.139 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:38.170 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:38.200 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:43.220 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:43.250 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:43.277 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:48.292 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:48.322 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:48.350 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:53.361 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:53.387 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:53.415 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:20:58.446 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:20:58.477 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:20:58.513 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:03.518 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:03.553 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:03.583 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:08.592 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:08.629 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:08.656 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:13.629 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:13.706 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:13.739 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:18.786 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:18.819 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:18.850 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:23.860 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:23.889 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:23.922 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:28.933 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:28.965 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:28.994 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:34.005 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:34.036 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:34.067 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:39.059 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:39.109 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:39.139 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:44.146 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:44.198 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:44.236 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:21:49.265 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:49.295 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:49.322 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:54.344 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:54.375 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:54.401 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:21:59.420 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:21:59.453 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:21:59.498 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:04.498 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:04.524 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:04.556 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:09.577 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:09.603 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:09.634 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:14.675 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:14.701 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:14.736 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:19.752 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:19.785 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:19.817 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:24.821 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:24.848 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:24.878 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:22:29.896 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:29.922 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:29.960 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:22:34.973 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:35.003 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:35.029 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:22:40.044 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:40.074 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:40.107 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:22:45.138 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:45.200 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:45.237 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:50.278 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:50.305 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:50.332 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:22:55.351 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:22:55.378 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:22:55.406 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:00.426 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:00.460 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:00.490 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:05.502 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:05.539 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:05.566 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:10.585 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:10.611 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:10.641 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:15.664 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:15.695 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:15.735 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:23:20.746 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:20.776 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:20.807 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:23:25.824 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:25.860 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:25.892 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:30.906 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:30.936 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:30.963 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:35.989 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:36.016 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:36.048 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:41.066 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:41.100 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:41.132 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:46.147 [atcher-6] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:46.177 [atcher-6] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:46.204 [atcher-6] INFO        tph.GameStatus - It is turn: 0
+16:23:51.246 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:51.277 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:51.304 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:23:56.321 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:23:56.357 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:23:56.384 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:24:01.398 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:24:01.424 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:24:01.451 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:24:06.473 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:24:06.502 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:24:06.532 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:24:11.507 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:24:11.571 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:24:11.601 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:24:16.641 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:24:16.675 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:24:16.709 [atcher-2] INFO        tph.GameStatus - It is turn: 0
+16:24:21.724 [atcher-2] INFO        tph.GameStatus - UNKNOWN plays first
+16:24:21.757 [atcher-2] INFO        tph.GameStatus - 
+
+His hand has 0 cards.
+
+16:24:21.784 [atcher-2] INFO        tph.GameStatus - It is turn: 0

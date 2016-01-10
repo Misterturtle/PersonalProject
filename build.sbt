@@ -16,7 +16,7 @@ libraryDependencies += "com.typesafe.akka" %% "akka-actor" % akkaVersion
 
 libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % akkaVersion
 
-libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.2" % "runtime"
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.2"
 
 libraryDependencies += "org.slf4j" % "slf4j-api" % "1.7.6"
 
