@@ -8,9 +8,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.matching.Regex
 
 
-
 object LogFileReader {
-
 
 
   // messages in
@@ -32,9 +30,35 @@ object LogFileReader {
 
   case class EnemyCardDrawn(id: Int, position: Int)
 
-  val BOARD_CHANGE = """^.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
+  val BOARD_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
 
-  case class BoardChange(name: String, id:Int, zonePos:Int, player: Int, position: Int)
+  case class BoardChange(name: String, id: Int, zonePos: Int, player: Int, position: Int)
+
+
+  val FRIENDLY_HAND_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=.+ player=(\d+)\] tag=ZONE_POSITION value=(\d+)$""".r
+
+  case class FriendlyHandChange(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int)
+
+  val ENEMY_HAND_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[id=(\d+) cardID=.+type=INVALID zone=HAND zonePos=(\d+) player=(\d+)\] tag=ZONE_POSITION value=(\d+)""".r
+
+  case class EnemyHandChange(id: Int, zonePos: Int, player: Int, dstPos: Int)
+
+
+  //Zone Changes
+  val FRIENDLY_ZONE_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=(.+) zonePos=(\d+) cardId=.+ player=1] tag=ZONE value=(.+)""".r
+
+  case class FriendlyZoneChange(name: String, id: Int, zone: String, zonePos: Int, dstZone: String)
+
+  val ENEMY_PLAYS_CARD = """^\[Power\] PowerTaskList.+ACTION_START Entity=\[id=(\d+).+zone=HAND zonePos=(\d+) player=(\d+)\] BlockType=PLAY.+""".r
+
+  case class EnemyPlaysCard(id: Int, zonePos: Int, player: Int)
+
+  val ENEMY_CARD_RETURN = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=(.+) zonePos=(\d+).+ player=2\] tag=ZONE value=(.+)""".r
+
+  case class EnemyCardReturn(id: Int, zone: String, zonePos: Int, dstZone: Int)
+
+
+  //End Zone Changes
 
   val TAG_CHANGE = """^\s*TAG_CHANGE Entity=(.+) tag=(.+) value=(.+)$""".r
 
@@ -69,6 +93,40 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
     while (reader.ready()) {
       val line = reader.readLine()
       line match {
+
+
+        case FRIENDLY_CARD_DRAWN(name, id, position) =>
+          log.info("Friendly Card Drawn: " + line)
+          listener ! FriendlyCardDrawnEvent(name, id.toInt, position.toInt)
+
+        case ENEMY_CARD_DRAWN(id, position) =>
+          log.info("Enemy Card Drawn: " + line)
+          listener ! EnemyCardDrawnEvent(id.toInt, position.toInt)
+
+        case BOARD_CHANGE(name, id, zonePos, player, dstPos) =>
+          log.info("Board Change: " + line)
+          listener ! BoardChangeEvent(name, id.toInt, zonePos.toInt, player.toInt, dstPos.toInt)
+
+        case FRIENDLY_HAND_CHANGE(name, id, zonePos, player, dstPos) =>
+          log.info("Friendly Hand Change: " + line)
+          listener ! FriendlyHandChangeEvent(name, id.toInt, zonePos.toInt, player.toInt, dstPos.toInt)
+
+        case ENEMY_HAND_CHANGE(id, zonePos, player, dstPos) =>
+          log.info("Enemy Hand Change: " + line)
+          listener ! EnemyHandChangeEvent(id.toInt, zonePos.toInt, player.toInt, dstPos.toInt)
+
+        case ENEMY_PLAYS_CARD(id, zonePos, player) =>
+          log.info("Enemy Plays Card: " + line)
+          listener ! EnemyPlaysCardEvent(id.toInt, zonePos.toInt, player.toInt)
+
+        case FRIENDLY_ZONE_CHANGE(name, id, zone, zonePos, dstZone) =>
+          log.info("Friendly Zone Change: " + line)
+          listener ! FriendlyZoneChangeEvent(name, id.toInt, zone, zonePos.toInt, dstZone)
+
+        case ENEMY_CARD_RETURN(id, zone, zonePos, dstZone) =>
+          log.info("Enemy Card Return: " + line)
+          listener ! EnemyCardReturnEvent(id.toInt, zone, zonePos.toInt, dstZone)
+
         case DEBUG_PRINT_POWER(source, pad, text) =>
           text match {
 
@@ -102,17 +160,6 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
 
             case _ => log.debug(DebugPrintPower(source, pad, text).toString())
           }
-
-
-        case FRIENDLY_CARD_DRAWN(name, id, position) =>
-          log.info(line)
-          listener ! FriendlyCardDrawnEvent(name, id.toInt, position.toInt)
-
-        case ENEMY_CARD_DRAWN(id, position) =>
-          listener ! EnemyCardDrawnEvent(id.toInt, position.toInt)
-
-        case BOARD_CHANGE(name, id, zonePos, player, dstPos) =>
-          listener ! BoardChangeEvent(name, id.toInt, zonePos.toInt, player.toInt, dstPos.toInt)
 
 
         case FILE_NAME() => // ignore

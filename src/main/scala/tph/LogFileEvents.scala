@@ -1,8 +1,5 @@
 package tph
 
-/**
- * Created by RC on 1/7/2016.
- */
 object LogFileEvents {
 
   case class TurnStartEvent(turn: Int)
@@ -10,6 +7,16 @@ object LogFileEvents {
   case class FriendlyCardDrawnEvent(name: String, id: Int, position: Int)
 
   case class EnemyCardDrawnEvent(id: Int, position: Int)
+
+  case class FriendlyHandChangeEvent(name:String, id:Int, zonePos:Int, player:Int, dstPos:Int)
+
+  case class EnemyHandChangeEvent(id:Int, zonePos:Int, player:Int, dstPos:Int)
+
+  case class EnemyPlaysCardEvent(id:Int, zonePos:Int, player:Int)
+
+  case class EnemyCardReturnEvent(id:Int, zone:String, zonePos:Int, dstZone:String)
+
+  case class FriendlyZoneChangeEvent(name:String, id:Int, zone:String, zonePos:Int, dstZone:String)
 
   case class BoardChangeEvent(name: String, id:Int, zonePos:Int, player: Int, dstPos: Int)
 

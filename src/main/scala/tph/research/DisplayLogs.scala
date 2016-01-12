@@ -11,8 +11,6 @@ object DisplayLogs extends App {
   val gameStatus: ActorRef = system.actorOf(Props(new GameStatus(system)), "gameStatus")
   val logFileReader = system.actorOf(Props(new LogFileReader(system, new File( """C:\\Program Files (x86)\\Hearthstone\\Hearthstone_Data\\output_log.txt"""), gameStatus)), "logFileReader")
   logFileReader ! LogFileReader.START
-
-
-
+  gameStatus ! "poll"
 
 }
