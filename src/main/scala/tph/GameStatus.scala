@@ -16,8 +16,6 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
   var turn: Int = 0
   val me: Player = Player("UNKNOWN")
   val him: Player = Player("UNKNOWN")
-  var enemyZoneChange: Card = Card()
-  var friendlyZoneChange: Card = Card()
 
 
   def receive = {
@@ -26,271 +24,168 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       DisplayStatus()
       system.scheduler.scheduleOnce(10000.millis, this.self, "poll")
 
-    case TurnStartEvent(value: Int) =>
-      turn = value
 
-    case FriendlyCardDrawnEvent(name: String, id: Int, position: Int) =>
-
-
-      if (me.hand.length < position) {
-        var a = 0
-        for (a <- me.hand.length to position - 1) {
-          me.hand += new Card()
-        }
-      }
-      val drawnCard: Card = Card()
+    //Friendly Cases
+    case FriendlyDefinedEvent(name: String) => {
+      //"""^\s*TAG_CHANGE Entity=(.+) tag=(.+) value=(.+)$""".r
+      me.name = name
+    }
+    case FriendlyCardDrawnEvent(name: String, id: Int, position: Int) => {
+      //"""^.+id=\d+ local=False \[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=\S+ player=1\] pos from 0 -> \d+""".r
+      var drawnCard: Card = Card()
       drawnCard.name = name
       drawnCard.id = id
       drawnCard.zone = "HAND"
+      drawnCard.handPosition = position
+      me.hand.append(drawnCard)
+    }
+    case FriendlyHandChangeEvent(name, id, zonePos, player, dstPos) if player == 1 => {
+      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=.+ player=(\d+)\] tag=ZONE_POSITION value=(\d+)$""".r
+      var index = -2
 
-      me.hand(position - 1) = drawnCard
-
-
-    case EnemyCardDrawnEvent(id: Int, position: Int) =>
-
-
-      if (him.hand.length < position) {
-        var a = 0
-        for (a <- him.hand.length to position - 1) {
-          him.hand += new Card()
-        }
+      me.hand.indexWhere(_.id == id) match {
+        case x => index = x
       }
-      val drawnCard: Card = Card()
+
+      if (index >= 0) {
+        me.hand(index).handPosition = dstPos
+      }
+    }
+    case FriendlyPlaysCardEvent(name, id, srcZone, srcPos, dstZone, dstPos) if dstZone == "PLAY" => {
+      //"""^.+triggerEntity=\[name=(.+) id=(\d+) zone=.+ srcZone=(.+) srcPos=(\d+) dstZone=(.+) dstPos=(\d+)""".r
+      var index = -2
+
+      index = me.hand.indexWhere(_.id == id)
+      if (index >= 0) {
+        me.hand(index).zone = "PLAY"
+        me.hand(index).handPosition = 0
+        me.hand(index).boardPosition = dstPos
+        me.board.append(me.hand(index))
+        me.hand.remove(index)
+      }
+    }
+    case FriendlyCardReturnEvent(name, id, zonePos, dstPos) if me.board.indexWhere(_.id == id) >= 0 => {
+      //"""processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+.+ entity=\[name=(.+) id=(\d+) zone=HAND zonePos=(\d+).+ player=1.+ dstPos=(\d+)""".r
+      var index = -2
+
+      index = me.board.indexWhere(_.id == id)
+      if (index >= 0) {
+        me.board(index).zone = "HAND"
+        me.board(index).boardPosition = 0
+        me.board(index).handPosition = dstPos
+        me.hand.append(me.board(index))
+        me.board.remove(index)
+      }
+    }
+    case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == 1 && dstPos != 0 => {
+      // """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
+      var index = -2
+
+      index = me.board.indexWhere(_.id == id)
+
+      if (index >= 0) {
+        me.board(index).boardPosition = dstPos
+      }
+    }
+    case CardDeath(name:String, id:Int, zone:String, zonePos:Int, player:Int) if player == 1 && zone == "PLAY" => {
+      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=(.+) zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
+      var index = -2
+      index = me.board.indexWhere(_.id == id)
+      if (index >= 0){
+        me.board.remove(index)
+      }
+    }
+
+
+
+    //Enemy Events
+    case EnemyDefinedEvent(name: String) => {
+      //"""^\s*TAG_CHANGE Entity=(.+) tag=(.+) value=(.+)$""".r
+      him.name = name
+    }
+    case EnemyCardDrawnEvent(id: Int, position: Int) => {
+      //"""^.+id=\d+ local=.+ \[id=(\d+) cardId=.+type=.+zone=HAND zonePos=(\d+) player=2\] pos from 0 -> \d+""".r
+      var drawnCard: Card = Card()
       drawnCard.id = id
       drawnCard.zone = "HAND"
-      him.hand(position - 1) = drawnCard
+      drawnCard.handPosition = position
+      him.hand.append(drawnCard)
+    }
+    case EnemyPlaysCardEvent(name, id, zonePos, dstPos) => {
+      //"""^.+processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+
+      // entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=2\] .+ dstPos=(\d+)""".r
+      var index = -2
 
-    //Player 1
-    case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == 1 =>
-      if (dstPos == 0 && me.board(zonePos-1).id == id) {
-        me.board.remove(zonePos - 1)
+      index = him.hand.indexWhere(_.id == id)
+      if (index >= 0) {
+        him.hand(index).zone = "PLAY"
+        him.hand(index).name = name
+        him.hand(index).boardPosition = dstPos
+        him.hand(index).handPosition = 0
+        him.board.append(him.hand(index))
+        him.hand.remove(index)
       }
-      else {
-        if (me.board.length < dstPos) {
-          var a = 0
-          for (a <- me.board.length to dstPos-1) {
-            me.board += new Card()
-          }
-        }
+    }
+    case EnemyHandChangeEvent(id, zonePos, player, dstPos) if player == 2 => {
+      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[id=(\d+).+ zone=HAND zonePos=(\d+) player=(\d+)\] tag=ZONE_POSITION value=(\d+)""".r
+      var index = -2
 
-        val changedCard: Card = Card()
-        changedCard.zone = "PLAY"
-        changedCard.name = name
-        changedCard.id = id
-        me.board(dstPos - 1) = changedCard
+      index = him.hand.indexWhere(_.id == id)
+
+      if (index >= 0) {
+        him.hand(index).handPosition = dstPos
       }
+    }
+    //Needs tested
+    case EnemyCardReturnEvent(name, id, zone, zonePos) => {
+      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=(.+) zonePos=(\d+).+ player=2\] tag=ZONE value=HAND""".r
+      var index = -2
 
-    //Player 2
-    case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == 2  =>
-      if (dstPos == 0 && him.board(zonePos-1).id == id) {
-        him.board.remove(zonePos - 1)
+      index = him.board.indexWhere(_.id == id)
+      if (index >= 0) {
+        him.board(index).zone = "HAND"
+        him.board(index).boardPosition = 0
+        him.hand.append(him.board(index))
+        him.board.remove(index)
       }
-      else {
-        if (him.board.length < dstPos) {
-          var a = 0
-          for (a <- him.board.length to dstPos-1) {
-            him.board += new Card()
-          }
-        }
-        val changedCard: Card = Card()
-        changedCard.zone = "PLAY"
-        changedCard.name = name
-        changedCard.id = id
-        him.board(dstPos - 1) = changedCard
-      }
+    }
+    case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == 2 && dstPos != 0 => {
+      // """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
+      var index = -2
 
-
-    case FriendlyHandChangeEvent(name, id, zonePos, player, dstPos) if dstPos != 0 && player == 1 && friendlyZoneChange.name == "UNKNOWN" =>
-      //Only Friendly Hand Position Reassignments
-      if (me.hand.length < dstPos) {
-        var a = 0
-        for (a <- me.hand.length to dstPos-1) {
-          me.hand += new Card()
-        }
-      }
-      val changedCard: Card = Card()
-      changedCard.zone = "HAND"
-      changedCard.name = name
-      changedCard.id = id
-      me.hand(dstPos - 1) = changedCard
-      if(me.hand(zonePos-1).id == me.hand(dstPos-1).id)
-        me.hand.remove(zonePos-1)
-
-
-    case EnemyHandChangeEvent(id, zonePos, player, dstPos) if dstPos != 0 && player == 2 && enemyZoneChange.name == "UNKNOWN" =>
-      // Only Enemy Hand Position Reassignments
-      if (him.hand.length < dstPos) {
-        var a = 0
-        for (a <- him.hand.length to dstPos-1) {
-          him.hand += new Card()
-        }
-      }
-      val changedCard: Card = Card()
-      changedCard.id = id
-      changedCard.zone = "HAND"
-      him.hand(dstPos - 1) = changedCard
-
-
-
-
-
-
-
-    //Enemy Zone Changing
-    //
-    //
-    //
-    case EnemyPlaysCardEvent(id, zonePos, player) if player == 2 && him.hand(zonePos - 1).id == id =>
-      //Enemy plays card from hand to board
-      him.hand.remove(zonePos - 1)
-      enemyZoneChange.id = id
-      enemyZoneChange.zone = "PLAY"
-
-
-    case EnemyHandChangeEvent(id, zonePos, player, dstPos) if player == 2 && enemyZoneChange.zone == "PLAY" && enemyZoneChange.id == id =>
-      // Creates card for board
-      // Zone must already be set as "PLAY"
-      // Sets board position for recently played cards
-      // Disposes of card if position = 0
-
-        enemyZoneChange.zone = "UNKNOWN"
-        enemyZoneChange.id = 0
-
-      if(dstPos > 0 ) {
-        if (him.board.length < dstPos) {
-          var a = 0
-          for (a <- him.board.length to dstPos-1) {
-            him.board += new Card()
-          }
-        }
-
-        val changedCard: Card = Card()
-        changedCard.id = id
-        him.board(dstPos - 1) = changedCard
+      him.board.indexWhere(_.id == id) match {
+        case x => index = x
       }
 
-    case EnemyCardReturnEvent(id, zone, zonePos, dstZone) if dstZone == "HAND" && him.board(zonePos - 1).id == id =>
-      //When a card is returned from board to hand
-      //Does not create hand Card() yet
-      enemyZoneChange.id = id
-      enemyZoneChange.zone = "HAND"
-      him.board.remove(zonePos - 1)
-
-
-    case BoardChangeEvent(name, id, zonePos, player, dstPos) if enemyZoneChange.id == id && enemyZoneChange.zone == "HAND" =>
-      //When a card is returned from board to hand
-      //Creates hand Card()
-      if (him.hand.length < dstPos) {
-        var a = 0
-        for (a <- him.hand.length to dstPos-1) {
-          him.hand += new Card()
-        }
+      if (index >= 0) {
+        him.board(index).boardPosition = dstPos
       }
-
-      val changedCard: Card = Card()
-      changedCard.id = id
-      him.hand(dstPos - 1) = changedCard
-    //
-    //
-    //
-    //End of Enemy Zone Change
-
-
-    //Friendly Zone Change
-    //
-    //
-    //
-
-
-
-    case FriendlyZoneChangeEvent(name, id, zone, zonePos, dstZone) if dstZone == "PLAY"  =>
-      friendlyZoneChange.name = name
-      friendlyZoneChange.id = id
-      friendlyZoneChange.zone = "PLAY"
-      if(me.hand(zonePos-1).id == id)
-      me.hand.remove(zonePos-1)
-
-    case FriendlyHandChangeEvent(name, id, zonePos, player, dstPos) if player == 1 && friendlyZoneChange.id == id && friendlyZoneChange.zone == "PLAY" =>
-
-        friendlyZoneChange.zone = "UNKNOWN"
-        friendlyZoneChange.id = 0
-        friendlyZoneChange.name = "UNKNOWN"
-
-      if (dstPos > 0) {
-        if (me.board.length < dstPos) {
-          var a = 0
-          for (a <- me.board.length to dstPos-1) {
-            me.board += new Card()
-          }
-        }
-
-        val changedCard: Card = Card()
-        changedCard.name = name
-        changedCard.id = id
-        changedCard.zone = "PLAY"
-        me.board(dstPos - 1) = changedCard
+    }
+    case CardDeath(name:String, id:Int, zone:String, zonePos:Int, player:Int) if player == 2 && zone == "PLAY" => {
+      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=(.+) zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
+      var index = -2
+      index = him.board.indexWhere(_.id == id)
+      if (index >= 0){
+        him.board.remove(index)
       }
-
-    case FriendlyZoneChangeEvent(name, id, zone, zonePos, dstZone) if dstZone == "HAND" && me.board(zonePos-1).id == id =>
-      friendlyZoneChange.name = name
-      friendlyZoneChange.id = id
-      friendlyZoneChange.zone = "HAND"
-      me.board.remove(zonePos-1)
-
-    case FriendlyHandChangeEvent(name, id, zonePos, player, dstPos) if player == 1 && friendlyZoneChange.id == id && friendlyZoneChange.zone == "HAND" =>
-
-        friendlyZoneChange.zone = "UNKNOWN"
-        friendlyZoneChange.id = 0
-        friendlyZoneChange.name = "UNKNOWN"
-
-      if (dstPos > 0) {
-        if (me.hand.length < dstPos) {
-          var a = 0
-          for (a <- me.hand.length to dstPos-1) {
-            me.hand += new Card()
-          }
-        }
-
-        val changedCard: Card = Card()
-        changedCard.id = id
-        changedCard.name = name
-        changedCard.zone = "HAND"
-        me.hand(dstPos - 1) = changedCard
-      }
-
-
-      //
-      //
-      //
-      //End Friendly Zone Change
+    }
 
 
 
-
-    case FriendlyDefinedEvent(name: String) =>
-      me.name = name
-
-    case EnemyDefinedEvent(name: String) =>
-      him.name = name
-
-
-    case PlaysFirstEvent(firstPlayerName: String) if firstPlayerName == me.name =>
-      me.playsFirst = true
-
-
-    case PlaysFirstEvent(firstPlayerName: String) if firstPlayerName == him.name =>
-      him.playsFirst = true
-
-    case GameOver() =>
-
+    //Neutral Events
+    case TurnStartEvent(value: Int) => {
+      turn = value
+    }
+    case GameOver() => {
       Reset()
-
-    case x: String =>
+    }
+    case x: String => {
       log.debug("GameStatus: " + x)
-
-    case _ =>
+    }
+    case _ =>{
       log.debug("GameStatus: DEFAULT case")
   }
+}
 
   def Reset(): Unit = {
     me.hand.clear()
@@ -305,21 +200,22 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
 
   def DisplayStatus(): Unit = {
 
-    if (me.playsFirst == true)
-      log.info(me.name + " plays first")
-    if (him.playsFirst == false)
-      log.info(him.name + " plays first")
-
     var a: Int = 0
-    for (a <- 1 to me.hand.length) {
-      log.info("My hand, card " + a + ": " + me.hand(a - 1).name)
+    for (a <- 0 until me.hand.length) {
+      log.info("My hand, card " + a + ": " + me.hand(a).name)
+    }
+
+    var b: Int = 0
+    for (b <- 0 until me.board.length) {
+      log.info("Friendly board position " + b + ": " + me.board(b).name)
     }
 
     log.info("\n\nHis hand has " + him.hand.length + " cards.\n")
 
-    var b: Int = 0
-    for (b <- 1 to me.board.length) {
-      log.info("Friendly board position " + b + ": " + me.board(b - 1).name)
+
+    var c:Int = 0
+    for (c <- 0 until him.board.length){
+      log.info("Enemy board position " + b + ": " + him.board(c).name)
     }
 
     log.info("It is turn: " + turn)
@@ -335,7 +231,6 @@ class Player(var name: String, handList: ListBuffer[Card], boardList: ListBuffer
 
   var hand: ListBuffer[Card] = handList
   var board: ListBuffer[Card] = boardList
-  var playsFirst: Boolean = false
 
 
 }
@@ -344,6 +239,9 @@ case class Card() {
   var name: String = "UNKNOWN"
   var id: Int = 0
   var zone: String = "UNKNOWN"
+  var handPosition = -1
+  var boardPosition = -1
+
 
 }
 

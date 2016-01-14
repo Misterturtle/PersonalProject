@@ -2,7 +2,7 @@ package tph
 
 import akka.actor.{ActorSystem, ActorRef, Actor}
 import akka.actor.Actor.Receive
-import tph.LogFileReader.NumOptions
+import tph.LogFileEvents.NumOptions
 
 
 object GameWatcher {
