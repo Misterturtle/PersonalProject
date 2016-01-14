@@ -1,37 +1,28 @@
 package tph.screen
 
-import java.awt.Rectangle
-import java.io.File
-
 import com.sun.jna.Pointer
-import com.sun.jna.platform.win32.WinBase.{PROCESS_INFORMATION, STARTUPINFO}
 import com.sun.jna.platform.win32._
-import com.sun.jna.platform.win32.WinDef.{DWORD, HWND}
 import com.typesafe.scalalogging.StrictLogging
-import jna.User32Ext
+import tph.screen.Native.WindowHandle
 
 /**
   * Created by rob on 1/8/2016.
   */
 class WindowedApplication(title: String) extends StrictLogging {
 
-  val WM_LBUTTONDOWN = 0x201
-  val WM_LBUTTONUP = 0x202
-  val STATE_BUTTON_DOWN = 1.asInstanceOf[Byte]
-  val STATE_BUTTON_UP = 0.asInstanceOf[Byte]
-  val HWND_TOP: WinDef.HWND = new WinDef.HWND(new Pointer(0))
-
-  var window: Option[HWND] = findWindow
+  val native = new Native
+  var window: WindowHandle = native.findWindow(title)
 
   def isStarted = {
     if (window.isEmpty)
-      window = findWindow
+      window = native.findWindow(title)
     window.isDefined
   }
 
   def startApplication(cmd: String): Boolean = {
-    if(createProcess(cmd)) {
-      window = findWindow
+    if(native.createProcess(cmd)) {
+      waitOpen(title)
+      window = native.findWindow(title)
     } else {
       window = None
       logger.error("Could not start application {} - {}", title, cmd)
@@ -40,35 +31,56 @@ class WindowedApplication(title: String) extends StrictLogging {
     isStarted
   }
 
+  def waitOpen(title:String):Unit = {
+    val timeout = System.currentTimeMillis() + 30000L
+    while (native.findWindow(title).isEmpty && System.currentTimeMillis() < timeout)
+      Thread.sleep(100)
+  }
+
+  def click(point:Point):Unit = click(point.x, point.y)
+
   def click(x:Int, y:Int):Unit = {
     assertWindow()
-    val pos = (y << 16) | x
-    User32Ext.USER32EXT.SendMessageA(window.get, WM_LBUTTONDOWN, STATE_BUTTON_DOWN, pos)
-    User32Ext.USER32EXT.SendMessageA(window.get, WM_LBUTTONUP, STATE_BUTTON_UP, pos)
+    native.leftButtonClick(window, x, y)
   }
+
+
+  def positionWindow(where:Rectangle):Unit = positionWindow(where.x,where.y,where.width,where.height)
 
   def positionWindow(x:Int, y:Int, width:Int, height:Int):Unit = {
     assertWindow()
-    User32.INSTANCE.SetWindowPos(window.get, HWND_TOP, x,y,width,height, 0)
+    native.setWindowPos(window, x, y, width, height)
   }
 
-  private def findWindow = Option(User32.INSTANCE.FindWindow(null, title))
+  def stop():Unit = {
+    assertWindow()
+    val pid = processId
 
-  private def createProcess(cmd: String): Boolean = {
-    val processInformation = new WinBase.PROCESS_INFORMATION.ByReference();
-    val startupInfo = new STARTUPINFO();
-    Kernel32.INSTANCE.CreateProcess(
-      null,
-      cmd,
-      null,
-      null,
-      true,
-      new DWORD(0x00000020), //new DWORD(0x00000001)
-      null,
-      null,
-      startupInfo,
-      processInformation)
+    native.closeWindow(window)
+
+    while(native.findWindow(title).isDefined) {
+      println(s"stop(): waiting for window $title to go away" )
+      Thread.sleep(1000)
+    }
+    while(processActive(pid)) {
+      println(s"stop(): waiting for pid $pid for $title to go away")
+      Thread.sleep(100)
+    }
+
+    window = None
   }
 
-  private def assertWindow():Unit = if (window.isEmpty) throw new RuntimeException(s"Application has not been started: $title")
+  def rectangle:Rectangle = {
+    assertWindow()
+    native.getWindowRect(window)
+  }
+
+  def processId:Int = {
+    assertWindow()
+    native.getWindowThreadProcesId(window)
+  }
+
+  def processActive(processId:Int): Boolean = native.getExitCodeProcess(window) == 259
+
+  def assertWindow():Unit = if (!window.isDefined) throw new RuntimeException(s"Application has not been started: $title")
 }
