@@ -1,0 +1,157 @@
+
+13:51:43.186 [atcher-6] INFO   t.research.Reporter - ??? [Power] GameState.SendChoices() - id=1 ChoiceType=MULLIGAN
+13:51:43.186 [atcher-6] INFO   t.research.Reporter - ??? [Power] GameState.SendChoices() -   m_chosenEntities[0]=[name=Sludge Belcher id=25 zone=HAND zonePos=1 cardId=FP1_012 player=1]
+13:51:43.186 [atcher-6] INFO   t.research.Reporter - ??? [Power] GameState.SendChoices() -   m_chosenEntities[1]=[name=Faceless Manipulator id=31 zone=HAND zonePos=2 cardId=EX1_564 player=1]
+13:51:43.186 [atcher-6] INFO   t.research.Reporter - ??? [Power] GameState.SendChoices() -   m_chosenEntities[2]=[name=Reno Jackson id=23 zone=HAND zonePos=3 cardId=LOE_011 player=1]
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - ??? [Power] GameState.DebugPrintPowerList() - Count=8
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - TagChange(GameState,,Wizard,MULLIGAN_STATE,DEALING)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - TagChange(GameState,    ,Wizard,MULLIGAN_STATE,WAITING)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - TagChange(GameState,    ,Wizard,MULLIGAN_STATE,DONE)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - TagChange(GameState,    ,GameEntity,NEXT_STEP,MAIN_READY)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+13:51:43.526 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=9 ParentID=0 PreviousID=0 TaskCount=1
+13:51:43.634 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,MULLIGAN_STATE,DEALING)
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=9
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=9
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=10 ParentID=0 PreviousID=0 TaskCount=1
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,MULLIGAN_STATE,WAITING)
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=10
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=10
+13:51:43.635 [atcher-9] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=11 ParentID=0 PreviousID=0 TaskCount=2
+13:51:43.636 [atcher-7] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:43.638 [atcher-2] INFO   t.research.Reporter - ??? din
+13:51:43.761 [atcher-3] INFO   t.research.Reporter - ??? gs.gen.cpp Line: 65)
+13:51:43.761 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,MULLIGAN_STATE,DONE)
+13:51:43.762 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,MAIN_READY)
+13:51:43.762 [atcher-3] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+13:51:43.762 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=11
+13:51:43.994 [atcher-2] INFO   t.research.Reporter - ??? [Power] GameState.DebugPrintPowerList() - Count=24
+13:51:43.994 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STEP,MAIN_READY)
+13:51:43.994 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:43.994 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,[name=Gul'dan id=64 zone=PLAY zonePos=0 cardId=HERO_07 player=1],NUM_TURNS_IN_PLAY,1)
+13:51:43.994 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,[name=Life Tap id=65 zone=PLAY zonePos=0 cardId=CS2_056 player=1],NUM_TURNS_IN_PLAY,1)
+13:51:43.995 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,Wizard,RESOURCES,1)
+13:51:43.995 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,Wizard,NUM_CARDS_DRAWN_THIS_TURN,0)
+13:51:43.995 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,GameEntity,NEXT_STEP,MAIN_START_TRIGGERS)
+13:51:43.995 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+13:51:43.995 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STEP,MAIN_START_TRIGGERS)
+13:51:43.995 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - TagChange(GameState,    ,GameEntity,NEXT_STEP,MAIN_START)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STEP,MAIN_START)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,    ,SHOW_ENTITY - Updating Entity=[id=18 cardId= type=INVALID zone=DECK zonePos=0 player=1] CardID=CS2_203)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=HEALTH value=1)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=ATK value=2)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=COST value=2)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=ZONE value=HAND)
+13:51:44.105 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=FACTION value=HORDE)
+13:51:44.106 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=CARDTYPE value=MINION)
+13:51:44.106 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=RARITY value=COMMON)
+13:51:44.229 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,        ,tag=BATTLECRY value=1)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,[id=18 cardId= type=INVALID zone=DECK zonePos=0 player=1],ZONE_POSITION,4)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,Wizard,NUM_CARDS_DRAWN_THIS_TURN,1)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,GameEntity,NEXT_STEP,MAIN_ACTION)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STEP,MAIN_ACTION)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,    ,GameEntity,NEXT_STEP,MAIN_END)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - NumOptions(GameState,Wizard,1)
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - ??? [Power] GameState.DebugPrintOptions() - id=1
+13:51:44.230 [atcher-2] INFO   t.research.Reporter - ??? [Power] GameState.DebugPrintOptions() -   option 0 type=END_TURN mainEntity=
+13:51:47.724 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=11
+13:51:47.724 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=12 ParentID=0 PreviousID=0 TaskCount=1
+13:51:47.724 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+13:51:47.724 [atcher-8] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STEP,MAIN_READY)
+13:51:47.724 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+13:51:47.724 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=12
+13:51:47.835 [atcher-5] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=12
+13:51:47.835 [atcher-5] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=13 ParentID=0 PreviousID=0 TaskCount=5
+13:51:47.835 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:47.835 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,[name=Gul'dan id=64 zone=PLAY zonePos=0 cardId=HERO_07 player=1],NUM_TURNS_IN_PLAY,1)
+13:51:47.835 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,[name=Life Tap id=65 zone=PLAY zonePos=0 cardId=CS2_056 player=1],NUM_TURNS_IN_PLAY,1)
+13:51:47.836 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,RESOURCES,1)
+13:51:47.836 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,NUM_CARDS_DRAWN_THIS_TURN,0)
+13:51:47.836 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,MAIN_START_TRIGGERS)
+13:51:47.836 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+13:51:47.836 [atcher-5] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=13
+13:51:47.954 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=13
+13:51:47.954 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=14 ParentID=0 PreviousID=0 TaskCount=1
+13:51:47.954 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+13:51:47.954 [atcher-8] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STEP,MAIN_START_TRIGGERS)
+13:51:47.954 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=14
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=14
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=15 ParentID=0 PreviousID=0 TaskCount=1
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,MAIN_START)
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+13:51:47.955 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=15
+13:51:47.959 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=15
+13:51:48.064 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=16 ParentID=0 PreviousID=0 TaskCount=1
+13:51:48.064 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+13:51:48.065 [atcher-6] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STEP,MAIN_START)
+13:51:48.065 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+13:51:48.065 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=16
+13:51:48.065 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=16
+13:51:48.066 [atcher-6] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=17 ParentID=0 PreviousID=0 TaskCount=4
+13:51:48.066 [atcher-6] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:48.066 [atcher-6] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,    ,SHOW_ENTITY - Updating Entity=[id=18 cardId= type=INVALID zone=DECK zonePos=0 player=1] CardID=CS2_203)
+13:51:48.204 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=HEALTH value=1)
+13:51:48.204 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=ATK value=2)
+13:51:48.204 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=COST value=2)
+13:51:48.204 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=ZONE value=HAND)
+13:51:48.204 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=FACTION value=HORDE)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=CARDTYPE value=MINION)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=RARITY value=COMMON)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,        ,tag=BATTLECRY value=1)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,[id=18 cardId= type=INVALID zone=DECK zonePos=0 player=1],ZONE_POSITION,4)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,NUM_CARDS_DRAWN_THIS_TURN,1)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,MAIN_ACTION)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=17
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - ??? [Zone] ZoneMgr.AddServerZoneChanges() - taskListId=17 changeListId=2 taskStart=0 taskEnd=3
+13:51:48.205 [atcher-5] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - m_id=2 m_taskList=17 m_changes.Count=4
+13:51:48.342 [atcher-9] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - processing index=0 change=powerTask=[power=[type=SHOW_ENTITY entity=[id=18 cardId=CS2_203 name=[id=18 cardId= type=INVALID zone=DECK zonePos=0 player=1]] tags=System.Collections.Generic.List`1[Network+Entity+Tag]] complete=False] entity=[id=18 cardId= type=INVALID zone=DECK zonePos=0 player=1] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=
+13:51:48.343 [atcher-9] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=Ironbeak Owl id=18 zone=HAND zonePos=0 cardId=CS2_203 player=1] to FRIENDLY HAND
+13:51:48.343 [atcher-9] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - id=2 local=False [name=Ironbeak Owl id=18 zone=HAND zonePos=0 cardId=CS2_203 player=1] zone from FRIENDLY DECK -> FRIENDLY HAND
+13:51:48.343 [atcher-9] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - processing index=1 change=powerTask=[power=[type=TAG_CHANGE entity=[id=18 cardId=CS2_203 name=Ironbeak Owl] tag=ZONE_POSITION value=4] complete=False] entity=[name=Ironbeak Owl id=18 zone=HAND zonePos=0 cardId=CS2_203 player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+13:51:48.343 [atcher-9] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - START waiting for [name=Ironbeak Owl id=18 zone=HAND zonePos=0 cardId=CS2_203 player=1] to load (powerTask=(not null))
+13:51:48.477 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - END waiting for [name=Ironbeak Owl id=18 zone=HAND zonePos=0 cardId=CS2_203 player=1] to load (powerTask=(not null))
+13:51:48.477 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - id=2 local=False [name=Ironbeak Owl id=18 zone=HAND zonePos=4 cardId=CS2_203 player=1] pos from 0 -> 4
+13:51:48.477 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - processing index=2 change=powerTask=[power=[type=TAG_CHANGE entity=[id=2 cardId= name=Wizard] tag=NUM_CARDS_DRAWN_THIS_TURN value=1] complete=False] entity=Wizard srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=
+13:51:48.477 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.ProcessChanges() - processing index=3 change=powerTask=[power=[type=TAG_CHANGE entity=[id=1 cardId= name=GameEntity] tag=NEXT_STEP value=MAIN_ACTION] complete=False] entity=GameEntity srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=
+13:51:48.478 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.UpdateDirtyZones() - m_id=2 loadingEntities.Count=0 m_dirtyZones.Count=2
+13:51:48.478 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.UpdateDirtyZones() - m_id=2 START waiting for zone FRIENDLY DECK
+13:51:48.478 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.OnUpdateLayoutComplete() - m_id=2 END waiting for zone FRIENDLY DECK
+13:51:48.478 [atcher-2] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.UpdateDirtyZones() - m_id=2 START waiting for zone FRIENDLY HAND
+13:51:48.985 [atcher-7] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.OnUpdateLayoutComplete() - m_id=2 END waiting for zone FRIENDLY HAND
+13:51:48.985 [atcher-7] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.Finish() - id=2 changes=4 complete=True local=False localTrigger=[]
+13:51:48.985 [atcher-7] INFO   t.research.Reporter - ??? [Zone] ZoneChangeList.FireCompleteCallback() - m_id=2 m_taskList=17 m_changes.Count=4 m_complete=True m_completeCallback=(not null)
+13:51:49.105 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=17
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=18 ParentID=0 PreviousID=0 TaskCount=1
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STEP,MAIN_ACTION)
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=18
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=18
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=19 ParentID=0 PreviousID=0 TaskCount=1
+13:51:49.106 [atcher-3] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=Wizard BlockType=TRIGGER Index=-1 Target=0)
+13:51:49.254 [atcher-2] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,MAIN_END)
+13:51:49.254 [atcher-2] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+13:51:49.254 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=19
+13:51:49.254 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=19
+13:51:49.254 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=20 ParentID=0 PreviousID=0 TaskCount=1
+13:51:49.254 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+13:51:49.255 [atcher-2] INFO   t.research.Reporter - NumOptions(PowerTaskList,Wizard,1)
+13:51:49.255 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+13:51:49.255 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerProcessor.PrepareHistoryForCurrentTaskList() - m_currentTaskList=20
+13:51:49.255 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=20

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+
+    <!-- Outputs logs to the standard console -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS}: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--&lt;!&ndash; Outputs logs to a file called log.txt (may be overridden using JVM parameters) &ndash;&gt;-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_FILE:-log.txt}</file>
+        <append>false</append>
+       <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%8.8thread] %-5level %20.20logger{20} - %msg%n</pattern>-->
+        </encoder>
+    </appender>-->
+
+    <!--&lt;!&ndash; Outputs logs to the Log tab in the GUI of the Hearthstats Companion &ndash;&gt;-->
+    <!--<appender name="APP" class="net.hearthstats.log.LogPaneAppender">-->
+    <!--</appender>-->
+
+
+    <!--&lt;!&ndash; Send app logs to the Log tab in the GUI. This logger should be left at INFO level. &ndash;&gt;-->
+    <!--<logger name="net.hearthstats.app" level="INFO">-->
+        <!--<appender-ref ref="APP" />-->
+    <!--</logger>-->
+
+    <!--&lt;!&ndash; Send all other logs to the log file and the console. &ndash;&gt;-->
+    <!--&lt;!&ndash; Change the level to DEBUG to enable full log output. &ndash;&gt;-->
+    <!--<logger name="net.hearthstats" level="INFO"></logger>-->
+
+    <!--<logger name="net.hearthstats.video" level="INFO"></logger>-->
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+
+
+</configuration>

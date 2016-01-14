@@ -1,0 +1,48 @@
+
+17:05:46.465 [atcher-5] INFO   t.research.Reporter - ??? [Power] GameState.DebugPrintPowerList() - Count=11
+17:05:46.466 [atcher-5] INFO   t.research.Reporter - TagChange(GameState,,Wizard,PLAYSTATE,CONCEDED)
+17:05:46.466 [atcher-5] INFO   t.research.Reporter - TagChange(GameState,,Wizard,PLAYSTATE,LOSING)
+17:05:46.466 [atcher-5] INFO   t.research.Reporter - TagChange(GameState,,Wizard,PLAYSTATE,LOST)
+17:05:46.466 [atcher-5] INFO   t.research.Reporter - TagChange(GameState,,The Innkeeper,PLAYSTATE,WON)
+17:05:46.466 [atcher-5] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,NEXT_STEP,FINAL_WRAPUP)
+17:05:46.599 [atcher-3] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STEP,FINAL_WRAPUP)
+17:05:46.599 [atcher-3] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_START Entity=GameEntity BlockType=TRIGGER Index=-1 Target=0)
+17:05:46.599 [atcher-3] INFO   t.research.Reporter - TagChange(GameState,    ,GameEntity,NEXT_STEP,FINAL_GAMEOVER)
+17:05:46.599 [atcher-3] INFO   t.research.Reporter - DebugPrintPower(GameState,,ACTION_END)
+17:05:46.599 [atcher-3] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STEP,FINAL_GAMEOVER)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - TagChange(GameState,,GameEntity,STATE,COMPLETE)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=36 ParentID=0 PreviousID=0 TaskCount=6
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,PLAYSTATE,CONCEDED)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,PLAYSTATE,LOSING)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,PLAYSTATE,LOST)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,The Innkeeper,PLAYSTATE,WON)
+17:05:46.600 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,FINAL_WRAPUP)
+17:05:46.706 [atcher-8] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STEP,FINAL_WRAPUP)
+17:05:46.706 [atcher-8] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+17:05:46.836 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=37 ParentID=0 PreviousID=0 TaskCount=1
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_START Entity=GameEntity BlockType=TRIGGER Index=-1 Target=0)
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,NEXT_STEP,FINAL_GAMEOVER)
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - DebugPrintPower(PowerTaskList,,ACTION_END)
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=38 ParentID=0 PreviousID=0 TaskCount=2
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STEP,FINAL_GAMEOVER)
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,GameEntity,STATE,COMPLETE)
+17:05:46.837 [atcher-3] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - ??? [Power] GameState.DebugPrintPowerList() - Count=2
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,,Wizard,GOLD_REWARD_STATE,2)
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - TagChange(GameState,,The Innkeeper,GOLD_REWARD_STATE,2)
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - ID=39 ParentID=0 PreviousID=0 TaskCount=2
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - Source Action=(null)
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,Wizard,GOLD_REWARD_STATE,2)
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - TagChange(PowerTaskList,    ,The Innkeeper,GOLD_REWARD_STATE,2)
+17:05:46.975 [atcher-2] INFO   t.research.Reporter - ??? [Power] PowerTaskList.DebugDump() - End Action=(null)
+17:05:48.036 [atcher-9] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class MAGE, cannot add deckID 13192 flair [CardFlair: Premium=NORMAL]
+17:05:48.036 [atcher-9] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class HUNTER, cannot add deckID 24558 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class WARRIOR, cannot add deckID 25860 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class SHAMAN, cannot add deckID 72599 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class DRUID, cannot add deckID 73018 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class PRIEST, cannot add deckID 20831 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class ROGUE, cannot add deckID 73865 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class PALADIN, cannot add deckID 75671 flair [CardFlair: Premium=NORMAL]
+17:05:48.162 [atcher-7] INFO   t.research.Reporter - ??? CollectionManager.AddPreconDeck(): Already have a precon deck for class WARLOCK, cannot add deckID 163761 flair [CardFlair: Premium=NORMAL]
