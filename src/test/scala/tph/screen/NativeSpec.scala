@@ -83,6 +83,8 @@ class NativeSpec extends FreeSpec with Matchers with BeforeAndAfterEach {
 
 
 
+
+
   def waitOpen(title: String): Unit = {
     val timeout = System.currentTimeMillis() + 30000L
     while (native.findWindow(title).isEmpty && System.currentTimeMillis() < timeout)

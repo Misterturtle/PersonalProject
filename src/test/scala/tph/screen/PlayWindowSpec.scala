@@ -10,15 +10,6 @@ class PlayWindowSpec extends FreeSpec with Matchers {
 
   val p = new PlayWindow()
 
-  "confirm starting hand" in {
-    p.clickConfirm()
-  }
-
-  "select my card" - {
-    "of 6" in {
-
-    }
-  }
 
   "try robot" in {
       val robot = new Robot

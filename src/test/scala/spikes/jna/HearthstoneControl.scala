@@ -11,8 +11,6 @@ class HearthstoneControl extends FreeSpec with Matchers {
 
   "activate window" in {
     val w = findWindow("Hearthstone")
-    Kernel32.INSTANCE.
-    User32Ext.USER32EXT.SendMessageA(w, WM_LBUTTONDOWN, STATE_BUTTON_DOWN, pos) != 0)
   }
 
   def findWindow(title: String):WinDef.HWND = User32.INSTANCE.FindWindow(null, title)
