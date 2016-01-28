@@ -28,4 +28,6 @@ libraryDependencies += "net.java.dev.jna" % "jna-platform" % "4.2.1"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
 
+libraryDependencies += "pircbot" % "pircbot" % "1.5.0"
+
 fork in run := true

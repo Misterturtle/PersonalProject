@@ -6,6 +6,8 @@ import autoitx4java.AutoItX
 import com.jacob.com.LibraryLoader
 import org.scalatest.{Matchers, FreeSpec}
 
+import scala.collection.mutable.ListBuffer
+
 /**
   * Created by rconaway on 1/22/16.
   */
@@ -35,6 +37,12 @@ class AutoItSpike extends FreeSpec with Matchers {
     println(colorAt(1509, 495))
   }
 
+  "colorAt of region" in {
+    val start = System.currentTimeMillis()
+    (1 to 10).foreach ( x => colorAt(0, 0, 5, 5))
+    println(System.currentTimeMillis() - start)
+  }
+
   def startBattleNet(): Unit = {
     if (!ax.winExists("Battle.net")) {
       ax.run("""C:\Program Files (x86)\Battle.net\Battle.net.6526\Battle.net.exe""", """C:\Program Files (x86)\Battle.net\Battle.net.6526""", AutoItX.SW_MAXIMIZE)
@@ -58,6 +66,15 @@ class AutoItSpike extends FreeSpec with Matchers {
   def colorAt(x: Int, y: Int): String = {
     Integer.toHexString(ax.pixelGetColor(x, y).toInt).toUpperCase()
   }
+
+  def colorAt(left:Int, top:Int, width:Int, height:Int):Region = {
+    val buffer = ListBuffer[Int]()
+    for (x <- left until left + width; y <- top until top + height) {
+      buffer += ax.pixelGetColor(x,y).toInt
+    }
+    Region(left, top, width, height, buffer.toList)
+  }
+
 
   def selectTodaysQuests(): Unit = {
     waitFor(922, 515, "312CE7")
@@ -142,5 +159,8 @@ class AutoItSpike extends FreeSpec with Matchers {
   def placeCardInField():Unit = {
     click(963, 524)
   }
+
+
+  case class Region(x:Int, y:Int, width:Int, height:Int, pixels:List[Int])
 
 }
