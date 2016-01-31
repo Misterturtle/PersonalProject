@@ -1,14 +1,20 @@
-00:48:34.940 [atcher-5] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
-00:48:34.995 [atcher-5] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
-00:48:35.016 [atcher-5] DEBUG  a.event.EventStream - Default Loggers started
-00:48:50.236 [tcher-10] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,c-68-32-32-50.hsd1.mi.comcast.net,:hello Rob)
-00:48:50.239 [atcher-9] DEBUG  t.research.Reporter - received handled message Hello(Rob)
-00:48:50.240 [atcher-9] DEBUG      tph.irc.IrcDemo - received handled message Hello(Rob)
-00:48:50.241 [tcher-10] INFO   t.research.Reporter - Hello(Rob)
-00:49:06.618 [tcher-11] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,c-68-32-32-50.hsd1.mi.comcast.net,:exit)
-00:49:06.618 [tcher-11] DEBUG      tph.irc.IrcDemo - received handled message tph.irc.IrcWatcher$Exit$@7afeb2a1
-00:49:06.619 [tcher-11] DEBUG  t.research.Reporter - received handled message tph.irc.IrcWatcher$Exit$@7afeb2a1
-00:49:06.619 [tcher-11] INFO   t.research.Reporter - tph.irc.IrcWatcher$Exit$@7afeb2a1
-00:49:06.620 [tcher-11] DEBUG  t.research.Reporter - received handled message tph.irc.Messages$Stop$@26c00d51
-00:49:06.620 [tcher-11] INFO   t.research.Reporter - tph.irc.Messages$Stop$@26c00d51
-00:49:06.633 [atcher-4] DEBUG  a.event.EventStream - shutting down: StandardOutLogger started
+22:34:12.575 [atcher-3] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
+22:34:12.607 [atcher-3] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
+22:34:12.638 [atcher-3] DEBUG  a.event.EventStream - Default Loggers started
+22:35:52.520 [atcher-6] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,hello)
+22:35:52.536 [atcher-6] WARN    tph.irc.IrcWatcher - Unexpected command: hello
+22:36:01.344 [atcher-2] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,:hello world)
+22:36:01.364 [atcher-9] DEBUG  t.research.Reporter - received handled message Hello(world)
+22:36:01.367 [atcher-9] INFO   t.research.Reporter - Hello(world)
+22:36:01.371 [atcher-6] DEBUG      tph.irc.IrcDemo - received handled message Hello(world)
+22:39:26.583 [atcher-8] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,:hello world)
+22:39:26.584 [tcher-12] DEBUG      tph.irc.IrcDemo - received handled message Hello(world)
+22:39:26.584 [tcher-12] DEBUG  t.research.Reporter - received handled message Hello(world)
+22:39:26.584 [tcher-12] INFO   t.research.Reporter - Hello(world)
+22:40:15.559 [tcher-11] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,:exit)
+22:40:15.560 [tcher-11] DEBUG  t.research.Reporter - received handled message tph.irc.IrcWatcher$Exit$@517e02be
+22:40:15.561 [tcher-11] DEBUG      tph.irc.IrcDemo - received handled message tph.irc.IrcWatcher$Exit$@517e02be
+22:40:15.561 [tcher-11] INFO   t.research.Reporter - tph.irc.IrcWatcher$Exit$@517e02be
+22:40:15.565 [tcher-16] DEBUG  t.research.Reporter - received handled message tph.irc.Messages$Stop$@9152512
+22:40:15.566 [tcher-16] INFO   t.research.Reporter - tph.irc.Messages$Stop$@9152512
+22:40:15.592 [tcher-15] DEBUG  a.event.EventStream - shutting down: StandardOutLogger started

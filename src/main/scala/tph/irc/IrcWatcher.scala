@@ -2,6 +2,7 @@ package tph.irc
 
 import akka.actor.{ActorRef, Actor}
 import akka.event.LoggingReceive
+import rob.IrcBot
 import tph.Actors
 
 object IrcWatcher {

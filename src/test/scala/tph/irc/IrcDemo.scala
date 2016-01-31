@@ -5,6 +5,7 @@ import java.io.File
 import akka.actor.Actor.Receive
 import akka.actor._
 import akka.event.LoggingReceive
+import rob.IrcBot
 import tph.Actors
 import tph.research.Reporter
 import scala.concurrent.duration._

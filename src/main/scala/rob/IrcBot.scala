@@ -1,4 +1,4 @@
-package tph.irc
+package rob
 
 import akka.actor.ActorRef
 import org.jibble.pircbot.PircBot
