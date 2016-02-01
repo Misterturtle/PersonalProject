@@ -1,0 +1,20 @@
+22:34:12.575 [atcher-3] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
+22:34:12.607 [atcher-3] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
+22:34:12.638 [atcher-3] DEBUG  a.event.EventStream - Default Loggers started
+22:35:52.520 [atcher-6] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,hello)
+22:35:52.536 [atcher-6] WARN    tph.irc.IrcWatcher - Unexpected command: hello
+22:36:01.344 [atcher-2] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,:hello world)
+22:36:01.364 [atcher-9] DEBUG  t.research.Reporter - received handled message Hello(world)
+22:36:01.367 [atcher-9] INFO   t.research.Reporter - Hello(world)
+22:36:01.371 [atcher-6] DEBUG      tph.irc.IrcDemo - received handled message Hello(world)
+22:39:26.583 [atcher-8] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,:hello world)
+22:39:26.584 [tcher-12] DEBUG      tph.irc.IrcDemo - received handled message Hello(world)
+22:39:26.584 [tcher-12] DEBUG  t.research.Reporter - received handled message Hello(world)
+22:39:26.584 [tcher-12] INFO   t.research.Reporter - Hello(world)
+22:40:15.559 [tcher-11] DEBUG   tph.irc.IrcWatcher - received handled message Message(#pircbot,rconaway,~rconaway,121.sub-70-208-236.myvzw.com,:exit)
+22:40:15.560 [tcher-11] DEBUG  t.research.Reporter - received handled message tph.irc.IrcWatcher$Exit$@517e02be
+22:40:15.561 [tcher-11] DEBUG      tph.irc.IrcDemo - received handled message tph.irc.IrcWatcher$Exit$@517e02be
+22:40:15.561 [tcher-11] INFO   t.research.Reporter - tph.irc.IrcWatcher$Exit$@517e02be
+22:40:15.565 [tcher-16] DEBUG  t.research.Reporter - received handled message tph.irc.Messages$Stop$@9152512
+22:40:15.566 [tcher-16] INFO   t.research.Reporter - tph.irc.Messages$Stop$@9152512
+22:40:15.592 [tcher-15] DEBUG  a.event.EventStream - shutting down: StandardOutLogger started

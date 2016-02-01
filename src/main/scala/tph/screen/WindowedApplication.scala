@@ -76,11 +76,15 @@ class WindowedApplication(title: String) extends StrictLogging {
   }
 
   def processId:Int = {
-    assertWindow()
-    native.getWindowThreadProcesId(window)
+    ???
+//    assertWindow()
+//    native.getWindowThreadProcessId(window)
   }
 
-  def processActive(processId:Int): Boolean = native.getExitCodeProcess(window) == 259
+  def processActive(processId:Int): Boolean = {
+    ???
+//    native.getExitCodeProcess(processId) == 259
+  }
 
   def assertWindow():Unit = if (!window.isDefined) throw new RuntimeException(s"Application has not been started: $title")
 }
