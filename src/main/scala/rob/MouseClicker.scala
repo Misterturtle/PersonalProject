@@ -5,4 +5,8 @@ package rob
   */
 class MouseClicker {
 
+  // click
+  def clickGameMenuButton:MouseClicker = ???
+  def clickConcedeOnGameMenu:MouseClicker = ???
+  def clickContinue:MouseClicker = ???
 }

@@ -1,67 +1,55 @@
 package rob
 
+import java.io.File
+
+import akka.actor.{Props, ActorSystem}
+import com.typesafe.config.ConfigFactory
 import org.jibble.pircbot.PircBot
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach, BeforeAndAfterAll, FreeSpec, Matchers}
 
 /**
   * Created by rconaway on 1/30/16.
   */
-class AcceptanceTests extends FreeSpec with Matchers {
+class AcceptanceTests extends FreeSpec with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
-  val HOST = "irc.freenode.net"
-  val CHANNEL = "#pircbot"
+  val config = ConfigFactory.load()
+  val system = ActorSystem("AcceptanceTests")
+  val hearthstone = Controller.makeHearthstone(config, system)
 
-  "Wait for turn then end turn" in {
-    start()
-    waitForOpponentTurn()
+  val ircHost = config.getString("tph.irc.host")
+  val ircChannel = config.getString("tph.irc.channel")
 
-    startBotToVoteEndTurn("Lucy")
-    startBotToVotePlayCard("Ricky")
-    startBotToVoteEndTurn("Ethel")
+  val admin = new Player(ircHost, ircChannel, "admin")
+  val lucy = new Player(ircHost, ircChannel, "lucy")
+  val ricky = new Player(ircHost, ircChannel, "ricky")
+  val ethel = new Player(ircHost, ircChannel, "ethel")
+  val fred = new Player(ircHost, ircChannel, "fred")
 
-    waitForMyTurn()
-    waitForOpponentTurn()
-    end()
+  override def beforeEach() = {
+    if (hearthstone.isPlaying)
+      hearthstone.resign()
   }
 
-  def startBotToVoteEndTurn(name:String) =
-    new PircBot {
-      setName(name)
-      setVerbose(false)
-      connect(HOST)
-      joinChannel(CHANNEL)
+  override def afterAll() = {
+    if (hearthstone.isPlaying)
+      hearthstone.resign()
 
-      override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
-        if (message == "?vote?") {
-          this.sendMessage("tph", ":end turn")
-          this.disconnect()
-          this.dispose()
-        }
-      }
-    }
+    admin.close()
+    lucy.close()
+    ricky.close()
+    ethel.close()
+    fred.close()
+  }
 
-  def startBotToVotePlayCard(name:String) =
-    new PircBot {
-      setName("Ricky")
-      setVerbose(false)
-      connect(HOST)
-      joinChannel(CHANNEL)
+  "Wait for turn then end turn" in {
+    lucy.waitFor("?vote?").send(":end turn")
+    ricky.waitFor("?vote?").send(":play 1")
+    ethel.waitFor("?vote?").send(":end turn")
 
-      override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
-        if (message == "?vote?") {
-          this.sendMessage("tph", ":play 1")
-          this.disconnect()
-          this.dispose()
-        }
-      }
-    }
+    Controller    // starts game
 
-  def start() = ???
+    admin.waitFor("?vote?")
+  }
 
-  def waitForMyTurn() = ???
-
-  def waitForOpponentTurn() = ???
-
-  def end() = ???
 
 }
