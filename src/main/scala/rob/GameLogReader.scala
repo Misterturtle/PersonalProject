@@ -9,16 +9,29 @@ import org.apache.commons.io.input.{Tailer, TailerListenerAdapter, TailerListene
 import scala.concurrent.{Future, ExecutionContext}
 
 object GameLogReader {
-  case class Message(line:String)
+
+  trait Message
+
+  val TAG_CHANGE = """\[Power\] (\S+)\.DebugPrintPower\(\) - TAG_CHANGE Entity=(.+) tag=(.+) value=(.+)""".r
+  case class PlayState(entity: String, value: String) extends Message
+
+  def parse(line: String): Option[Message] = {
+    line match {
+      case TAG_CHANGE(source, entity, tag, value) =>
+        if (source == "GameState" && tag == "PLAYSTATE") Some(PlayState(entity, value))
+        else None
+      case _ => None
+    }
+  }
 }
 
-class GameLogReader(file: File, listener: ActorRef, executionContext:ExecutionContext) {
+class GameLogReader(file: File, listener: ActorRef, executionContext: ExecutionContext) {
+
   import GameLogReader._
 
   val tailListener = new TailerListenerAdapter {
-    override def handle(line:String):Unit = {
-      println(s"handle $line")
-      listener ! Message(line)
+    override def handle(line: String): Unit = {
+      parse(line).foreach(x => listener ! x)
     }
   }
 
