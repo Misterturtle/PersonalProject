@@ -2,26 +2,22 @@ package rob
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
+import com.typesafe.scalalogging.LazyLogging
 import org.jibble.pircbot.PircBot
 
-
-class Player(host:String, channel:String, nickname:String) {
+object Player {
+  val TIMEOUT_MS = 3000L
+}
+class Player(host:String, channel:String, nickname:String) extends LazyLogging {
+  import Player._
 
   case class Message()
 
   val messages = new ConcurrentLinkedQueue[String]
 
-  val bot = new PircBot {
-    setName(nickname)
-    setVerbose(false)
-    connect(host)
-    joinChannel(channel)
 
-    override def onMessage(channel:String, sender:String, login:String, hostName:String, message:String): Unit = {
-      messages.add(message)
-    }
-
-  }
+  logger.debug(s"host=$host, channel=$channel, nickname=$nickname")
+  val bot = new PlayerBot(host, channel, nickname, messages)
 
   def clear():Player = {
     messages.clear()
@@ -34,7 +30,7 @@ class Player(host:String, channel:String, nickname:String) {
   }
 
   def waitFor(s: String):Player = {
-    val timeout = System.currentTimeMillis() + 30000L
+    val timeout = System.currentTimeMillis() + TIMEOUT_MS
     while (timeout > System.currentTimeMillis()) {
       Option(messages.poll()) match {
         case Some(x) if x == s => return this
@@ -49,6 +45,19 @@ class Player(host:String, channel:String, nickname:String) {
     bot.disconnect()
     bot.dispose()
     this
+  }
+
+}
+
+class PlayerBot(host:String, channel:String, nickname:String, messages:ConcurrentLinkedQueue[String]) extends PircBot with LazyLogging {
+  logger.debug(s"host=$host, channel=$channel, nickname=$nickname")
+  setName(nickname)
+  setVerbose(false)
+  connect(host)
+  joinChannel(channel)
+
+  override def onMessage(channel:String, sender:String, login:String, hostName:String, message:String): Unit = {
+    messages.add(message)
   }
 
 }

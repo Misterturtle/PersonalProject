@@ -32,5 +32,7 @@ libraryDependencies += "pircbot" % "pircbot" % "1.5.0"
 
 libraryDependencies += "commons-io" % "commons-io" % "2.4"
 
+libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
+
 
 fork in run := true

@@ -1,22 +1,32 @@
 package rob
 
 import akka.actor.ActorRef
+import com.typesafe.scalalogging.LazyLogging
 import org.jibble.pircbot.PircBot
 
 object IrcBot {
   val NICKNAME = "Trebor"
-  case class Message(channel:String, sender:String, login:String, hostName:String, message:String)
+  trait Message
+  object EndTurn extends Message
+
 }
 
-class IrcBot(hostName:String, channel:String, watcher:ActorRef) extends PircBot {
-  import IrcBot._
+import IrcBot._
+class IrcBot(hostName:String, channel:String, watcher:ActorRef, nickname:String=IrcBot.NICKNAME) extends PircBot with LazyLogging {
 
-  setName(NICKNAME)
+  setName(nickname)
+  logger.debug(s"nickname = $nickname")
   setVerbose(false)
   connect(hostName)
+  logger.debug(s"connected to $hostName")
   joinChannel(channel)
+  logger.debug(s"joined $channel")
 
   override def onMessage(channel:String, sender:String, login:String, hostName:String, message:String): Unit = {
-      watcher ! Message(channel, sender, login, hostName, message)
+    logger.debug(s"IRC message: sender=$sender, message=$message")
+      message.toLowerCase match {
+        case "end turn" => watcher ! EndTurn
+        case _ =>
+      }
   }
 }
