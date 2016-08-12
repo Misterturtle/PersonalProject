@@ -1,0 +1,20 @@
+Friendly Hand Index 1: HandPosition: 1 BoardPosition: -1 Id: 11
+
+Friendly Hand Index 2: HandPosition: 2 BoardPosition: -1 Id: 24
+
+Friendly Hand Index 3: HandPosition: 3 BoardPosition: -1 Id: 27
+
+Friendly Hand Index 4: HandPosition: 4 BoardPosition: -1 Id: 22
+
+Friendly Hand Index 5: HandPosition: 5 BoardPosition: -1 Id: 28
+
+Enemy Hand Index 1: HandPosition: 2 BoardPosition: -1 Id: 34
+
+Enemy Hand Index 2: HandPosition: 1 BoardPosition: -1 Id: 53
+
+Enemy Hand Index 3: HandPosition: 3 BoardPosition: -1 Id: 63
+
+Enemy Hand Index 4: HandPosition: 4 BoardPosition: -1 Id: 57
+
+Enemy Hand Index 5: HandPosition: 5 BoardPosition: -1 Id: 54
+
