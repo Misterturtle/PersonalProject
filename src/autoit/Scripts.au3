@@ -34,6 +34,7 @@ Func StartHearthStone()
 	WinMove("Hearthstone", "", 0,0,1884,1080)
 EndFunc
 
+
 Func WaitFor($x, $y, $hex)
 	While Hex(PixelGetColor($x,$y), 6) <> $hex
 		ToolTip(Hex(PixelGetColor($x,$y), 6))

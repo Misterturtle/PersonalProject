@@ -1,12 +1,11 @@
 package spikes
 
-import java.io.File
-
 import autoitx4java.AutoItX
 import com.jacob.com.LibraryLoader
-import org.scalatest.{Matchers, FreeSpec}
+import org.scalatest.{FreeSpec, Matchers}
 
 import scala.collection.mutable.ListBuffer
+
 
 /**
   * Created by rconaway on 1/22/16.
@@ -51,6 +50,8 @@ class AutoItSpike extends FreeSpec with Matchers {
 
     ax.winActivate("Battle.net")
     ax.winMove("Battle.net", "", 0, 0, 1024, 768)
+
+
   }
 
   def startHearthstone(): Unit = {

@@ -1,12 +1,12 @@
 package tph
 
 import java.io._
-import java.nio.file.Files
-import org.apache.commons.io.FileUtils
+
 import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
-import tph.research.DisplayLogs._
+import org.apache.commons.io.FileUtils
+import tph.Main._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -44,7 +44,7 @@ class TDD (system: ActorSystem) extends Actor with akka.actor.ActorLogging {
       pattern.findAllIn(SINGLE_TEST.toString()).matchData foreach {
         m => name = m.group(1)
       }
-      SingleTest(new File("C:\\Users\\RC\\Documents\\GitHubRepository\\TwitchPlaysHearthstone\\debugsituations\\" + name), system.actorOf(Props(new LogFileReader(system, new File("C:\\Users\\RC\\Documents\\GitHubRepository\\TwitchPlaysHearthstone\\debugsituations\\"+ name), gameStatus)), "testFileReader"))
+      SingleTest(new File("C:\\Users\\RC\\Documents\\GitHubRepository\\TwitchPlaysHearthstone\\debugsituations\\" + name), system.actorOf(Props(new LogFileReader(system, new File("C:\\Users\\RC\\Documents\\GitHubRepository\\TwitchPlaysHearthstone\\debugsituations\\" + name), gameStatus, controller)), "testFileReader"))
   }
 
 
@@ -89,10 +89,6 @@ class TDD (system: ActorSystem) extends Actor with akka.actor.ActorLogging {
     testFileReader ! PoisonPill
     return false
   }
-    if (results != true || false)
-      {
-        log.warning("results didn't equal true or false")
-      }
   }
 
   def FullTest(): Unit = {
@@ -106,7 +102,7 @@ class TDD (system: ActorSystem) extends Actor with akka.actor.ActorLogging {
     val testFileReaders = new Array[ActorRef](situations.length)
 
     for (a <- 0 until situations.length) {
-      testFileReaders(a) = system.actorOf(Props(new LogFileReader(system, situations(a), gameStatus)), "testFileReader"+a)
+      testFileReaders(a) = system.actorOf(Props(new LogFileReader(system, situations(a), gameStatus, controller)), "testFileReader" + a)
       SingleTest(situations(a),testFileReaders(a))
 
     }

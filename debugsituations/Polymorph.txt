@@ -12498,7 +12498,7 @@ FSM not Preprocessed: Arcane_Idle_01(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] GameState.DebugPrintPower() -         TAG_CHANGE Entity=[name=Mana Wyrm id=37 zone=PLAY zonePos=1 cardId=NEW1_012 player=2] tag=LINKED_ENTITY value=69
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] GameState.DebugPrintPower() -         SHOW_ENTITY - Updating Entity=69 CardID=CS2_tk1
@@ -12782,7 +12782,7 @@ FSM not Preprocessed: Arcane_Idle_01(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [id=69 cardId= type=INVALID zone=SETASIDE zonePos=0 player=2] CardID=
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -         tag=ZONE value=SETASIDE
@@ -14122,7 +14122,8 @@ FSM not Preprocessed: ShowEvent : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Sheep id=70 zone=SETASIDE zonePos=0 cardId=CS2_tk1 player=1] CardID=CS2_tk1
- 
+\[Power\] PowerTaskList.DebugPrintPower\(\) -     FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=SETASIDE zonePos=\d+ cardId=.+ player=(\d+)] CardID=.+
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -         tag=HEALTH value=1

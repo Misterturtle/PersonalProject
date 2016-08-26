@@ -16,6 +16,11 @@ object LogFileEvents {
 
 
   //Neutral Events
+  case class DiscoverOption(option: Int)
+
+  case class FaceAttackValueEvent(player: Int, value: Int)
+
+  case class WeaponPlayedEvent(id: Int, player: Int)
   case class SecretPlayedEvent(id:Int, player:Int)
   case class OldZoneChangeEvent(id:Int, zone:String, player:Int, dstZone:String)
   case class ZoneChangeEvent(id:Int, player:Int, zone:String, dstZone:String)
@@ -30,7 +35,9 @@ object LogFileEvents {
   case class MinionSummoned(name:String, id:Int, zonePos:Int, player: Int)
   case class BoardPositionChange(id:Int, player:Int, dstPos:Int)
   case class HandPositionChange(id:Int, pos:Int, player:Int, dstPos:Int)
-  case class Polymorph(newId:Int,oldId:Int ,player:Int)
+
+  //case class Polymorph(newId:Int,oldId:Int ,player:Int)
+  case class Transform(oldId: Int, newId: Int)
   case class Hex(name:String, id:Int, player:Int, zonePos:Int)
 
 

@@ -2,17 +2,16 @@ package tph
 
 import java.io._
 
-import scala.concurrent.duration._
-import akka.actor.{ActorRef, Props, ActorSystem, Actor}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.matching.Regex
+import akka.actor.{Actor, ActorSystem}
 import tph.LogFileEvents._
+
 import scala.collection.mutable._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 
 class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging {
 
-//His hand gets confused sometimes.
 
 
   var turn: Int = 0
@@ -20,10 +19,7 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
   val him: Player = Player("UNKNOWN")
   val USER_NAME: String = "Wizard"
 
-  //val writer = new PrintWriter(new FileWriter("debug.log"))
-
   def receive = {
-
 
     //Friendly Cases
 
@@ -71,6 +67,7 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
 
 // Forseen problem: No dstPos passed in. Relying on Position Change methods to fix. Position change methods must come after ZoneChangeEvent
     case ZoneChangeEvent(id, player, zone, dstZone) => {
+
       var index = -2
 
       if (zone == "OPPOSING PLAY") {
@@ -91,20 +88,36 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
           if (dstZone == "OPPOSING HAND") {
             val name = him.board(index).name
             him.board.remove(index)
-            val changedCard = new Card
-            changedCard.name = name
-            changedCard.id = id
-            changedCard.handPosition = -5
-            changedCard.boardPosition = -1
-            him.hand.append(changedCard)
+            if (him.hand.indexWhere(_.id == id) == -1) {
+              // If his hand doesn't already contain the card
+              val changedCard = new Card
+              changedCard.name = name
+              changedCard.id = id
+              changedCard.handPosition = -5
+              changedCard.boardPosition = -1
+              him.hand.append(changedCard)
+            }
           }
+
           if (dstZone == "OPPOSING DECK") {
             him.board.remove(index)
           }
         }
       }
+
+      if (zone == "OPPOSING HAND") {
+        index = him.hand.indexWhere(_.id == id)
+        if (index >= 0) {
+          if (dstZone == "OPPOSING GRAVEYARD") {
+            him.hand.remove(index)
+          }
+        }
+      }
+
+
+
       if (zone == "FRIENDLY PLAY") {
-        index = me.hand.indexWhere(_.id == id)
+        index = me.board.indexWhere(_.id == id)
         if (index >= 0) {
           if (dstZone == "OPPOSING PLAY") {
 
@@ -117,38 +130,63 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
             changedCard.boardPosition = -5
             him.board.append(changedCard)
           }
+
+          if (dstZone == "FRIENDLY HAND") {
+            val name = me.board(index).name
+            me.board.remove(index)
+            if (me.hand.indexWhere(_.id == id) == -1) {
+              // If my hand doesn't already contain the card
+              val changedCard = new Card
+              changedCard.name = name
+              changedCard.id = id
+              changedCard.handPosition = -5
+              changedCard.boardPosition = -1
+              me.hand.append(changedCard)
+            }
+          }
+          if (dstZone == "FRIENDLY DECK") {
+            me.hand.remove(index)
+          }
         }
-        if (dstZone == "FRIENDLY HAND") {
-          val name = me.board(index).name
-          me.board.remove(index)
-          val changedCard = new Card
-          changedCard.name = name
-          changedCard.id = id
-          changedCard.handPosition = -5
-          changedCard.boardPosition = -1
-          me.hand.append(changedCard)
-        }
-        if (dstZone == "FRIENDLY DECK") {
-          me.hand.remove(index)
-        }
+
+
       }
 
+
+
+      if (zone == "FRIENDLY HAND") {
+        index = me.hand.indexWhere(_.id == id)
+        if (index >= 0) {
+          if (dstZone == "FRIENDLY GRAVEYARD") {
+            me.hand.remove(index)
+          }
+        }
+        }
+    }
+
+
+        case FaceAttackValueEvent(player: Int, value: Int) => {
+          if (player == me.player) {
+            me.faceValue = value
+          }
+          if (player == him.player) {
+            him.faceValue = value
+          }
         }
 
+        case WeaponPlayedEvent(id: Int, player: Int) =>
+          if (player == me.player) {
+            val index = me.hand.indexWhere(_.id == id)
+            if (index >= 0)
+              me.hand.remove(index)
+          }
 
-//    case FriendlyCardReturnEvent(name, id, player) if (me.board.indexWhere(_.id == id) >= 0) && player == me.player => {
-//      //"""\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from FRIENDLY PLAY -> FRIENDLY HAND""".r
-//      var index = -2
-//
-//      index = me.board.indexWhere(_.id == id)
-//
-//      if (index >= 0
-//      //&& me.board(index).zone == "HAND"
-//      // Not sure what this does.
-//      ) {
-//        me.board.remove(index)
-//      }
-//    }
+          if (player == him.player) {
+            val index = him.hand.indexWhere(_.id == id)
+            if (index >= 0)
+              him.hand.remove(index)
+          }
+
 
 
     case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == me.player && dstPos != 0 => {
@@ -218,20 +256,6 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
     }
 
 
-
-//    case EnemyCardReturnEvent(name, id, player) if player == him.player => {
-//      //"""\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
-//      var index = -2
-//
-//      index = him.board.indexWhere(_.id == id)
-//
-//      if (index >= 0
-//      //&& me.board(index).zone == "HAND"
-//      // Not sure what this does.
-//      ) {
-//        him.board.remove(index)
-//      }
-//    }
     case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == him.player && dstPos != 0 => {
       // """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
       var index = -2
@@ -246,14 +270,6 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       }
 
     }
-//    case CardDeath(name: String, id: Int, zone: String, zonePos: Int, player: Int) if player == him.player && zone == "PLAY" => {
-//      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=(.+) zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
-//      var index = -2
-//      index = him.board.indexWhere(_.id == id)
-//      if (index >= 0) {
-//        him.board.remove(index)
-//      }
-//    }
 
 
 
@@ -261,7 +277,9 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
 
     case KnownCardDrawn(name: String, id: Int, position: Int, player: Int) =>
 
-      if (player == me.player) {
+      if (player == me.player &&
+        me.hand.indexWhere(_.id == id) == -1) {
+        // Prevents bug of drawing a returned card
         var drawnCard: Card = Card()
         drawnCard.name = name
         drawnCard.id = id
@@ -374,7 +392,8 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       }
     }
 
-    case HandPositionChange(id, pos, player, dstPos) if pos != 0 =>
+        case HandPositionChange(id, pos, player, dstPos)
+          if pos != 0 =>
       var index = -2
       if (player == me.player)
         {
@@ -389,20 +408,48 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
           him.hand(index).handPosition = dstPos
         }
 
-    case Polymorph(newId,oldId, player) =>
-      //"""\[Zone\] ZoneChangeList.ProcessChanges.+power=\[type=TAG_CHANGE entity=\[id=\d+.+name=.+\] tag=LINKEDCARD value=(\d+)\] complete=false\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+ player=(\d+)\].+""".r
-      var index = -2
-      if (player == me.player) {
-        index = me.board.indexWhere(_.id == oldId)
-        me.board(index).id = newId
-        me.board(index).name = "Sheep"
-      }
-      if (player == him.player) {
-        index = him.board.indexWhere(_.id == oldId)
-        him.board(index).id = newId
-        him.board(index).name = "Sheep"
-      }
 
+        case Transform(oldId, newId) if (newId != 0) =>
+          //\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)
+          var index = -2
+          //These conditions are needed due to some transform cards creating an instance on the board and some not.
+          if (me.hand.indexWhere(_.id == oldId) >= 0) //Old card in my hand
+          {
+            index = me.hand.indexWhere(_.id == oldId)
+            me.hand.remove(index)
+            var changedCard = new Card
+            changedCard.name = "Transformed Minion"
+            changedCard.id = newId
+            changedCard.boardPosition = -5
+            changedCard.handPosition = -1
+            me.board.append(changedCard)
+          }
+
+          if (me.board.indexWhere(_.id == oldId) >= 0) //Old card on him board
+          {
+            index = me.board.indexWhere(_.id == oldId)
+            me.board(index).id = newId
+            me.board(index).name = "Transformed Minion"
+          }
+
+          if (him.hand.indexWhere(_.id == oldId) >= 0) // Old card in his hand
+          {
+            index = him.hand.indexWhere(_.id == oldId)
+            him.hand.remove(index)
+            var changedCard = new Card
+            changedCard.name = "Transformed Minion"
+            changedCard.id = newId
+            changedCard.boardPosition = -5
+            changedCard.handPosition = -1
+            him.board.append(changedCard)
+          }
+
+          if (him.board.indexWhere(_.id == oldId) >= 0) //Old card on his board
+          {
+            index = him.board.indexWhere(_.id == oldId)
+            him.board(index).id = newId
+            him.board(index).name = "Transformed Minion"
+          }
 
     case Hex(name, id,player, zonePos) => {
       var oldIndex = -2
@@ -431,12 +478,14 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       if (player == me.player)
         {
           index = me.hand.indexWhere(_.id == id)
+          if (index != -1)
           me.hand.remove(index)
         }
       if (player == him.player)
       {
         index = him.hand.indexWhere(_.id == id)
-        me.hand.remove(index)
+        if (index != -1)
+          him.hand.remove(index)
       }
 
 
@@ -477,7 +526,10 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
         }
       }
 
+      log.info("\n\nMy face value is " + me.faceValue)
       log.info("\n\nHis hand has " + him.hand.length + " cards.\n")
+      log.info("\nHis face value is " + him.faceValue)
+
 
 
       var c: Int = 0
@@ -503,10 +555,17 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
 
       log.info("It is turn: " + turn)
       system.scheduler.scheduleOnce(10000.milli, this.self, "Display Status")
+
     }
 
+        case "GetGameStatus" =>
+          val array: Array[Player] = new Array[Player](2)
+          array(0) = me
+          array(1) = him
+          sender ! array
 
-    case x: String => {
+
+        case x: String => {
       log.debug("GameStatus: " + x)
     }
 
@@ -542,6 +601,8 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
     him.name = "UNKNOWN"
     me.player = -1
     him.player = -1
+    me.faceValue = 0
+    him.faceValue = 0
   }
 
   def PrintState(fileName: String): Unit = {
@@ -581,6 +642,7 @@ class Player(var name: String, handList: ListBuffer[Card], boardList: ListBuffer
   var hand: ListBuffer[Card] = handList
   var board: ListBuffer[Card] = boardList
   var player:Int = -1
+  var faceValue = 0
 }
 
 case class Card() {

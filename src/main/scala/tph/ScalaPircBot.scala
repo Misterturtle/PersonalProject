@@ -1,6 +1,4 @@
-package rob
-
-import java.util.concurrent.ConcurrentLinkedQueue
+package tph
 
 import org.jibble.pircbot.PircBot
 

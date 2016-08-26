@@ -1,8 +1,22 @@
-22:32:07.332 [atcher-2] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
-22:32:07.346 [atcher-2] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
-22:32:07.352 [atcher-2] DEBUG  a.event.EventStream - Default Loggers started
-22:32:07.451 [atcher-4] DEBUG  a.event.EventStream - shutting down: StandardOutLogger started
-22:32:07.460 [atcher-2] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
-22:32:07.462 [atcher-6] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
-22:32:07.462 [atcher-6] DEBUG  a.event.EventStream - Default Loggers started
-22:32:07.571 [tcher-10] DEBUG  a.event.EventStream - shutting down: StandardOutLogger started
+05:07:06.746 [atcher-4] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
+05:07:06.806 [atcher-4] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
+05:07:06.846 [atcher-4] DEBUG  a.event.EventStream - Default Loggers started
+05:07:07.191 [    main] DEBUG           tph.IrcBot - nickname = TPHBot
+05:07:17.299 [    main] DEBUG           tph.IrcBot - connected to irc.freenode.net
+05:07:17.300 [    main] DEBUG           tph.IrcBot - joined #tph
+05:07:17.304 [atcher-5] DEBUG       tph.Controller - received handled message init
+05:07:17.410 [atcher-4] ERROR .a.OneForOneStrategy - Hearthstone is not running
+java.lang.RuntimeException: Hearthstone is not running
+	at tph.Hearthstone.initialize(Hearthstone.scala:102) ~[classes/:na]
+	at tph.Hearthstone$$anonfun$receive$1.applyOrElse(Hearthstone.scala:25) ~[classes/:na]
+	at akka.actor.Actor$class.aroundReceive(Actor.scala:480) ~[akka-actor_2.11-2.4.1.jar:na]
+	at tph.Hearthstone.aroundReceive(Hearthstone.scala:16) ~[classes/:na]
+	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:526) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.actor.ActorCell.invoke(ActorCell.scala:495) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.dispatch.Mailbox.run(Mailbox.scala:224) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.dispatch.Mailbox.exec(Mailbox.scala:234) [akka-actor_2.11-2.4.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.7.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.7.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.7.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.7.jar:na]

@@ -464,6 +464,7 @@ public class AutoItX {
         return result.getInt();
     }
 
+
     /**
      * Searches a rectangle of pixels for the pixel color provided.
      * @param left left coordinate of rectangle.

@@ -2,22 +2,23 @@ package tph
 
 import java.io._
 
-import akka.util.Timeout
+import akka.actor.{Actor, ActorRef, ActorSystem}
 import akka.pattern.ask
+import akka.util.Timeout
 
 import scala.concurrent.Await
-import scala.concurrent.duration._
-import akka.actor.{ActorRef, Props, ActorSystem, Actor}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.matching.Regex
+import scala.concurrent.duration._
 
 
 object LogFileReader {
 //BUGS:
-  // # of cards in his hand messes up sometimes. (Sometimes it fixes itself; maybe after the bugged card is played)
-  // Need a weapon system
-  //Hex doesn't work
-  //Hand/Board indexing gets confused when many actions happen quickly. If program is re-ran, issue is fixed. (Board clear/vanish)
+  // Shadowcaster needs tested (Add a copy to your hand)
+  // Renounce Darkness needs tested (Replaces entire deck with new cards)
+  // Lord Jaraxxus needs tested (Is played, but replaces your hero instead of being played on the board)
+  //Shifter Zerus needs tested (Shifts into a new card every turn)
+  //Golden Monkey needs tested (Replaces hand and deck)
+
 
   // messages in
   val START = "LogFileReader.start"
@@ -37,7 +38,10 @@ object LogFileReader {
   //val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
 
   //Neutral Strings
-  val SECRET_PLAYED = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+).+zone=HAND zonePos=\d+ player=(\d+)\] tag=SECRET value=1""".r
+
+  val DISCOVER_OPTIONS = """\[Power\] GameState.DebugPrintEntityChoices\(\) -   Entities\[(\d+)\]=\[name=.+ id=\d+ zone=SETASIDE zonePos=0 cardId=.+ player=\d+\]""".r
+  val FACE_ATTACK_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=HERO.+ player=(\d+)] tag=ATK value=(\d+)""".r
+  val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
   val OLD_ZONE_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=.+id=(\d+).+zone=(.+) zonePos=.+ player=(\d+)\] tag=ZONE value=(.+)""".r
   val ZONE_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False .+id=(\d+) zone=.+ zonePos=\d+ cardId=.+ player=(\d+)\] zone from (.+) -> (.+)$""".r
   val KNOWN_CARD_DRAWN = """^.+id=\d+ local=False \[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=\S+ player=(\d+)\] pos from \d+ -> \d+""".r
@@ -46,11 +50,13 @@ object LogFileReader {
   val HAND_POSITION_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+name=.+tag=ZONE_POSITION value=\d+\] complete=False\] entity=.+id=(\d+).+zone=HAND zonePos=(\d+).+player=(\d+).+dstPos=(\d+)""".r
   val CARD_DEATH = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=(.+) zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
   val MINION_SUMMONED = """^.+FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+player=(\d+).+""".r
-  val POLYMORPH = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=LINKED_ENTITY value=(\d+)\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+  //val POLYMORPH = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=LINKED_ENTITY value=(\d+)\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+  val TRANSFORM =
+    """\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)""".r
   val HEX = """\[Zone\] ZoneChangeList.+ \[name=(.+) id=(\d+) zone=PLAY zonePos=.+ cardId=hexfrog player=(\d+)\] pos from 0 -> (\d)""".r
   val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=.+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
   val SAP = """\[Power\] PowerTaskList.DebugPrintPower\(\) - BLOCK_START BlockType=POWER Entity=\[name=Sap id=.+ zone=PLAY zonePos=.+ cardId=.+ player=.+\] EffectCardId= EffectIndex=.+ Target=\[name=(.+) id=(\d+) zone=PLAY zonePos=.+ cardId=.+ player=(\d+)\]""".r
-
+  val WEAPON = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)] to .+ PLAY (Weapon)""".r
 
   //Debug Strings
   val DEBUG_PRINT_POWER = """^\[Power\] (\S+).DebugPrintPower\(\) - (\s*)(.*)$""".r
@@ -63,12 +69,13 @@ object LogFileReader {
 }
 
 
-class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends Actor with akka.actor.ActorLogging {
+class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, controller: ActorRef) extends Actor with akka.actor.ActorLogging {
 
-  import LogFileReader._
   import LogFileEvents._
+  import LogFileReader._
 
   var complete = false
+  var readerIdle = true
   val reader = new BufferedReader(new FileReader(file))
   val writer = new PrintWriter(new FileWriter("debug.log"))
 
@@ -77,11 +84,32 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
     case POLL => poll()
     case CLEAR_STATUS => listener ! GameOver()
     case "IsComplete" => sender ! complete
+
+
+
+    //This should be changed.
+    case "GetGameStatus" =>
+
+      if (reader.ready() == false) {
+        if (readerIdle == true) {
+          implicit val timeout = Timeout(5 seconds)
+          val future = listener ? "GetGameStatus"
+          val result = Await.result(future, timeout.duration).asInstanceOf[Array[Player]]
+          sender ! result
+        }
+        if (readerIdle == false) {
+          readerIdle = true
+          sender ! new Array[Player](0)
+        }
+      }
+      if (reader.ready() == true)
+        sender ! new Array[Player](0)
   }
 
 
   def poll(): Unit = {
       while (reader.ready()) {
+        readerIdle = false
         val line = reader.readLine()
         writer.println(line)
         writer.flush()
@@ -89,40 +117,37 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
 
 
           // Friendly Events
-          //        case FRIENDLY_CARD_DRAWN(name, id, position,player) =>
-          //          log.info("Friendly Card Drawn: " + line)
-          //          listener ! FriendlyCardDrawnEvent(name, id.toInt, position.toInt,player.toInt)
-
-//          case FRIENDLY_CARD_RETURN(name, id, player) =>
-//            log.info("Friendly Card Return: " + line)
-//            listener ! FriendlyCardReturnEvent(name, id.toInt, player.toInt)
-
 
           case FRIENDLY_MINION_CONTROLLED(name, id) =>
             log.info("Minion Controlled: " + line)
             listener ! FriendlyMinionControlled(name, id.toInt)
-
-
-
 
           //Enemy Events
           case ENEMY_CARD_DRAWN(id, position, player) =>
             log.info("Enemy Card Drawn: " + line)
             listener ! EnemyCardDrawnEvent(id.toInt, position.toInt, player.toInt)
 
-//          case ENEMY_CARD_RETURN(name, id, player) =>
-//            log.info("Enemy Card Return: " + line)
-//            listener ! EnemyCardReturnEvent(name, id.toInt, player.toInt)
-
-
 
           //Neutral Events
+
+          case DISCOVER_OPTIONS(option) =>
+            log.info("Discover Option: " + option)
+            controller ! DiscoverOption(option.toInt)
+
+          case FACE_ATTACK_VALUE(player, value) =>
+            log.info("Face Value Changed: " + line)
+            listener ! FaceAttackValueEvent(player.toInt, value.toInt)
+
+          case WEAPON(id, player) =>
+            log.info("Weapon Played: " + line)
+            listener ! WeaponPlayedEvent(id.toInt, player.toInt)
+
           case SECRET_PLAYED(id, player) =>
             log.info("Secret Played: " +line)
             listener ! SecretPlayedEvent(id.toInt, player.toInt)
 
           case OLD_ZONE_CHANGE(id, zone, player, dstZone) if dstZone != "GRAVEYARD" =>
-            log.info("Zone Change: " + line)
+            log.info("Old Zone Change: " + line)
             listener ! OldZoneChangeEvent(id.toInt, zone, player.toInt, dstZone)
 
           case ZONE_CHANGE(id, player, zone, dstZone) =>
@@ -146,6 +171,7 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
               log.info("Friendly Player: 2, Enemy Player: 1")
             }
             listener ! DefinePlayers(friendlyPlayerID.toInt)
+            controller ! "Start Game"
 
           case CARD_PLAYED(name, id, dstPos, player) =>
             log.info("Card Played: " + line)
@@ -168,9 +194,13 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
             log.info("Minion Summoned: " + line)
             listener ! MinionSummoned(name, id.toInt, zonePos.toInt, player.toInt)
 
-          case POLYMORPH(newId, oldId, player) =>
-            log.info("Polymorph: " + line)
-            listener ! Polymorph(newId.toInt, oldId.toInt, player.toInt)
+          //          case POLYMORPH(newId, oldId, player) =>
+          //            log.info("Polymorph: " + line)
+          //            listener ! Polymorph(newId.toInt, oldId.toInt, player.toInt)
+
+          case TRANSFORM(oldId, newId) if newId != 0 =>
+            log.info("Transform: " + line)
+            listener ! Transform(oldId.toInt, newId.toInt)
 
           case HEX(name, id, player, zonePos) =>
             log.info("HEX: " + line)
@@ -180,6 +210,8 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
 
 
           //Debug Events
+          case "DEBUGPOINT" =>
+            None
 
           case DEBUG_PRINT_POWER(source, pad, text) =>
             text match {
@@ -188,9 +220,9 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef) extends
 
                 listener ! TurnStartEvent(value.toInt)
 
-
               case TAG_CHANGE(entity, tag, value) if entity == "GameEntity" && value == "FINAL_GAMEOVER" =>
-                //listener ! GameOver()
+                listener ! GameOver()
+                controller ! "Game Over"
 
               case TAG_CHANGE(entity, tag, value) if tag == "NUM_OPTIONS" =>
                 log.debug(NumOptions(source, entity, value).toString())
