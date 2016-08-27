@@ -39,7 +39,7 @@ object LogFileReader {
 
   //Neutral Strings
 
-  val DISCOVER_OPTIONS = """\[Power\] GameState.DebugPrintEntityChoices\(\) -   Entities\[(\d+)\]=\[name=.+ id=\d+ zone=SETASIDE zonePos=0 cardId=.+ player=\d+\]""".r
+
   val FACE_ATTACK_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=HERO.+ player=(\d+)] tag=ATK value=(\d+)""".r
   val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
   val OLD_ZONE_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=.+id=(\d+).+zone=(.+) zonePos=.+ player=(\d+)\] tag=ZONE value=(.+)""".r
@@ -57,6 +57,23 @@ object LogFileReader {
   val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=.+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
   val SAP = """\[Power\] PowerTaskList.DebugPrintPower\(\) - BLOCK_START BlockType=POWER Entity=\[name=Sap id=.+ zone=PLAY zonePos=.+ cardId=.+ player=.+\] EffectCardId= EffectIndex=.+ Target=\[name=(.+) id=(\d+) zone=PLAY zonePos=.+ cardId=.+ player=(\d+)\]""".r
   val WEAPON = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)] to .+ PLAY (Weapon)""".r
+
+
+  //IrcLogic Strings
+  val MULLIGAN_OPTION =
+    """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=SHOW_ENTITY entity=\[id=\d+ cardId=.+ name=\[id=\d+ cardId= type=INVALID zone=DECK zonePos=0 player=\d+\]\] tags=System.Collections.Generic.List`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[id=\d+ cardId= type=INVALID zone=DECK zonePos=0 player=\d+\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=""".r
+  val MULLIGAN_START = "[Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=STEP value=BEGIN_MULLIGAN"
+  val DISCOVER_OPTION = """\[Power\] GameState.DebugPrintEntityChoices\(\) -   Entities\[(\d+)\]=\[name=.+ id=\d+ zone=SETASIDE zonePos=0 cardId=.+ player=\d+\]""".r
+
+  //Controller Strings
+
+  val PLAY_MENU = "FSM not Preprocessed: Hero_Armor(Clone) : FSM"
+  val COLLECTION_MENU = "FSM not Preprocessed: DeckGlowAll : FSM"
+  val START_UP = "FSM not Preprocessed: Startup_Hub : FSM"
+
+
+
+
 
   //Debug Strings
   val DEBUG_PRINT_POWER = """^\[Power\] (\S+).DebugPrintPower\(\) - (\s*)(.*)$""".r
@@ -87,23 +104,23 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
 
 
 
-    //This should be changed.
     case "GetGameStatus" =>
 
       if (reader.ready() == false) {
         if (readerIdle == true) {
           implicit val timeout = Timeout(5 seconds)
           val future = listener ? "GetGameStatus"
-          val result = Await.result(future, timeout.duration).asInstanceOf[Array[Player]]
+          val result = Await.result(future, timeout.duration)
           sender ! result
+          readerIdle = false
         }
         if (readerIdle == false) {
           readerIdle = true
-          sender ! new Array[Player](0)
+          sender ! None
         }
       }
       if (reader.ready() == true)
-        sender ! new Array[Player](0)
+        sender ! None
   }
 
 
@@ -130,7 +147,7 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
 
           //Neutral Events
 
-          case DISCOVER_OPTIONS(option) =>
+          case DISCOVER_OPTION(option) =>
             log.info("Discover Option: " + option)
             controller ! DiscoverOption(option.toInt)
 
@@ -194,10 +211,6 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
             log.info("Minion Summoned: " + line)
             listener ! MinionSummoned(name, id.toInt, zonePos.toInt, player.toInt)
 
-          //          case POLYMORPH(newId, oldId, player) =>
-          //            log.info("Polymorph: " + line)
-          //            listener ! Polymorph(newId.toInt, oldId.toInt, player.toInt)
-
           case TRANSFORM(oldId, newId) if newId != 0 =>
             log.info("Transform: " + line)
             listener ! Transform(oldId.toInt, newId.toInt)
@@ -207,6 +220,13 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
             listener ! Hex(name, id.toInt, player.toInt, zonePos.toInt)
 
 
+
+          //Irc Logic Events
+          case MULLIGAN_START =>
+            controller ! "Mulligan"
+
+          case MULLIGAN_OPTION() =>
+            controller ! "NewMulliganOption"
 
 
           //Debug Events

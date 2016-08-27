@@ -15,13 +15,14 @@ object Main extends App {
   val system = ActorSystem("TwitchPlaysHearthstone")
   val screenScraper = new ScreenScraper()
   val mouseClicker = new MouseClicker()
-  val hearthstone: ActorRef = system.actorOf(Props(new Hearthstone(system, controller, config, screenScraper, mouseClicker)), "hearthStone")
-  val controller: ActorRef = system.actorOf(Props(new Controller(system, hearthstone, logFileReader, ircLogic)), "Controller")
-  val gameStatus: ActorRef = system.actorOf(Props(new GameStatus(system)), "gameStatus")
 
 
-  val gameLogFile = new File(config.getString("tph.game-log.file"))
-  val logFileReader = system.actorOf(Props(new LogFileReader(system, gameLogFile, gameStatus, controller)), "logFileReader")
+  lazy val controller: ActorRef = system.actorOf(Props(new Controller(system, hearthstone, logFileReader, ircLogic)), "Controller")
+  lazy val hearthstone: ActorRef = system.actorOf(Props(new Hearthstone(system, controller, config, screenScraper, mouseClicker)), "hearthStone")
+  lazy val gameStatus: ActorRef = system.actorOf(Props(new GameStatus(system)), "gameStatus")
+  lazy val logFileReader = system.actorOf(Props(new LogFileReader(system, gameLogFile, gameStatus, controller)), "logFileReader")
+  lazy val gameLogFile = new File(config.getString("tph.game-log.file"))
+
 
   val ircHost = config.getString("tph.irc.host")
   val ircChannel = config.getString("tph.irc.channel")
@@ -30,6 +31,9 @@ object Main extends App {
 
   if (!testMode) {
     controller ! "init"
+    ircLogic ! "Start Game"
+    ircLogic ! "Turn Start"
+    gameStatus ! "Display Status"
   }
 
   //TEST MODE
