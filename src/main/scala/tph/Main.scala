@@ -1,9 +1,11 @@
 package tph
 
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
+import tph.IrcMessages.ChangeMenu
 
 /**
   * Created by rconaway on 2/12/16.
@@ -31,9 +33,12 @@ object Main extends App {
 
   if (!testMode) {
     controller ! "init"
+    TimeUnit.SECONDS.sleep(15)
+    controller ! ChangeMenu("playMenu", "inGame")
     ircLogic ! "Start Game"
+    ircLogic ! "Skip Mulligan"
     ircLogic ! "Turn Start"
-    gameStatus ! "Display Status"
+   // gameStatus ! "Display Status"
   }
 
   //TEST MODE

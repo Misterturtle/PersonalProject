@@ -6,7 +6,8 @@ import akka.actor._
 import akka.event.LoggingReceive
 import akka.pattern.ask
 import akka.util.Timeout
-import tph.Controller.ChangeMenu
+//import tph.Controller.ChangeMenu
+import tph.IrcMessages.ChangeMenu
 import tph.LogFileEvents._
 
 import scala.concurrent.Await
@@ -17,17 +18,11 @@ object Controller {
 
   trait Message
   object Start extends Message
-
-  case class ChangeMenu(previousMenu: String, changeToMenu: String)
-
-
-
-
 }
 
 class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: ActorRef, ircLogic: ActorRef) extends Actor with ActorLogging {
 
-  var currentMenu = ""
+  var currentMenu = "mainMenu"
   var previousMenu = ""
 
   override def receive: Receive = LoggingReceive({
@@ -35,13 +30,26 @@ class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: Acto
     case "init" => // Entry point to start everything
       hearthstone ! "Start"
       logFileReader ! "LogFileReader.start"
-      ircLogic ! "Activate"
+      ircLogic ! "Start"
 
     case ChangeMenu(pastMenu, changeToMenu) =>
-      if (pastMenu == previousMenu)
+      if (pastMenu == currentMenu) {
         currentMenu = changeToMenu
-      if (pastMenu != previousMenu)
-        throw new IllegalArgumentException
+        previousMenu = pastMenu
+      }
+
+      //Test Purposes
+        if(previousMenu == "")
+          {
+            currentMenu = changeToMenu
+            previousMenu = pastMenu
+          }
+
+      else throw new IllegalArgumentException
+
+      ircLogic ! ChangeMenu(pastMenu, changeToMenu)
+      IrcBot.previousMenu = pastMenu
+      IrcBot.currentMenu = changeToMenu
 
     case "CurrentMenu" =>
       sender ! currentMenu
@@ -50,6 +58,10 @@ class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: Acto
       ircLogic ! "Start Game"
     case "Game Over" =>
       ircLogic ! "Game Over"
+    case "Turn Start" =>
+      ircLogic ! "Turn Start"
+    case "Turn End"=>
+      ircLogic ! "Turn End"
 
     // Messages from LogFileReader
     case DiscoverOption(option) =>

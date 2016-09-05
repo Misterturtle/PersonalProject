@@ -5,6 +5,7 @@ import java.io._
 import akka.actor.{Actor, ActorRef, ActorSystem}
 import akka.pattern.ask
 import akka.util.Timeout
+import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -64,6 +65,9 @@ object LogFileReader {
     """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=SHOW_ENTITY entity=\[id=\d+ cardId=.+ name=\[id=\d+ cardId= type=INVALID zone=DECK zonePos=0 player=\d+\]\] tags=System.Collections.Generic.List`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[id=\d+ cardId= type=INVALID zone=DECK zonePos=0 player=\d+\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=""".r
   val MULLIGAN_START = "[Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=STEP value=BEGIN_MULLIGAN"
   val DISCOVER_OPTION = """\[Power\] GameState.DebugPrintEntityChoices\(\) -   Entities\[(\d+)\]=\[name=.+ id=\d+ zone=SETASIDE zonePos=0 cardId=.+ player=\d+\]""".r
+  val TURN_START = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=(.+) tag=CURRENT_PLAYER value=1""".r
+  val TURN_END = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=(.+) tag=CURRENT_PLAYER value=0""".r
+
 
   //Controller Strings
 
@@ -95,6 +99,7 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
   var readerIdle = true
   val reader = new BufferedReader(new FileReader(file))
   val writer = new PrintWriter(new FileWriter("debug.log"))
+  val config = ConfigFactory.load()
 
   def receive = {
     case START => poll()
@@ -188,7 +193,6 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
               log.info("Friendly Player: 2, Enemy Player: 1")
             }
             listener ! DefinePlayers(friendlyPlayerID.toInt)
-            controller ! "Start Game"
 
           case CARD_PLAYED(name, id, dstPos, player) =>
             log.info("Card Played: " + line)
@@ -228,6 +232,12 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
           case MULLIGAN_OPTION() =>
             controller ! "NewMulliganOption"
 
+          case TURN_START(entity) if entity == config.getString("tph.hearthstone.player") =>
+            controller ! "Turn Start"
+
+          case TURN_END(entity) if entity == config.getString("tph.hearthstone.player") =>
+            controller ! "Turn End"
+
 
           //Debug Events
           case "DEBUGPOINT" =>
@@ -237,10 +247,9 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
             text match {
 
               case TAG_CHANGE(entity, tag, value) if source == "GameState" && entity == "GameEntity" && tag == "TURN" =>
-
                 listener ! TurnStartEvent(value.toInt)
 
-              case TAG_CHANGE(entity, tag, value) if entity == "GameEntity" && value == "FINAL_GAMEOVER" =>
+              case TAG_CHANGE(entity, tag, value) if entity == "GameEntity" && value == "FINAL_GAMEOVER" && tag == "STEP" =>
                 listener ! GameOver()
                 controller ! "Game Over"
 
@@ -265,7 +274,7 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
 
           case FILE_NAME() => // ignore
           case EMPTY_LINE() => // ignore
-          case x => listener ! ("??? " + x)
+          case x =>
         }
       }
   system.scheduler.scheduleOnce(100.millis, this.self, POLL)}

@@ -5,15 +5,18 @@ import java.io.{File, InputStream}
 import java.util.concurrent._
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem}
+import akka.event.LoggingReceive
 import akka.pattern.ask
 import akka.util.Timeout
 import autoitx4java.AutoItX
 import com.jacob.com.LibraryLoader
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.commons.io.{FileUtils, IOUtils}
+//import tph.Controller.ChangeMenu
 import tph.IrcMessages._
 import tph.research.PixelDataBase._
 
+import scala.collection.mutable
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
@@ -22,6 +25,9 @@ import scala.concurrent.duration._
 
 class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = ConfigFactory.load(), scraper: ScreenScraper, clicker: MouseClicker) extends Actor with ActorLogging {
   val TITLE = "Hearthstone"
+  var currentMenu = "mainMenu"
+  var previousMenu = ""
+
   val transformMap = Map[Int, String](1 -> "One", 2 -> "Two", 3 -> "Three", 4 -> "Four", 5 -> "Five", 6 -> "Six", 7 -> "Seven", 8 -> "Eight", 9 -> "Nine", 10 -> "Ten")
 
 
@@ -37,9 +43,21 @@ class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = Co
   val ax = new AutoItX()
 
 
-  def receive = {
+  override def receive: Receive = LoggingReceive({
 
     case "Start" => initialize()
+    case "Game Over" =>
+      TimeUnit.SECONDS.sleep(15)
+      //Click anywhere
+      clicker.Click(emoteMenu.clickLocations("greetings").position)
+      TimeUnit.SECONDS.sleep(1)
+      clicker.Click(emoteMenu.clickLocations("greetings").position)
+      TimeUnit.SECONDS.sleep(1)
+      clicker.Click(emoteMenu.clickLocations("greetings").position)
+      TimeUnit.SECONDS.sleep(1)
+      clicker.Click(emoteMenu.clickLocations("greetings").position)
+
+
 
 
 
@@ -74,10 +92,10 @@ class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = Co
       TimeUnit.MILLISECONDS.sleep(50)
       clicker.Click(emoteMenu.clickLocations("threaten").position)
 
-    case (Concede(vote)) =>
+    case (Concede()) =>
       clicker.Click(inGame.clickLocations("gameOptions").position)
       TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("concede").position)
+      clicker.Click(inGame.clickLocations("concedeButton").position)
 
     case (Discover(option: Int)) =>
       clicker.Click(inGame.clickLocations("discoverCard" + transformMap(option)).position)
@@ -161,7 +179,7 @@ class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = Co
       clicker.Click(inGame.clickLocations("myFace").position)
 
 
-    case (CardPlayWIthEnemyFaceTarget(card: Int)) =>
+    case (CardPlayWithEnemyFaceTarget(card: Int)) =>
       val currentGameStatus = GetGameStatus()
       val cardsInHand = currentGameStatus(0).hand.length
       clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
@@ -237,7 +255,104 @@ class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = Co
       }
       TimeUnit.MILLISECONDS.sleep(50)
       clicker.Click(inGame.clickLocations("mulliganConfirm").position)
-  }
+
+    //-------------MENU CASES----------------
+    //Multi Menu
+    case  Back(menu:String) =>
+
+      if(menu == "playMenu"){
+        clicker.Click(playMenu.clickLocations("backButton").position)
+        ChangeMenu("playMenu", "mainMenu")
+      }
+
+      //Most likely removing due to only subscribers accessing collections
+//      if(menu == "collectionMenu"){
+//        clicker.Click(playMenu.clickLocations("backButton").position)
+//        ChangeMenu("collectionMenu", previousMenu)
+//      }
+
+
+    case  Play(menu:String) =>
+      if(menu == "mainMenu"){
+        clicker.Click(mainMenu.clickLocations("play").position)
+        ChangeMenu("mainMenu", "playMenu")
+      }
+
+      if(menu == "playMenu"){
+        clicker.Click(playMenu.clickLocations("play").position)
+        ChangeMenu("playMenu", "inGame")
+        controller ! "Start Game"
+      }
+
+
+      // Most likely removing due to only subscribers accessing colletions
+//
+//    case  Collection(menu:String) =>
+//      if(menu == "mainMenu"){
+//        clicker.Click(mainMenu.clickLocations("myCollection").position)
+//        ChangeMenu("mainMenu", "playMenu")
+//      }
+//
+//      if(menu == "playMenu") {
+//        clicker.Click(playMenu.clickLocations("myCollection").position)
+//        ChangeMenu("playMenu", "inGame")
+//      }
+
+
+
+
+    //Main Menu
+
+
+    case  Shop() =>
+      clicker.Click(mainMenu.clickLocations("shop").position)
+      ChangeMenu("mainMenu", "shopMenu")
+
+    case  OpenPacks()=>
+      clicker.Click(mainMenu.clickLocations(OPEN_PACKS).position)
+      ChangeMenu("mainMenu", "openPackMenu")
+
+    case QuestLog()=>
+      clicker.Click(mainMenu.clickLocations(QUEST_LOG).position)
+      ChangeMenu("mainMenu", "questMenu")
+
+
+
+      //Play Menu
+      case Casual()=>
+        clicker.Click(playMenu.clickLocations(CASUAL).position)
+
+      case Ranked()=>
+        clicker.Click(playMenu.clickLocations(RANKED).position)
+
+      case Deck(deckNumber:Int)=>
+        val transMap = mutable.Map[Int, String](1->"first", 2->"second",3->"third",4->"fourth",5->"fifth",6->"sixth",7->"seventh",8->"eighth",9->"ninth")
+        clicker.Click(playMenu.clickLocations(transMap(deckNumber)+"Deck").position)
+
+      case FirstPage()=>
+        clicker.Click(playMenu.clickLocations(PREVIOUS_PAGE).position)
+
+      case SecondPage()=>
+        clicker.Click(playMenu.clickLocations(NEXT_PAGE).position)
+
+
+
+    //Collection Menu
+
+
+    //Quest Menu
+    case Quest(number) =>
+      clicker.Click(questMenu.clickLocations("quest"+transformMap(number)).position)
+    case Back(menu) =>
+      clicker.Click(questMenu.clickLocations("backButton").position)
+      ChangeMenu("questMenu", "mainMenu")
+
+
+
+
+
+
+  })
 
 
   def initialize(): Unit = {
@@ -258,6 +373,13 @@ class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = Co
     else return result.asInstanceOf[Array[Player]]
   }
 
+  def ChangeMenu(pastMenu:String, nextMenu:String): Unit ={
 
-  //def clickEndTurn(): Unit =  ax.mouseClick("main", 1507, 495 )
+    currentMenu = nextMenu
+    previousMenu = pastMenu
+    controller ! tph.IrcMessages.ChangeMenu(pastMenu, nextMenu)
+
+  }
+
+
 }

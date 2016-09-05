@@ -32,9 +32,10 @@
     <!--<logger name="net.hearthstats" level="INFO"></logger>-->
 
     <!--<logger name="net.hearthstats.video" level="INFO"></logger>-->
+    <logger name="tph.LogFileReader" level="WARN"></logger>
+    <logger name="tph.GameStatus" level="WARN"></logger>
 
-
-    <root level="">
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>

@@ -565,8 +565,7 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
           sender ! array
 
 
-        case x: String => {
-      log.debug("GameStatus: " + x)
+        case x => {
     }
 
     case PrintState(fileName) =>

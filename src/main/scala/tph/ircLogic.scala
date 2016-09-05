@@ -1,14 +1,14 @@
+//What am I currently working on?
+//Current Thought: Working on adjusting votes. Left a line red.
 
-//Duplicate votes??
 
-//45 second vote time
-//Different timing for mulligan?
-// How are discovers going to work???
+//Problem: How will I balance the amount of votes required to execute a chaos mode, to execute a Hurry. How to balance numbers of moves executed?
+//Solution: Have a log output of tallyMap as votes get executed. This will give me more data to see how drastic 1st and 2nd votes are.
 
-//Theory crafting - Ordered mode - 45 second vote time
-//Allow hurry after bind? Example: warlock !hero power, !bind, !hurry
-//Maybe have a !order to get around taunts etc? Doesn't affect vote influence
-//Maybe have temporary decision? Tally votes and then look for that vote as the 2nd part of a bind. Increase 1st part if so and retally.
+
+//Problem: Multiple vote entries for a single vote on a single sender?
+
+//Problem: when adding to bindMap, it should have a break() at the end that gets trimmed and replaced every time
 
 //Theory crafting - Chaos is single decisions.
 //Chaos Mode checks every 2 seconds for if highest vote is VOTE_PERCENTAGE(200%?)(double) ahead of 2nd vote.
@@ -16,15 +16,16 @@
 //Only one vote per person allowed in chaos mode
 
 
-
-
-
-
 package tph
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.{Actor, ActorRef, ActorSystem}
+import akka.event.LoggingReceive
 import akka.pattern.ask
 import akka.util.Timeout
+
+//import tph.Controller.ChangeMenu
 import tph.IrcMessages._
 import tph.LogFileEvents.DiscoverOption
 
@@ -43,29 +44,36 @@ object ircLogic {
 
   val TURNSTART = "Turn Start"
   val TURNEND = "Turn End"
+  val MENU_DECIDE = "Menu Decide"
   val DECIDE = "Decide"
   val CHECK = "Check"
   val STARTGAME = "Start Game"
   val GAMEOVER = "Game Over"
   val MULLIGAN = "Mulligan"
   val MULLIGAN_OPTION = "NewMulliganOption"
-  val MULLIGAN_DECIDE = "MulliganDecide"
   val DELAY_AMOUNT = 10000
+  val VOTE_DIFFERENCE_FACTOR = 1.3
+  val TEMP_DECISION_VOTE_ADJUSTMENT_FACTOR = 1.5
+  val CONCEDE_PERCENTAGE = .8
+  val HURRY_VOTER_PERCENTAGE = .7
 
-  var currentMenu = "MainMenu"
+
+  var currentMenu = "mainMenu"
   var previousMenu = ""
 
+  var gameMode = "ordered"
   var inGame = false
   var myTurn = false
   var hisTurn = false
   var active = false
-
-  var waitSpeed = false
   var hurrySpeed = false
-  var skipDecide = false
+  var doneWithMulligan = false
 
   //Just to create it
-  var previousDecision = Wait()
+  var previousDecision: Any = None
+
+  case class PreviousDecision()
+
 }
 
 
@@ -74,6 +82,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   //Input is organized into Arrays?
   import ircLogic._
 
+
+  //Voter Maps and Count Maps
+  //Menus
   val mainMenuVoterMap = mutable.Map[String, Any]()
   val mainMenuVoteCount = mutable.Map[Any, Int]()
   val playMenuVoterMap = mutable.Map[String, Any]()
@@ -82,52 +93,67 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   val collectionMenuVoteCount = mutable.Map[Any, Int]()
   val enchantMenuVoterMap = mutable.Map[String, Any]()
   val enchantMenuVoteCount = mutable.Map[Any, Int]()
+  val questMenuVoterMap = mutable.Map[String, Any]()
+  val questMenuVoteCount = mutable.Map[Any, Int]()
 
+
+  //In Game
   val voterMap = mutable.Map[String, ListBuffer[Any]]()
   val bindMap = mutable.Map[String, ListBuffer[Any]]()
   var tallyMap = mutable.Map[Any, Int]()
-  val numberOfVote = new ListBuffer[Int]
-
-  val voteCounts = mutable.Map[Any, Int]()
   val emoteCounts = mutable.Map[Any, Int]()
   val emoteVoterMap = mutable.Map[String, Any]()
   val speedCounts = mutable.Map[Any, Int]()
   val speedVoterMap = mutable.Map[String, Any]()
-  val concedeCounts = mutable.Map[Any, Int]()
   val concedeVoterMap = mutable.Map[String, Any]()
-  var averageVoterList: ListBuffer[Int] = new ListBuffer[Int]
-  var averageVoterAmount = 0
-  var possibleDiscoverOptions: ListBuffer[Int] = new ListBuffer[Int]
-
-  var savedGameStatus = new Array[Player](2)
-  var mulliganOptions = 0
-  var mulligan = false
   var mulliganVoteMap = mutable.Map[String, Array[Int]]()
   var mulliganCount = mutable.Map[Array[Int], Int]()
 
 
-  def receive = {
+  //IrcLogic Variables
+  var averageVoterList: ListBuffer[Int] = new ListBuffer[Int]
+  var averageVoterAmount = 0
+  var possibleDiscoverOptions: ListBuffer[Int] = new ListBuffer[Int]
+  var savedGameStatus = new Array[Player](2)
+  var mulliganOptions = 0
+  var mulligan = false
+
+  override def receive: Receive = LoggingReceive({
     case "Activate" => active = true
     case "Start" => {
       active = true
-      system.scheduler.scheduleOnce(10000.milli, this.self, DECIDE)
+      system.scheduler.scheduleOnce(10000.milli, this.self, MENU_DECIDE)
     }
     case STARTGAME => StartGame()
+    case GAMEOVER => if(inGame) GameOver()
+    case ChangeMenu(pastMenu, changeToMenu) =>
+      previousMenu = currentMenu
+      currentMenu = changeToMenu
+
+      //TEST PURPOSES:
+    case "Skip Mulligan" => doneWithMulligan = true
+
+
+
+    case CHECK => if(inGame) Check()
+    case MULLIGAN => if(inGame)Mulligan()
+    case MULLIGAN_OPTION => mulliganOptions = mulliganOptions + 1
+
 
     case DiscoverOption(option: Int) =>
       possibleDiscoverOptions.append(option)
 
-
     case x => {
 
+
       if (active) {
-        if (currentMenu == "MainMenu") {
+        if (currentMenu == "mainMenu") {
           x match {
-            case DECIDE =>
+            case MENU_DECIDE =>
               SimpleDecide(mainMenuVoterMap, mainMenuVoteCount)
 
-            case (Play(), sender: String) =>
-              mainMenuVoterMap(sender) = Play()
+            case (Play(thisMenu), sender: String) =>
+              mainMenuVoterMap(sender) = Play(thisMenu)
 
             case (OpenPacks(), sender: String) =>
               mainMenuVoterMap(sender) = OpenPacks()
@@ -135,39 +161,55 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
             case (Shop(), sender: String) =>
               mainMenuVoterMap(sender) = Shop()
 
-            case (Collection(), sender: String) =>
-              mainMenuVoterMap(sender) = Collection()
+            case (QuestLog(), sender: String) =>
+              mainMenuVoterMap(sender) = QuestLog()
+
+            case (Collection(thisMenu), sender: String) =>
+              mainMenuVoterMap(sender) = Collection(thisMenu)
+
+            case _ =>
           }
         }
 
-        if (currentMenu == "PlayMenu") {
+        if (currentMenu == "playMenu") {
           x match {
-            case DECIDE =>
+            case MENU_DECIDE =>
               SimpleDecide(playMenuVoterMap, playMenuVoteCount)
+
 
             case (Casual(), sender: String) =>
               playMenuVoterMap(sender) = Casual()
             case (Ranked(), sender: String) =>
               playMenuVoterMap(sender) = Ranked()
-            case (Play(), sender: String) =>
-              playMenuVoterMap(sender) = Play()
-            case (Collection(), sender: String) =>
-              playMenuVoterMap(sender) = Collection()
-            case (Back(), sender: String) =>
-              playMenuVoterMap(sender) = Back()
+            case (Play(thisMenu), sender: String) =>
+              playMenuVoterMap(sender) = Play(thisMenu)
+            case (Collection(thisMenu), sender: String) =>
+              playMenuVoterMap(sender) = Collection(thisMenu)
+            case (Back(thisMenu), sender: String) =>
+              playMenuVoterMap(sender) = Back(thisMenu)
             case (Deck(deckNumber), sender: String) =>
               playMenuVoterMap(sender) = Deck(deckNumber)
             case (FirstPage(), sender: String) =>
               playMenuVoterMap(sender) = FirstPage()
             case (SecondPage(), sender: String) =>
               playMenuVoterMap(sender) = SecondPage()
+            case _ =>
           }
         }
 
-        if (currentMenu == "CollectionMenu") {
+        if (currentMenu == "questMenu") {
+          x match {
+            case MENU_DECIDE =>
+              SimpleDecide(questMenuVoterMap, questMenuVoteCount)
 
-
+            case (Quest(number: Int), sender: String) =>
+              questMenuVoterMap(sender) = Quest(number)
+            case (Back(menu), sender: String) =>
+              questMenuVoterMap(sender) = Back(menu)
+          }
         }
+
+
 
         if (inGame) {
           x match {
@@ -190,29 +232,33 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
             case (Threaten(), sender: String) =>
               EmoteVoteEntry(Threaten(), sender)
 
-            case (Concede(vote), sender: String) if (vote == "yes" || vote == "no") =>
-              ConcedeVoteEntry(Concede(vote), sender)
+            case (Concede(), sender: String) =>
+              concedeVoterMap(sender) = Concede()
 
-            case GAMEOVER => GameOver()
 
-            case TURNSTART => TurnStart()
+
+            case TURNSTART => if (inGame) TurnStart()
             case TURNEND => TurnEnd()
             case DECIDE => Decide()
-            case CHECK => Check()
-            case MULLIGAN => Mulligan()
-            case MULLIGAN_OPTION => mulliganOptions = mulliganOptions + 1
+
+
 
             case _ =>
 
           }
 
+          if (mulligan) {
+            x match {
+              case (MulliganVote(vote), sender: String) =>
+                mulliganVoteMap(sender) = vote
 
+              case _ =>
+            }
+          }
 
           if (myTurn) {
             x match {
-
-
-              case Command(builtCommand: Command) =>
+              case CommandVote(builtCommand) => {
                 builtCommand.name match {
                   case "Discover" if (builtCommand.target >= 1 && builtCommand.target <= possibleDiscoverOptions.size) =>
                     VoteEntry(Discover(builtCommand.target), builtCommand.sender)
@@ -251,8 +297,8 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                     VoteEntry(CardPlayWithEnemyBoardTarget(builtCommand.card: Int, builtCommand.target: Int), builtCommand.sender)
                   case "CardPlayWithFriendlyFaceTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length) =>
                     VoteEntry(CardPlayWithFriendlyFaceTarget(builtCommand.card: Int), builtCommand.sender)
-                  case "CardPlayWIthEnemyFaceTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length) =>
-                    VoteEntry(CardPlayWIthEnemyFaceTarget(builtCommand.card: Int), builtCommand.sender)
+                  case "CardPlayWithEnemyFaceTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length) =>
+                    VoteEntry(CardPlayWithEnemyFaceTarget(builtCommand.card: Int), builtCommand.sender)
 
 
                   case "HeroPower" =>
@@ -282,53 +328,56 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
                   case _ =>
                 }
+              }
 
-                if (mulligan)
-                  x match {
-                    case (MulliganVote(vote), sender: String) =>
-                      mulliganVoteMap(sender) = vote
-                  }
+
 
               //Always Type
-              case (Wait(), sender: String) =>
-                SpeedVoteEntry(Wait(), sender)
-
               case (Hurry(), sender: String) =>
-                SpeedVoteEntry(Hurry(), sender)
+                VoteEntry(Hurry(), sender)
 
               case (EndTurn(), sender: String) =>
                 VoteEntry(EndTurn(), sender)
 
               case (Bind(), sender: String) =>
                 VoteEntry(Bind(), sender)
+              case _ =>
 
-              case (Cancel(), sender: String) =>
-                VoteEntry(Cancel(), sender)
             }
           }
         }
       }
     }
-  }
+  })
 
 
   def StartGame(): Unit = {
     inGame = true
-    system.scheduler.scheduleOnce(1000.milli, this.self, CHECK)
+    mulliganOptions = 0
+    system.scheduler.scheduleOnce(3000.milli, this.self, CHECK)
   }
 
   def GameOver(): Unit = {
-    inGame = false
-    myTurn = false
-    hisTurn = false
-    currentMenu = previousMenu
+    if (inGame) {
+      inGame = false
+      myTurn = false
+      hisTurn = false
+      if (previousMenu != "") {
+        hearthstone ! ChangeMenu(currentMenu, previousMenu)
+      }
+      system.scheduler.scheduleOnce(45.seconds, this.self, MENU_DECIDE)
+      hearthstone ! "Game Over"
+    }
   }
 
   def TurnStart(): Unit = {
-    GetGameStatus()
-    myTurn = true
-    system.scheduler.scheduleOnce(45000.milli, this.self, DECIDE)
 
+
+
+    GetGameStatus()
+    if (doneWithMulligan)
+      system.scheduler.scheduleOnce(45.seconds, this.self, DECIDE)
+    myTurn = true
   }
 
   def TurnEnd(): Unit = {
@@ -337,107 +386,759 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
 
   def Decide(): Unit = {
-    if (skipDecide) {
-      skipDecide = false
-    }
-    else {
-      if (myTurn) {
-        if (hurrySpeed) {
+    //If in an ordered game:
+    //Set active = false to not take anymore votes
+    //Set active = true at end of decide
+    //Sends as many decisions to hearthstone as averageAmountOfMoves
+    //Calculates decision
+    //Removes previousDecision from bindMap (Must be removed only AFTER calculation)
+    //Sends hearthstone the decision
+    //Removes old decision from voterMap
+    //After all decisions made, clears maps associated with normal votes
+
+
+    if (myTurn) {
+      if (gameMode == "ordered") {
+        active = false
+        for (a <- 0 until CalculateAmountOfMoves()) {
           val decision = CalculateDecision()
+          if(previousDecision != None){
+          RemoveBindVote("all", previousDecision)
+          tallyMap(previousDecision) = 0}
           hearthstone ! decision
-          hurrySpeed = false
-          skipDecide = true
+          RemoveNormalVote("all", decision)
+          previousDecision = decision
+          TimeUnit.SECONDS.sleep(2)
+          AdjustVotes()
+          tallyMap.clear()
         }
-        if (waitSpeed) {
-          system.scheduler.scheduleOnce(DELAY_AMOUNT.milli, this.self, DECIDE)
-          waitSpeed = false
-        }
-        if (!hurrySpeed && !waitSpeed) {
-          val decision = CalculateDecision()
-          hearthstone ! decision
-          GetGameStatus()
-          system.scheduler.scheduleOnce(10000.milli, this.self, DECIDE)
-        }
+        voterMap.clear()
+        bindMap.clear()
+        tallyMap.clear()
+        previousDecision = None
+        self ! "Activate"
+
+        if(!hurrySpeed)
+          hearthstone ! EndTurn()
+        hurrySpeed = false
       }
     }
   }
 
   def CalculateAmountOfMoves(): Int = {
+    //Find any voterMap List that ends in EndTurn() or Hurry().
+    //Note its size (amount of votes)
+    //Find any bindMap with the same sender and count the number of Breaks(), which should indicate number of bind blocks
+    //Add all of it together and append to numberOfVotes
+    //Once done looking through voterMap, average the list and return result
+
+    val numberOfVotes = new ListBuffer[Int]
+
     voterMap foreach {
-      case (senders, voteLists) =>
-        if (voteLists.last == EndTurn() || voteLists.last == Hurry())
-          numberOfVote.append(voteLists.size)
+      case (sender, voteLists) =>
+        var moves = 0
+          moves = voteLists.size
+
+
+          if (bindMap.isDefinedAt(sender)) {
+            val bindList = bindMap(sender).count(_ == Break())
+            moves = moves + bindList
+          }
+
+        numberOfVotes.append(moves)
     }
 
-    val totalVotes = numberOfVote.sum
-    val totalPeople = numberOfVote.size
-    val averageNumberOfVotes = totalVotes / totalPeople
 
-    return averageNumberOfVotes
-
+    val totalVotes = numberOfVotes.sum
+    val totalPeople = numberOfVotes.size
+    if (totalPeople != 0) {
+      val averageNumberOfVotes = totalVotes / totalPeople
+      return averageNumberOfVotes
+    }
+    else return 0
   }
 
   def AdjustVotes(): Unit = {
+
     val oldGameStatus = savedGameStatus
+    val myOldHand = oldGameStatus(0).hand
+    val myOldBoard = oldGameStatus(0).board
+    val hisOldBoard = oldGameStatus(1).board
     GetGameStatus()
     val newGameStatus = savedGameStatus
-    //unfold oldHand
-    //unfold myOldBoard
-    //unfold hisNewBoard
-    //unfold newHand
-    //unfold myNewBoard
-    //unfold HisNewBoard
-
-    //Desired Function: Adjust VoteEntry's for when a minion dies or a card is played
-    //Solution: Compare old and new, detect changes in card ID's.
-
-    //Maybe adjust votes in voterMap but leave binded votes (besides first) alone
-    //Make binded cards worth 0?
-    //Make binded leads worth more?
-
-    //Map original position to ID's?
-    //Map changed positions to ID's?
-    //Non-binded votes will find their ID after tally and adjust
-
-    //Maybe allow !future
+    val myNewHand = newGameStatus(0).hand
+    val myNewBoard = newGameStatus(0).board
+    val hisNewBoard = newGameStatus(1).board
 
 
+
+    //For each element in myOldHand, map the oldPos to the newPos if myNewHand contains the same id
+    //If it does not contain the same id, -1 will be mapped
+    val myChangedHandMap = mutable.Map[Int, Int]()
+    myOldHand foreach {
+      case x =>
+        val index = myOldHand.indexWhere(_.id == x.id)
+        if (myNewHand.isDefinedAt(index)) {
+          if (myOldHand(index).id != myNewHand(index).id)
+            myChangedHandMap(myOldHand(index).handPosition) = myNewHand.find(_.id == myOldHand(index).id).getOrElse(new Card).handPosition
+        }
+    }
+
+    //For each changed card, search voterMap for the vote and reassign the modified position
+    myChangedHandMap foreach {
+      case (oldPos, newPos) => {
+        //If myNewHand does contain the card
+        if (newPos != -1) {
+          voterMap foreach {
+            case (sender, voteList) =>
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != previousDecision) {
+                    vote match {
+
+                      //Normal Turn Play Type
+                      case CardPlay(card) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlay(newPos)
+                      case CardPlayWithPosition(card, position) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithPosition(newPos, position)
+                      case CardPlayWithFriendlyBoardTarget(card, target) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyBoardTarget(newPos, target)
+                      case CardPlayWithEnemyBoardTarget(card, target) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyBoardTarget(newPos, target)
+                      case CardPlayWithFriendlyFaceTarget(card) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyFaceTarget(newPos)
+                      case CardPlayWithEnemyFaceTarget(card) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyFaceTarget(newPos)
+
+                      //Batlecry Play Type
+                      case CardPlayWithFriendlyOption(card, boardTarget) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyOption(newPos, boardTarget)
+                      case CardPlayWithFriendlyFaceOption(card) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyFaceOption(newPos)
+                      case CardPlayWithEnemyOption(card, boardTarget) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyOption(newPos, boardTarget)
+                      case CardPlayWithEnemyFaceOption(card) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyFaceOption(newPos)
+
+                      //Battlecry and Position Type
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(newPos, target, position)
+                      case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(newPos, position)
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(newPos, target, position)
+                      case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(newPos, position)
+                      case _ => println("Unexpected vote: " + vote)
+                    }
+                  }
+                  else voterMap(sender).remove(index)
+              }
+          }
+
+          //If vote follows a PreviousDecision() but is before a Break(), do not adjust votes
+
+          bindMap foreach {
+            case (sender, voteList) =>
+              var bindActive = false
+              voteList foreach {
+                case vote =>
+                  val index = bindMap(sender).indexWhere(_ == vote)
+                  if (vote == Break()) {
+                    bindActive = false
+                  }
+                  if (vote != previousDecision) {
+                    if (!bindActive) {
+                      vote match {
+                        case PreviousDecision() =>
+                          bindMap(sender).remove(index)
+
+                        //Normal Turn Play Type
+                        case CardPlay(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithPosition(card, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyBoardTarget(card, target) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyBoardTarget(card, target) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyFaceTarget(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyFaceTarget(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+
+                        //Batlecry Play Type
+                        case CardPlayWithFriendlyOption(card, boardTarget) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyFaceOption(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyOption(card, boardTarget) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyFaceOption(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+
+                        //Battlecry and Position Type
+                        case CardPlayWithFriendlyOptionWithPosition(card, target, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyOptionWithPosition(card, target, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+
+                        case _ => println("Unexpected vote: " + vote)
+                      }
+                    }
+                  }
+                  else {
+                    bindMap(sender)(index) = PreviousDecision()
+                    bindActive = true
+                  }
+
+              }
+          }
+        }
+
+
+        //If myNewHand does not contain the card anymore
+        if (newPos == -1) {
+          voterMap foreach {
+            case (sender, voteList) =>
+              voteList foreach {
+                case vote =>
+                  val index = voterMap(sender).indexWhere(_ == vote)
+                  if (vote != previousDecision) {
+                    vote match {
+                      case CardPlay(card) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithPosition(card, position) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithFriendlyBoardTarget(card, target) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithEnemyBoardTarget(card, target) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithFriendlyFaceTarget(card) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithEnemyFaceTarget(card) if card == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Batlecry Play Type
+                      case CardPlayWithFriendlyOption(card, boardTarget) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithFriendlyFaceOption(card) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithEnemyOption(card, boardTarget) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithEnemyFaceOption(card) if card == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Battlecry and Position Type
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
+                        voterMap(sender).remove(index)
+                      case _ => println("Unexpected vote: " + vote)
+                    }
+                  }
+                  else voterMap(sender).remove(index)
+              }
+          }
+
+          bindMap foreach {
+            case (sender, voteList) =>
+              var bindActive = false
+              voteList foreach {
+                case vote =>
+                  val index = bindMap(sender).indexWhere(_ == vote)
+                  if (vote == Break()) {
+                    bindActive = false
+                  }
+                  if (vote != previousDecision) {
+                    if (!bindActive) {
+                      vote match {
+                        case PreviousDecision() =>
+                          bindMap(sender).remove(index)
+
+                        case CardPlay(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithPosition(card, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyBoardTarget(card, target) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyBoardTarget(card, target) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyFaceTarget(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyFaceTarget(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+
+                        //Batlecry Play Type
+                        case CardPlayWithFriendlyOption(card, boardTarget) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyFaceOption(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyOption(card, boardTarget) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyFaceOption(card) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+
+                        //Battlecry and Position Type
+                        case CardPlayWithFriendlyOptionWithPosition(card, target, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyOptionWithPosition(card, target, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
+                          RemoveBindVote(sender, vote)
+                        case _ => println("Unexpected vote: " + vote)
+
+                      }
+                    }
+                  }
+                  else {
+                    bindMap(sender)(index) = PreviousDecision()
+                    bindActive = true
+                  }
+              }
+          }
+        }
+      }
+
+
+        //For each element in myOldBoard, map the oldPos to the newPos if myNewBoard contains the same id
+        //If it does not contain the same id, -1 will be mapped
+        val myChangedBoardMap = mutable.Map[Int, Int]()
+        myOldBoard foreach {
+          case x =>
+            val index = myOldBoard.indexWhere(_.id == x.id)
+            if (myNewBoard.isDefinedAt(index)) {
+              if (myOldBoard(index).id != myNewBoard(index).id)
+                myChangedBoardMap(myOldBoard(index).handPosition) = myNewBoard.find(_.id == myOldBoard(index).id).getOrElse(new Card).handPosition
+            }
+        }
+
+        myChangedBoardMap foreach {
+          case (oldPos, newPos) => {
+            //If myNewBoard does contain the card
+            if (newPos != -1) {
+              voterMap foreach {
+                case (sender, voteList) =>
+                  voteList foreach {
+                    case vote =>
+                      val index = voteList.indexWhere(_ == vote)
+                      if (vote != previousDecision) {
+                        vote match {
+
+                          //Card Play Type
+                          case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
+
+                          //Battlecry Option with Position Type
+                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
+                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
+                            voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
+                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
+                          case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
+                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
+                          case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
+
+                          //Normal Turn Play Type
+                          case CardPlayWithPosition(card, position) if position == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithPosition(card, newPos)
+                          case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
+                          case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                            voterMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+                          //Attack Type
+                          case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                            voterMap(sender)(index) = NormalAttack(newPos, enemyPosition)
+                          case NormalAttackToFace(position) if position == oldPos =>
+                            voterMap(sender)(index) = NormalAttackToFace(newPos)
+                          case _ => println("Unexpected vote: " + vote)
+                        }
+                      }
+                      else voterMap(sender).remove(index)
+                  }
+              }
+
+              //Cycle through BindMap
+              bindMap foreach {
+                case (sender, voteList) =>
+                  var bindActive = false
+                  voteList foreach {
+                    case vote =>
+                      val index = bindMap(sender).indexWhere(_ == vote)
+
+                      if (vote == Break()) {
+                        bindActive = false
+                      }
+                      if (vote != previousDecision) {
+                        if (!bindActive) {
+
+                          vote match {
+                            case PreviousDecision() =>
+                              bindMap(sender).remove(index)
+
+
+                            //Card Play Type
+                            case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Battlecry Option with Position Type
+                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Normal Turn Play Type
+                            case CardPlayWithPosition(card, position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Attack Type
+                            case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case NormalAttackToFace(position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case _ => println("Unexpected vote: " + vote)
+                          }
+                        }
+                      }
+                      else {
+                        bindMap(sender)(index) = PreviousDecision()
+                        bindActive = true
+                      }
+                  }
+              }
+            }
+
+            //If myNewBoard does not contain the card
+            if (newPos == -1) {
+              voterMap foreach {
+                case (sender, voteList) =>
+                  voteList foreach {
+                    case vote =>
+                      val index = voteList.indexWhere(_ == vote)
+                      if (vote != previousDecision) {
+                        vote match {
+                          case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                            voterMap(sender).remove(index)
+
+                          //Battlecry Option with Position Type
+                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
+                            voterMap(sender).remove(index)
+
+                          //Normal Turn Play Type
+                          case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                            voterMap(sender).remove(index)
+                          case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                            voterMap(sender).remove(index)
+
+                          //Attack Type
+                          case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                            voterMap(sender).remove(index)
+                          case NormalAttackToFace(position) if position == oldPos =>
+                            voterMap(sender).remove(index)
+                          case _ => println("Unexpected vote: " + vote)
+                        }
+                      }
+                      else voterMap(sender).remove(index)
+                  }
+              }
+
+              bindMap foreach {
+                case (sender, voteList) =>
+                  var bindActive = false
+                  voteList foreach {
+                    case vote =>
+                      val index = bindMap(sender).indexWhere(_ == vote)
+                      if (vote == Break()) {
+                        bindActive = false
+                      }
+                      if (vote != previousDecision) {
+                        if (!bindActive) {
+                          vote match {
+
+                            case PreviousDecision() =>
+                              bindMap(sender).remove(index)
+
+                            case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Battlecry Option with Position Type
+                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Normal Turn Play Type
+                            case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Attack Type
+                            case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case NormalAttackToFace(position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case _ => println("Unexpected vote: " + vote)
+                          }
+                        }
+                      }
+                      else {
+                        bindMap(sender)(index) = PreviousDecision()
+                        bindActive = true
+                      }
+                  }
+
+              }
+            }
+          }
+        }
+
+
+
+        //For each element in hisOldBoard, map the oldPos to the newPos if hisNewBoard contains the same id
+        //If it does not contain the same id, -1 will be mapped
+        val hisChangedBoardMap = mutable.Map[Int, Int]()
+        hisOldBoard foreach {
+          case x =>
+            val index = hisOldBoard.indexWhere(_.id == x.id)
+            if (hisNewBoard.isDefinedAt(index)) {
+              if (hisOldBoard(index).id != hisNewBoard(index).id)
+                hisChangedBoardMap(hisOldBoard(index).handPosition) = hisNewBoard.find(_.id == hisOldBoard(index).id).getOrElse(new Card).handPosition
+            }
+        }
+
+
+        hisChangedBoardMap foreach {
+          case (oldPos, newPos) => {
+            //If hisNewBoard does contain the card
+            if (newPos != -1) {
+              voterMap foreach {
+                case (sender, voteList) =>
+                  voteList foreach {
+                    case vote =>
+                      val index = voteList.indexWhere(_ == vote)
+                      if (vote != previousDecision) {
+                        vote match {
+                          case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
+
+                          //Battlecry Option with Position Type
+                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
+
+                          //Normal Turn Play Type
+                          case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                            voterMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
+                          case HeroPowerWithEnemyTarget(target) =>
+                            voterMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+
+                          //Attack Type
+                          case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                            voterMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
+                          case FaceAttack(position) if position == oldPos =>
+                            voterMap(sender)(index) = FaceAttack(newPos)
+                          case _ => println("Unexpected vote: " + vote)
+                        }
+                      }
+                      else voterMap(sender).remove(index)
+                  }
+              }
+
+              bindMap foreach {
+                case (sender, voteList) =>
+                  var bindActive = false
+                  voteList foreach {
+                    case vote =>
+                      val index = bindMap(sender).indexWhere(_ == vote)
+                      if (vote == Break()) {
+                        bindActive = false
+                      }
+                      if (vote != previousDecision) {
+                        if (!bindActive) {
+                          vote match {
+                            case PreviousDecision() =>
+                              bindMap(sender).remove(index)
+                            case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Battlecry Option with Position Type
+                            case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Normal Turn Play Type
+                            case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case HeroPowerWithEnemyTarget(target) =>
+                              RemoveBindVote(sender, vote)
+
+
+                            //Attack Type
+                            case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case FaceAttack(position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case _ => println("Unexpected vote: " + vote)
+                          }
+                        }
+                      }
+                      else {
+                        bindMap(sender)(index) = PreviousDecision()
+                        bindActive = true
+                      }
+                  }
+              }
+
+            }
+          }
+
+            //If hisNewBoard does not contain the card anymore
+            if (newPos == -1) {
+              voterMap foreach {
+                case (sender, voteList) =>
+                  voteList foreach {
+                    case vote =>
+                      val index = voterMap(sender).indexWhere(_ == vote)
+                      if (vote != previousDecision) {
+                        vote match {
+                          case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                            voterMap(sender).remove(index)
+
+                          //Battlecry Option with Position Type
+                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                            voterMap(sender).remove(index)
+
+                          //Normal Turn Play Type
+                          case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                            voterMap(sender).remove(index)
+                          case HeroPowerWithEnemyTarget(target) =>
+                            voterMap(sender).remove(index)
+
+
+                          //Attack Type
+                          case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                            voterMap(sender).remove(index)
+                          case FaceAttack(position) if position == oldPos =>
+                            voterMap(sender).remove(index)
+                          case _ => println("Unexpected vote: " + vote)
+                        }
+                      }
+                      else voterMap(sender).remove(index)
+                  }
+              }
+
+              bindMap foreach {
+                case (sender, voteList) =>
+                  var bindActive = false
+                  voteList foreach {
+                    case vote =>
+                      val index = bindMap(sender).indexWhere(_ == vote)
+                      if (vote == Break()) {
+                        bindActive = false
+                      }
+                      if (vote != previousDecision) {
+                        if (!bindActive) {
+                          vote match {
+                            case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Battlecry Option with Position Type
+                            case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+
+                            //Normal Turn Play Type
+                            case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case HeroPowerWithEnemyTarget(target) =>
+                              RemoveBindVote(sender, vote)
+
+
+                            //Attack Type
+                            case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                              RemoveBindVote(sender, vote)
+                            case FaceAttack(position) if position == oldPos =>
+                              RemoveBindVote(sender, vote)
+                          }
+                        }
+                      }
+                      else {
+                        bindMap(sender)(index) = PreviousDecision()
+                        bindActive = true
+                      }
+                  }
+              }
+            }
+
+        }
+    }
   }
 
-  def CalculateDecision(): Any = {
-    active = false
-    for (i <- 0 until CalculateAmountOfMoves()) {
-      TallyVotes()
-      DecisionMaintenance()
-      val maxValue: Int = tallyMap.values.max
-      val decision = tallyMap(tallyMap.find(_._2 == maxValue).getOrElse(None, -2)._1)
 
+  def CalculateDecision(): Any = {
+    //Creates a temporary decision
+    //Finds that temporary decision in bindMap and adds 10 value for any vote before the temp decision (In order to encourage an associated previous move)
+    //Retallys and reports highest vote
+    //TallyVotes and return the max value
+
+
+    TallyVotes()
+    if (tallyMap.isDefinedAt(EndTurn())) {
+      tallyMap.remove(EndTurn())
+    }
+    if (tallyMap.nonEmpty) {
+      val tempMaxValue: Int = tallyMap.values.max
+      val tempDecision = tallyMap(tallyMap.find(_._2 == tempMaxValue).getOrElse(None, -2)._1)
+      bindMap foreach {
+        case (sender, voteList) =>
+          val index = voteList.indexWhere(_ == tempDecision)
+          if (voteList.isDefinedAt(index - 1)) {
+            tallyMap(voteList(index - 1)) = tallyMap(voteList(index - 1)) + 10
+          }
+      }
+      val maxValue = tallyMap.values.max
+      val decision = tallyMap.find(_._2 == tempMaxValue).getOrElse(None, -2)._1
 
       return decision
     }
+    else return None
   }
 
-  def DecisionMaintenance(): Unit = {
-
-    bindMap foreach {
-      case (sender, voteList) =>
-        val index = (voteList.indexWhere(_ == previousDecision))
-        if (index != -1)
-          voteList.remove(index)
-    }
-
-    voterMap foreach {
-      case (sender, voteList) =>
-        val index = (voteList.indexWhere(_ == previousDecision))
-        if (index != -1)
-          voteList.remove(index)
-    }
-
-    tallyMap(previousDecision) = 0
-
-  }
 
   def TallyVotes(): Unit = {
+    //Go through each voterMap list and assign 10 points to tallyMap for each vote
+    //Go through each bindMap list and assign 10 points to tallyMap for the first vote after every break.
+    //Assign 0 points to all other votes
+    //If a vote is equal to the previous decision, assign 20 points to the next vote.
+    //DecisionMaintenance() will remove any votes that == previous decision. (Instead of doing it in this method)
+
+
     voterMap foreach {
       case (key, value) =>
         value foreach {
@@ -446,78 +1147,40 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               tallyMap(vote) = tallyMap(vote) + 10
             else tallyMap(vote) = 10
         }
-
-        val voterMapBuffer = value
-        if (tallyMap.isDefinedAt())
-          tallyMap(value) = tallyMap(value) + 10
-        else tallyMap(value) = 10
     }
 
 
     bindMap foreach {
       case (key, list) =>
-        var currentBind = 0
-        var bindActive = false
 
         list foreach {
           case x =>
 
-            var index = list.indexWhere(_ == x)
+            val index = list.indexWhere(_ == x)
+            if(list.isDefinedAt(index+1)) {
+              val nextVote = list(index + 1)
 
-            if (x == Break()) {
-              currentBind = 0
-              bindActive = false
-            }
-
-            if (x == previousDecision) {
-              bindActive = true
-              currentBind = currentBind + 1
-            }
-
-            if (x != previousDecision && x != Break()) {
-              if (tallyMap.isDefinedAt(x)) {
-                if (!bindActive) {
-                  if (currentBind == 0)
-                    tallyMap(x) = tallyMap(x) + 10
-
-                  if (currentBind == 1)
-                    tallyMap(x) = tallyMap(x) + 5
-
-                  if (currentBind == 2)
-                    tallyMap(x) = tallyMap(x) + 5
-
-                  if (currentBind == 3)
-                    tallyMap(x) = tallyMap(x) + 2
+              if (x == Break()) {
+                if (tallyMap.isDefinedAt(x)) {
+                  tallyMap(nextVote) = tallyMap(nextVote) + 10
                 }
-
-
-                if (bindActive)
-                  tallyMap(x) == tallyMap(x) + 20
+                else tallyMap(nextVote) = 10
               }
 
-              if (!tallyMap.isDefinedAt(x)) {
-                if (!bindActive) {
 
-                  if (currentBind == 0)
-                    tallyMap(x) = 10
 
-                  if (currentBind == 1)
-                    tallyMap(x) = 5
-
-                  if (currentBind == 2)
-                    tallyMap(x) = 5
-
-                  if (currentBind == 3)
-                    tallyMap(x) = 2
+              if (x == previousDecision) {
+                if (tallyMap.isDefinedAt(x)) {
+                  tallyMap(nextVote) = tallyMap(nextVote) + 20
                 }
-                if (bindActive)
-                  tallyMap(x) = 20
+                else {
+                  tallyMap(nextVote) = 20
+                }
               }
             }
         }
     }
   }
-
 
 
   def Check(): Unit = {
@@ -526,19 +1189,39 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       val emoteReturn = CheckEmoteList()
       if (emoteReturn != None) hearthstone ! emoteReturn
 
-      //Check if a wait or hurry needs to be added
-      if (myTurn) {
-        val speedReturn = CheckSpeed()
-        if (speedReturn != None) hearthstone ! speedReturn
+      //Check if concede has enough power to execute
+      val currentVoterSet = CreateCurrentVoterSet()
+      if (concedeVoterMap.size > (currentVoterSet.size * CONCEDE_PERCENTAGE) && currentVoterSet.size > averageVoterAmount / 3) {
+        hearthstone ! Concede()
       }
+      CheckHurryVotes()
 
       //Reschedule Check()
-      system.scheduler.scheduleOnce(1000.milli, this.self, CHECK)
+      system.scheduler.scheduleOnce(3000.milli, this.self, CHECK)
     }
   }
 
 
-  //Might need modified
+  def CheckHurryVotes(): Unit = {
+    //If voterMap(sender) contains Hurry() add one to hurryTally
+    // If hurrytally = HURRY_VOTER_PERCENTAGE of completeVoterSet execute a hurry
+    var hurryTally = 0
+    var currentVoterSet = CreateCurrentVoterSet()
+
+    voterMap foreach {
+      case (sender, voteList) =>
+        if (voteList.contains(Hurry())) {
+          hurryTally = hurryTally + 1
+        }
+
+        if (hurryTally >= currentVoterSet.size * HURRY_VOTER_PERCENTAGE && currentVoterSet.size > averageVoterAmount / 3) {
+          this.self ! DECIDE
+          RemoveNormalVote("all", Hurry())
+          hurrySpeed = true
+        }
+    }
+
+  }
 
   def CheckEmoteList(): Any = {
     //If 33% of voters want to emote
@@ -560,42 +1243,16 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   }
 
 
-  //Needs modified
-  def CheckSpeed(): Unit = {
-    if (!speedVoterMap.isEmpty) {
-      val currentVoterSet = CreateCurrentVoterSet()
-      if (speedCounts.size >= currentVoterSet.size / 3 && currentVoterSet.size >= averageVoterAmount / 3) {
-        val maxValue = speedCounts.valuesIterator.max
-        val maxVote = speedCounts.find(_._2 == maxValue).getOrElse(None, -2)._1
-        speedCounts.clear()
-        speedVoterMap.clear()
-        if (maxVote == Wait()) {
-          waitSpeed = true
-        }
-
-        if (maxVote == Hurry()) {
-          hurrySpeed = true
-
-          this.self ! DECIDE
-        }
-      }
-    }
-  }
-
-
   def GetGameStatus(): Unit = {
-    active = false
-
     implicit val timeout = Timeout(30 seconds)
     val future = controller ? "GetGameStatus"
     val result = Await.result(future, timeout.duration)
 
     if (result == None) {
-
+      TimeUnit.SECONDS.sleep(2)
       GetGameStatus()
     }
     else {
-      this.self ! "Activate"
       savedGameStatus = result.asInstanceOf[Array[Player]]
     }
 
@@ -603,78 +1260,78 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   }
 
   def VoteEntry(vote: Any, sender: String): Unit = {
+    // Different cases of possible vote entries
+    if (!voterMap.isDefinedAt(sender))
+      voterMap(sender) = ListBuffer[Any]()
+    if(!bindMap.isDefinedAt(sender))
+      bindMap(sender) = ListBuffer[Any]()
 
-    if (!voterMap(sender).isEmpty) {
+    if (voterMap(sender).nonEmpty) {
       vote match {
 
         case Bind() =>
-          if (voterMap(sender).last != Bind() && voterMap(sender).last != Cancel() && voterMap(sender).last != EndTurn()) {
+          //Add Bind() to voterMap if last vote is not Bind(), or EndTurn() or Hurry()
+          if (voterMap(sender).last != Bind() && voterMap(sender).last != EndTurn() && voterMap(sender).last != Hurry()) {
             voterMap(sender).append(vote)
           }
 
-        case Cancel() =>
-          if (voterMap(sender).last != Bind() && voterMap(sender).last != Cancel() && voterMap(sender).last != EndTurn()) {
+        case Hurry() =>
+          //Add Hurry() to voterMap if last vote is not Bind()
+          if (voterMap(sender).last == Bind()) {
+            voterMap(sender).trimEnd(1)}
             voterMap(sender).append(vote)
-          }
+
 
         case Discover(option) =>
 
         case _ =>
-          voterMap(sender).last match {
-            case Bind() =>
-              voterMap(sender).trimEnd(1)
-              if (voterMap(sender).last == Bound()) {
-                bindMap(sender).append(vote)
-              }
-              else {
-
-                val bindedVote = voterMap(sender).last
+          //Add a normal vote to voterMap with behavior based on the current last vote entry
+          if (!voterMap(sender).contains(vote)) {
+            voterMap(sender).last match {
+              case Bind() =>
+                //If bind is the last entry, remove the bind.
+                //If the last entry is now Bound(), simply add the new vote to bindMap instead of voterMap
+                //If the last entry is now a normaly vote, move that vote to bindMap
+                //Add Bound() to voterMap in order to allow a multi-part bind
                 voterMap(sender).trimEnd(1)
-                bindMap(sender).append(bindedVote)
-                bindMap(sender).append(vote)
-                voterMap(sender).append(new Bound())
-              }
-
-            case Bound() => {
-              bindMap(sender).append(new Break())
-              voterMap(sender).trimEnd(1)
-              voterMap(sender).append(vote)
-            }
-
-            case Cancel() => {
-              voterMap(sender).trimEnd(1)
-              if (voterMap(sender).indexWhere(_ == vote) != -1)
-                voterMap(sender).remove(voterMap(sender).indexWhere(_ == vote))
-              val index = bindMap(sender).indexWhere(_ == vote)
-              if (index != -1) {
-                if (index == 0 || bindMap(sender)(index - 1) == Break()) {
-                  while (bindMap(sender).isDefinedAt(index) && bindMap(sender)(index) != Break()) {
-                    bindMap(sender).remove(index)
-                  }
-                  if (bindMap(sender).isDefinedAt(index) && bindMap(sender)(index) == Break())
-                    bindMap(sender).remove(index)
+                if (voterMap(sender).last == Bound()) {
+                  bindMap(sender).append(vote)
                 }
+                else {
+
+                  val bindedVote = voterMap(sender).last
+                  voterMap(sender).trimEnd(1)
+                  bindMap(sender).append(bindedVote)
+                  bindMap(sender).append(vote)
+                  voterMap(sender).append(new Bound())
+                }
+
+              case Bound() => {
+                //If Bound() is the last entry(which means the last vote was moved to bindMap), add a Break() to bindMap, remove the Bound(), and append the vote
+                bindMap(sender).append(new Break())
+                voterMap(sender).trimEnd(1)
+                voterMap(sender).append(vote)
               }
+
+              case EndTurn() =>
+                //If EndTurn() is the last entry, remove the EndTurn and add the vote
+                voterMap(sender).trimEnd(1)
+                voterMap(sender).append(vote)
+
+              case _ =>
+                //If no special case, just add the vote
+                voterMap(sender).append(vote)
+
             }
-
-            case EndTurn() =>
-              voterMap(sender).trimEnd(1)
-              voterMap(sender).append(vote)
-
-            case _ =>
-              voterMap(sender).append(vote)
-
           }
-
       }
     }
-    if (!voterMap(sender).isEmpty) {
+    if (voterMap(sender).isEmpty) {
       vote match {
+        //If voterMap is empty, do nothing unless a normal vote comes in
         case Bind() =>
-
-        case Cancel() =>
-
         case Discover(option) =>
+        case Hurry() =>
 
 
         case _ => voterMap(sender).append(vote)
@@ -698,39 +1355,65 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     }
   }
 
-  def SpeedVoteEntry(vote: Any, sender: String): Unit = {
-
-    if (speedVoterMap.contains(sender)) {
-      val oldVote = speedVoterMap(sender)
-      speedCounts(oldVote) = speedCounts(oldVote) - 1
-      speedVoterMap(sender) = vote
-      speedCounts(vote) = speedCounts(vote) + 1
+  def RemoveNormalVote(sender: String, vote: Any): Unit = {
+    //If sender is "all", go through all of voterMap and delete vote entry. Go through voteCount and set to 0
+    //If sender is specific, go through just that voterMap and delete vote entries. voteCount shouldn't be calculated yet, so no need to set to 0
+    if (sender == "all") {
+      voterMap foreach {
+        case (player, voteList) =>
+          for (a <- 0 until voteList.count(_ == vote)) {
+            voteList.remove(voteList.indexWhere(_ == vote))
+          }
+      }
     }
+
     else {
-      speedVoterMap(sender) = vote
-      if (speedCounts.contains(vote))
-        speedCounts(vote) = speedCounts(vote) + 1
-      else speedCounts(vote) = 1
+      for (a <- 0 until voterMap(sender).count(_ == vote)) {
+        voterMap(sender).remove(voterMap(sender).indexWhere(_ == vote))
+      }
     }
   }
 
-  def ConcedeVoteEntry(vote: Any, sender: String): Unit = {
+  def RemoveBindVote(sender: String, vote: Any): Unit = {
+    //Search through a senders bindMap and find which index the vote is in.
+    //Check if the index is after a Break(), which is the start of a bind, or index 0
+    //Keep removing that index until you reach a break() or undefined
+    //If the index is now a break, remove it.
 
-    if (concedeVoterMap.contains(sender)) {
-      val oldVote = concedeVoterMap(sender)
-      concedeCounts(oldVote) = concedeCounts(oldVote) - 1
-      concedeVoterMap(sender) = vote
-      concedeCounts(vote) = concedeCounts(vote) + 1
+    if (sender == "all") {
+      bindMap foreach {
+        case (sender, voteList) =>
+          val index = bindMap(sender).indexWhere(_ == vote)
+          if (index != -1) {
+            if (index == 0 || bindMap(sender)(index - 1) == Break()) {
+              while (bindMap(sender).isDefinedAt(index) && bindMap(sender)(index) != Break()) {
+                bindMap(sender).remove(index)
+              }
+              if (bindMap(sender).isDefinedAt(index) && bindMap(sender)(index) == Break())
+                bindMap(sender).remove(index)
+            }
+          }
+      }
     }
     else {
-      concedeVoterMap(sender) = vote
-      if (concedeCounts.contains(vote))
-        concedeCounts(vote) = concedeCounts(vote) + 1
-      else concedeCounts(vote) = 1
+      val index = bindMap(sender).indexWhere(_ == vote)
+      if (index != -1) {
+        if (index == 0 || bindMap(sender)(index - 1) == Break()) {
+          while (bindMap(sender).isDefinedAt(index) && bindMap(sender)(index) != Break()) {
+            bindMap(sender).remove(index)
+          }
+          if (bindMap(sender).isDefinedAt(index) && bindMap(sender)(index) == Break())
+            bindMap(sender).remove(index)
+        }
+      }
     }
   }
+
 
   def CreateCurrentVoterSet(): Set[String] = {
+    //Combines all known voterMaps into one sender list
+    //Essentially obtains amount of people that have voted this turn
+
     val firstMap = concedeVoterMap.keySet.diff(voterMap.keySet)
     val secondMap = emoteVoterMap.keySet.diff(voterMap.keySet)
     val thirdMap = speedVoterMap.keySet.diff(voterMap.keySet)
@@ -751,16 +1434,25 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   def Mulligan(): Unit = {
 
     if (mulligan) {
-      if (mulliganCount.nonEmpty)
+      if (mulliganVoteMap.nonEmpty) {
         hearthstone !(MulliganVote(TallyMulliganVotes()), mulliganOptions)
-      mulligan = false
-      mulliganOptions = 0
+        mulligan = false
+        mulliganOptions = 0
+        mulliganVoteMap.clear()
+        mulliganCount.clear()
+        doneWithMulligan = true
+        if (myTurn)
+          system.scheduler.scheduleOnce(45000.milli, this.self, DECIDE)
+      }
+      else {
+        system.scheduler.scheduleOnce(10000.milli, this.self, MULLIGAN)
+      }
     }
 
 
-    if (!mulligan) {
+    else {
       mulligan = true
-      system.scheduler.scheduleOnce(10000.milli, this.self, MULLIGAN)
+      system.scheduler.scheduleOnce(15000.milli, this.self, MULLIGAN)
     }
   }
 
@@ -768,6 +1460,11 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
     mulliganVoteMap foreach {
       case (sender, vote) =>
+        val testArray = Array[Int](1)
+        testArray(0) = 1
+        if (vote == testArray) {
+          val testtest = 1
+        }
         if (mulliganCount.isDefinedAt(vote)) {
           mulliganCount(vote) = mulliganCount(vote) + 1
         }
@@ -791,12 +1488,18 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
         if (!voteCount.isDefinedAt(vote))
           voteCount(vote) = 1
     }
-    val maxValue = voteCount.values.max
-    val decision = voteCount.find(_._2 == maxValue).getOrElse(None, -2)._1
 
-    hearthstone ! decision
+    if (voteCount.nonEmpty) {
+
+      val decision = voteCount.find(_._2 == voteCount.values.max).getOrElse(None, -2)._1
+      voteCount.clear()
+      voterMap.clear()
+      hearthstone ! decision
+      system.scheduler.scheduleOnce(10000.milli, this.self, MENU_DECIDE)
+    }
+    if (voteCount.isEmpty)
+      system.scheduler.scheduleOnce(10000.milli, this.self, MENU_DECIDE)
   }
-
 
 }
 
