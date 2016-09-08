@@ -1,221 +1,162 @@
-16:44:51.596 [atcher-3] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
-16:44:52.067 [atcher-3] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
-16:44:52.077 [atcher-3] DEBUG  a.event.EventStream - Default Loggers started
-16:44:53.585 [    main] DEBUG           tph.IrcBot - nickname = TPHBot
-16:45:03.112 [    main] DEBUG           tph.IrcBot - connected to irc.freenode.net
-16:45:03.113 [    main] DEBUG           tph.IrcBot - joined #tph
-16:45:03.154 [atcher-2] DEBUG       tph.Controller - received handled message init
-16:45:03.790 [atcher-6] DEBUG      tph.Hearthstone - received handled message Start
-16:45:04.233 [atcher-7] DEBUG         tph.ircLogic - received handled message Start
-16:45:06.667 [atcher-4] DEBUG       tph.Controller - received handled message Turn Start
-16:45:06.676 [atcher-4] DEBUG         tph.ircLogic - received handled message Turn Start
-16:45:06.745 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:06.746 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:06.781 [atcher-9] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:06.782 [atcher-9] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:06.813 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:06.814 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:06.861 [atcher-6] DEBUG       tph.Controller - received handled message Mulligan
-16:45:06.910 [atcher-6] DEBUG         tph.ircLogic - received handled message Mulligan
-16:45:06.940 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:06.941 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:06.966 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:06.967 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:06.980 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:06.983 [atcher-3] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:07.083 [atcher-9] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:07.116 [atcher-9] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:07.477 [atcher-4] DEBUG       tph.Controller - received handled message Turn End
-16:45:07.479 [atcher-4] DEBUG         tph.ircLogic - received handled message Turn End
-16:45:08.014 [atcher-6] DEBUG       tph.Controller - received handled message Turn Start
-16:45:08.015 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:08.019 [atcher-6] DEBUG         tph.ircLogic - received handled message Turn Start
-16:45:08.019 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:08.028 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:08.029 [atcher-4] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:08.087 [atcher-9] DEBUG       tph.Controller - received handled message Turn End
-16:45:08.090 [atcher-9] DEBUG         tph.ircLogic - received handled message Turn End
-16:45:08.235 [atcher-8] DEBUG       tph.Controller - received handled message Turn Start
-16:45:08.236 [atcher-8] DEBUG         tph.ircLogic - received handled message Turn Start
-16:45:08.393 [atcher-8] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:08.394 [atcher-8] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:09.119 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
-16:45:09.120 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
-16:45:10.020 [atcher-8] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:10.021 [atcher-8] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:10.022 [atcher-8] DEBUG       tph.Controller - received handled message Turn Start
-16:45:10.024 [atcher-8] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:10.024 [atcher-8] DEBUG         tph.ircLogic - received handled message Turn Start
-16:45:10.025 [atcher-8] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:11.047 [atcher-6] DEBUG       tph.Controller - received handled message Turn End
-16:45:11.048 [atcher-6] DEBUG         tph.ircLogic - received handled message Turn End
-16:45:11.899 [atcher-8] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:11.900 [atcher-8] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:12.204 [atcher-9] DEBUG       tph.Controller - received handled message Turn Start
-16:45:12.206 [atcher-9] DEBUG         tph.ircLogic - received handled message Turn Start
-16:45:12.476 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:45:12.479 [atcher-4] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:45:15.288 [atcher-3] DEBUG         tph.ircLogic - received handled message Menu Decide
-16:45:18.121 [atcher-3] DEBUG       tph.Controller - received handled message ChangeMenu(playMenu,inGame)
-16:45:18.122 [atcher-3] DEBUG         tph.ircLogic - received handled message ChangeMenu(playMenu,inGame)
-16:45:18.127 [atcher-5] DEBUG         tph.ircLogic - received handled message Start Game
-16:45:18.128 [atcher-5] DEBUG         tph.ircLogic - received handled message Skip Mulligan
-16:45:18.128 [atcher-5] DEBUG         tph.ircLogic - received handled message Turn Start
-16:45:18.129 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
-16:45:20.250 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
-16:45:20.408 [atcher-5] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-78453588] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
-16:45:21.292 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:45:24.737 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:45:25.396 [atcher-2] DEBUG         tph.ircLogic - received handled message Menu Decide
-16:45:27.786 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:45:30.908 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:45:33.961 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:45:37.043 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:45:40.117 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:45:43.311 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:45:46.324 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:45:49.348 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:45:50.074 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!hero power his 1
-16:45:50.078 [atcher-9] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@624c798b)
-16:45:52.411 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:45:55.505 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:45:58.525 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:46:01.556 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:46:02.512 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!play 5
-16:46:02.523 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3a297d79)
-16:46:04.574 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:46:05.417 [atcher-9] DEBUG         tph.ircLogic - received handled message Decide
-16:46:07.225 [atcher-5] DEBUG      tph.Hearthstone - received handled message CardPlay(5)
-16:46:07.226 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
-16:46:07.261 [atcher-5] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-78453588] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [2] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
-16:46:09.167 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!att 1, his face
-16:46:09.873 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
-16:46:09.875 [atcher-8] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-78453588] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [3] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
-16:46:10.149 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:46:10.154 [atcher-7] DEBUG         tph.ircLogic - received handled message Activate
-16:46:11.492 [atcher-5] DEBUG      tph.Hearthstone - received handled message EndTurn()
-16:46:13.169 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:46:16.183 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:46:19.257 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:46:22.466 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:46:25.620 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:46:28.828 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:46:33.525 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-16:46:36.265 [atcher-3] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:46:36.265 [atcher-3] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:46:36.674 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:46:39.730 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:46:42.750 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:46:45.798 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:46:48.812 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:46:51.900 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:46:54.929 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:46:57.960 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:00.975 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:03.997 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:07.081 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:10.107 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:13.121 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:15.131 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!hero power his 1
-16:47:15.133 [atcher-3] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7d2e5e8c)
-16:47:16.217 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:19.222 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:22.266 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:25.273 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:28.285 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:31.295 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:34.302 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:37.332 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:40.342 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:43.353 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:46.374 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:49.383 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:52.404 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:47:55.415 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:47:58.425 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:01.450 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:04.451 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:07.461 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:10.474 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:13.497 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:16.515 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:19.525 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:22.544 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:25.596 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:28.647 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:31.672 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:34.684 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:37.695 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:40.707 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:43.712 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:48:46.750 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:49.764 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:52.775 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-16:48:55.891 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:48:58.926 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:49:01.963 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-16:49:04.975 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-16:49:05.109 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:49:05.110 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:49:08.005 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:49:11.013 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:49:14.052 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:49:14.521 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!hero power his 3
-16:49:14.522 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@72e6dcf9)
-16:49:17.081 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:49:20.102 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:49:23.132 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:49:26.163 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:49:29.201 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:49:32.226 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:49:35.296 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:49:38.350 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:49:41.363 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:49:44.421 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:49:47.459 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:49:50.470 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:49:53.508 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:49:56.515 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:49:59.575 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:50:02.581 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:50:05.605 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:50:08.623 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:50:11.677 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:50:14.704 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:50:17.748 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:50:20.790 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:50:21.231 [atcher-8] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:50:21.231 [atcher-8] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:50:23.835 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-16:50:26.868 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-16:50:29.890 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-16:50:32.914 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:50:35.931 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-16:50:38.941 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:50:41.969 [atcher-3] DEBUG         tph.ircLogic - received handled message Check
-16:50:43.747 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
-16:50:43.747 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-16:50:44.979 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:50:47.995 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:50:51.017 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:50:54.047 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:50:57.157 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:51:00.199 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:51:03.232 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:51:06.461 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:51:09.786 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:51:13.006 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:51:16.075 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
-16:51:19.090 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:51:22.114 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:51:25.163 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:51:28.174 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
-16:51:31.178 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-16:51:34.207 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
-16:51:35.917 [atcher-5] DEBUG       tph.Controller - received handled message Game Over
-16:51:35.919 [atcher-5] DEBUG         tph.ircLogic - received handled message Game Over
-16:51:35.946 [atcher-3] DEBUG      tph.Hearthstone - received unhandled message ChangeMenu(inGame,mainMenu)
-16:51:35.946 [atcher-3] DEBUG      tph.Hearthstone - received handled message Game Over
-16:51:36.169 [atcher-3] DEBUG       tph.Controller - received handled message Game Over
-16:51:36.170 [atcher-3] DEBUG         tph.ircLogic - received handled message Game Over
-16:51:37.278 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
+20:47:26.905 [atcher-4] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
+20:47:26.997 [atcher-4] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
+20:47:27.035 [atcher-4] DEBUG  a.event.EventStream - Default Loggers started
+20:47:28.468 [    main] DEBUG           tph.IrcBot - nickname = TPHBot
+20:47:37.221 [    main] DEBUG           tph.IrcBot - connected to irc.freenode.net
+20:47:37.222 [    main] DEBUG           tph.IrcBot - joined #tph
+20:47:37.232 [atcher-8] DEBUG       tph.Controller - received handled message init
+20:47:37.240 [atcher-3] DEBUG      tph.Hearthstone - received handled message Start
+20:47:37.241 [atcher-3] DEBUG         tph.ircLogic - received handled message Start
+20:47:37.989 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
+20:47:37.993 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:38.243 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.244 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.244 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.245 [atcher-6] DEBUG       tph.Controller - received handled message Mulligan
+20:47:38.245 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.247 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.250 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.251 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.253 [atcher-6] DEBUG         tph.ircLogic - received handled message Mulligan
+20:47:38.255 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.256 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.257 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.258 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.263 [atcher-3] DEBUG       tph.Controller - received handled message Turn End
+20:47:38.265 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.266 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.266 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.267 [atcher-6] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:38.335 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
+20:47:38.337 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:38.352 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.355 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.410 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
+20:47:38.411 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:38.491 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
+20:47:38.496 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:38.514 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.515 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.586 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.587 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.647 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.647 [tcher-10] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.693 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.696 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:38.715 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
+20:47:38.728 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:38.930 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
+20:47:38.931 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:38.950 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:38.951 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:39.005 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:39.009 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:39.044 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
+20:47:39.047 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:39.322 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
+20:47:39.327 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:39.351 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:39.351 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:39.675 [atcher-8] DEBUG       tph.Controller - received handled message Turn End
+20:47:39.676 [atcher-8] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:39.811 [atcher-3] DEBUG       tph.Controller - received handled message Turn Start
+20:47:39.814 [atcher-3] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:39.866 [atcher-3] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:39.867 [atcher-3] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:39.971 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:39.972 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:39.976 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:39.977 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:40.426 [atcher-7] DEBUG       tph.Controller - received handled message Turn End
+20:47:40.426 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:41.105 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
+20:47:41.107 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:41.211 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:41.212 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:41.473 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:41.474 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:41.625 [atcher-3] DEBUG       tph.Controller - received handled message Turn End
+20:47:41.626 [atcher-3] DEBUG         tph.ircLogic - received handled message Turn End
+20:47:42.115 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
+20:47:42.124 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:42.190 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:42.191 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:42.981 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:42.981 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:42.987 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:42.989 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:42.989 [atcher-7] DEBUG       tph.Controller - received handled message Mulligan
+20:47:42.990 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:42.990 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:42.991 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:42.992 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:42.992 [atcher-7] DEBUG         tph.ircLogic - received handled message Mulligan
+20:47:43.025 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:43.026 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:43.084 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:43.086 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:43.087 [atcher-4] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:43.098 [atcher-4] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:43.209 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
+20:47:43.210 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:43.402 [atcher-3] DEBUG       tph.Controller - received handled message NewMulliganOption
+20:47:43.403 [atcher-3] DEBUG         tph.ircLogic - received handled message NewMulliganOption
+20:47:47.605 [atcher-9] DEBUG         tph.ircLogic - received handled message Menu Decide
+20:47:52.230 [atcher-8] DEBUG       tph.Controller - received handled message ChangeMenu(playMenu,inGame)
+20:47:52.233 [atcher-6] DEBUG         tph.ircLogic - received handled message Start Game
+20:47:52.234 [atcher-6] DEBUG         tph.ircLogic - received handled message Skip Mulligan
+20:47:52.234 [atcher-6] DEBUG         tph.ircLogic - received handled message Turn Start
+20:47:52.235 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+20:47:54.238 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+20:47:54.263 [atcher-6] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#264859495] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+20:47:54.266 [atcher-6] DEBUG         tph.ircLogic - received handled message ChangeMenu(playMenu,inGame)
+20:47:55.292 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
+20:47:57.815 [atcher-8] DEBUG         tph.ircLogic - received handled message Menu Decide
+20:47:58.435 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+20:48:01.460 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+20:48:04.476 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+20:48:07.502 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+20:48:10.511 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+20:48:13.530 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+20:48:16.658 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+20:48:20.048 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+20:48:23.770 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
+20:48:24.033 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!play 5
+20:48:24.053 [atcher-6] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3336aa19)
+20:48:25.204 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!bind
+20:48:25.220 [atcher-8] DEBUG         tph.ircLogic - received handled message (Bind(),MrTurtle)
+20:48:26.607 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!play 1
+20:48:26.610 [atcher-6] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@19062332)
+20:48:26.804 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
+20:48:29.870 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
+20:48:32.938 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+20:48:36.013 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
+20:48:39.037 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
+20:48:39.328 [atcher-6] DEBUG         tph.ircLogic - received handled message Decide
+20:48:45.847 [atcher-2] DEBUG      tph.Hearthstone - received handled message CardPlay(5)
+20:48:45.848 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+20:48:45.849 [atcher-2] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#264859495] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [2] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+20:48:46.032 [atcher-7] ERROR .a.OneForOneStrategy - key not found: 11
+java.util.NoSuchElementException: key not found: 11
+	at scala.collection.MapLike$class.default(MapLike.scala:228) ~[scala-library-2.11.7.jar:na]
+	at scala.collection.AbstractMap.default(Map.scala:59) ~[scala-library-2.11.7.jar:na]
+	at scala.collection.MapLike$class.apply(MapLike.scala:141) ~[scala-library-2.11.7.jar:na]
+	at scala.collection.AbstractMap.apply(Map.scala:59) ~[scala-library-2.11.7.jar:na]
+	at tph.Hearthstone$$anonfun$receive$1.applyOrElse(Hearthstone.scala:146) ~[classes/:na]
+	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) ~[scala-library-2.11.7.jar:na]
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:64) ~[akka-actor_2.11-2.4.1.jar:na]
+	at akka.event.LoggingReceive.apply(LoggingReceive.scala:50) ~[akka-actor_2.11-2.4.1.jar:na]
+	at scala.PartialFunction$class.applyOrElse(PartialFunction.scala:123) ~[scala-library-2.11.7.jar:na]
+	at akka.event.LoggingReceive.applyOrElse(LoggingReceive.scala:50) ~[akka-actor_2.11-2.4.1.jar:na]
+	at akka.actor.Actor$class.aroundReceive(Actor.scala:480) ~[akka-actor_2.11-2.4.1.jar:na]
+	at tph.Hearthstone.aroundReceive(Hearthstone.scala:26) ~[classes/:na]
+	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:526) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.actor.ActorCell.invoke(ActorCell.scala:495) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.dispatch.Mailbox.run(Mailbox.scala:224) [akka-actor_2.11-2.4.1.jar:na]
+	at akka.dispatch.Mailbox.exec(Mailbox.scala:234) [akka-actor_2.11-2.4.1.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinTask.doExec(ForkJoinTask.java:260) [scala-library-2.11.7.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.7.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.7.jar:na]
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.7.jar:na]
+20:51:29.729 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
