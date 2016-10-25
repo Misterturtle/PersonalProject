@@ -43,7 +43,14 @@ object Main extends App {
 
   //TEST MODE
   if (testMode == true) {
+    
+    val testValue = "Delete Me"
+
     val TDD: ActorRef = system.actorOf(Props(new TDD(system)), "TDD")
     TDD ! "FULL_TEST"
   }
+
+
+
+  //gittest
 }
