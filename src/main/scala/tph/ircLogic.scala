@@ -25,7 +25,6 @@ import akka.event.LoggingReceive
 import akka.pattern.ask
 import akka.util.Timeout
 
-//import tph.Controller.ChangeMenu
 import tph.IrcMessages._
 import tph.LogFileEvents.DiscoverOption
 
@@ -61,6 +60,7 @@ object ircLogic {
   var currentMenu = "mainMenu"
   var previousMenu = ""
 
+  var testMode = false
   var gameMode = "ordered"
   var inGame = false
   var myTurn = false
@@ -68,6 +68,7 @@ object ircLogic {
   var active = false
   var hurrySpeed = false
   var doneWithMulligan = false
+  var endTurn = false
 
   //Just to create it
   var previousDecision: Any = None
@@ -120,6 +121,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   var mulligan = false
 
   override def receive: Receive = LoggingReceive({
+    case "Start Tests" =>
+      testMode = true
+
     case "Activate" => active = true
     case "Start" => {
       active = true
@@ -138,6 +142,10 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     case CHECK => if (inGame) Check()
     case MULLIGAN => if (inGame) Mulligan()
     case MULLIGAN_OPTION => mulliganOptions = mulliganOptions + 1
+    case TURNSTART => if (inGame) TurnStart()
+    case TURNEND => if (inGame) TurnEnd()
+    case "Direct Decide" =>
+      Decide()
 
 
     case DiscoverOption(option: Int) =>
@@ -236,8 +244,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               concedeVoterMap(sender) = Concede()
 
 
-            case TURNSTART => if (inGame) TurnStart()
-            case TURNEND => TurnEnd()
+
             case DECIDE => Decide()
 
 
@@ -289,9 +296,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                     VoteEntry(CardPlay(builtCommand.card: Int), builtCommand.sender)
                   case "CardPlayWithPosition" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length && builtCommand.spot >= 1 && builtCommand.spot <= savedGameStatus(0).hand.length + 1) =>
                     VoteEntry(CardPlayWithPosition(builtCommand.card: Int, builtCommand.spot: Int), builtCommand.sender)
-                  case "CardPlayWithFriendlyBoardTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length && builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(0).board.length) =>
+                  case "CardPlayWithFriendlyTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length && builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(0).board.length) =>
                     VoteEntry(CardPlayWithFriendlyBoardTarget(builtCommand.card: Int, builtCommand.target: Int), builtCommand.sender)
-                  case "CardPlayWithEnemyBoardTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length && builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
+                  case "CardPlayWithEnemyTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length && builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
                     VoteEntry(CardPlayWithEnemyBoardTarget(builtCommand.card: Int, builtCommand.target: Int), builtCommand.sender)
                   case "CardPlayWithFriendlyFaceTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).hand.length) =>
                     VoteEntry(CardPlayWithFriendlyFaceTarget(builtCommand.card: Int), builtCommand.sender)
@@ -312,16 +319,16 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
 
                   //Attack Type
-                  case "NormalAttack" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).board.length && builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
+                  case "NormalAttackWithEnemyTarget" if (builtCommand.card >= 1 && builtCommand.card <= savedGameStatus(0).board.length && builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
                     VoteEntry(NormalAttack(builtCommand.card: Int, builtCommand.target: Int), builtCommand.sender)
 
-                  case "FaceAttack" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
+                  case "NormalAttackWithEnemyFaceTarget" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
+                    VoteEntry(NormalAttackToFace(builtCommand.card:Int), builtCommand.sender)
+
+                  case "FaceAttackWithEnemyTarget" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
                     VoteEntry(FaceAttack(builtCommand.target: Int), builtCommand.sender)
 
-                  case "NormalAttackWithEnemyTarget" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(0).board.length) =>
-                    VoteEntry(NormalAttackToFace(builtCommand.target: Int), builtCommand.sender)
-
-                  case "FaceAttackWithEnemyFaceTarget" =>
+                  case "FaceAttackWithEnemyFaceTarget" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
                     VoteEntry(FaceAttackToFace(), builtCommand.sender)
 
                   case _ =>
@@ -339,6 +346,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
               case (Bind(), sender: String) =>
                 VoteEntry(Bind(), sender)
+
               case (Future(), sender: String) =>
                 VoteEntry(Future(), sender)
 
@@ -375,8 +383,11 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
 
     GetGameStatus()
-    if (doneWithMulligan)
-      system.scheduler.scheduleOnce(45.seconds, this.self, DECIDE)
+
+    if (!testMode){
+      if (doneWithMulligan)
+        system.scheduler.scheduleOnce(45.seconds, this.self, DECIDE)
+  }
     myTurn = true
   }
 
@@ -395,36 +406,53 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     //Sends hearthstone the decision
     //Removes old decision from voterMap
     //After all decisions made, clears maps associated with normal votes
-
+    if(!myTurn && endTurn){
+      endTurn = false
+    }
 
     if (myTurn) {
       if (gameMode == "ordered") {
-        active = false
-        for (a <- 0 until CalculateAmountOfMoves()) {
-          val decision = CalculateDecision()
-          if (previousDecision != None) {
-            RemoveBindVote("all", PreviousDecision(), false)
-            RemoveFutureVote("all", PreviousDecision(), false)
-            tallyMap(PreviousDecision()) = 0
+        if(!endTurn) {
+          active = false
+          val numberOfMoves = CalculateAmountOfMoves()
+          for (a <- 0 until numberOfMoves) {
+            val decision = CalculateDecision()
+            val oldGameStatus = GetGameStatus()
+            if (decision == EndTurn())
+              endTurn = true
+            if (previousDecision != None) {
+              RemoveBindVote("all", PreviousDecision(), false)
+              RemoveFutureVote("all", PreviousDecision(), false)
+              tallyMap(PreviousDecision()) = 0
+            }
+            if (decision != EndTurn())
+              hearthstone ! decision
+            previousDecision = decision
+
+            TimeUnit.SECONDS.sleep(4)
+            AdjustVotes(oldGameStatus)
+            RemoveNormalVote("all", PreviousDecision())
+
+            tallyMap.clear()
           }
-          hearthstone ! decision
-          RemoveNormalVote("all", decision)
-          previousDecision = decision
-          TimeUnit.SECONDS.sleep(4)
-          AdjustVotes()
-
+          voterMap.clear()
+          bindMap.clear()
+          futureMap.clear()
           tallyMap.clear()
-        }
-        voterMap.clear()
-        bindMap.clear()
-        futureMap.clear()
-        tallyMap.clear()
-        previousDecision = None
-        self ! "Activate"
 
-        if (!hurrySpeed)
-          hearthstone ! EndTurn()
-        hurrySpeed = false
+          previousDecision = None
+          self ! "Activate"
+
+          if (!hurrySpeed) {
+            hearthstone ! EndTurn()
+          }
+          hurrySpeed = false
+
+          if (endTurn) {
+            hearthstone ! EndTurn()
+          }
+        }
+        else endTurn = false
       }
     }
   }
@@ -435,7 +463,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
     voterMap foreach {
       case (sender, voteLists) =>
-        val fillerVotes = voterMap(sender).count(_ == Bind()) + voterMap(sender).count(_ == Future()) + voterMap(sender).count(_ == EndTurn()) + voterMap(sender).count(_ == Hurry()) + voterMap(sender).count(_ == Bound()) + voterMap(sender).count(_ == FutureBound())
+        val fillerVotes = voterMap(sender).count(_ == Bind()) + voterMap(sender).count(_ == Future()) + voterMap(sender).count(_ == Hurry()) + voterMap(sender).count(_ == Bound()) + voterMap(sender).count(_ == FutureBound())
         var moves = voterMap(sender).size - fillerVotes
 
 
@@ -466,17 +494,55 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     else return 0
   }
 
-  def AdjustVotes(): Unit = {
+  def AdjustVotes(oldGameStatus: Array[(_,_,_,_)]): Unit = {
 
-    val oldGameStatus = savedGameStatus
-    val myOldHand = oldGameStatus(0).hand
-    val myOldBoard = oldGameStatus(0).board
-    val hisOldBoard = oldGameStatus(1).board
-    GetGameStatus()
-    val newGameStatus = savedGameStatus
-    val myNewHand = newGameStatus(0).hand
-    val myNewBoard = newGameStatus(0).board
-    val hisNewBoard = newGameStatus(1).board
+    voterMap foreach{
+      case (sender, voteList) =>
+        voteList foreach{
+          case x =>
+            val index = voteList.indexWhere(_ == x)
+            if(x == previousDecision)
+              {
+                voteList(index) = PreviousDecision()
+              }
+        }
+    }
+
+    bindMap foreach{
+      case (sender, voteList) =>
+        voteList foreach{
+          case x =>
+            val index = voteList.indexWhere(_ == x)
+            if(x == previousDecision)
+            {
+              voteList(index) = PreviousDecision()
+            }
+        }
+    }
+
+    futureMap foreach{
+      case (sender, voteList) =>
+        voteList foreach{
+          case x =>
+            val index = voteList.indexWhere(_ == x)
+            if(x == previousDecision)
+            {
+              voteList(index) = PreviousDecision()
+            }
+        }
+    }
+
+    val myOldHand = oldGameStatus(0)._1.asInstanceOf[Array[Card]]
+    val myOldBoard = oldGameStatus(0)._2.asInstanceOf[Array[Card]]
+    val hisOldBoard = oldGameStatus(1)._2.asInstanceOf[Array[Card]]
+    val newGameStatus = GetGameStatus()
+    val myNewHand = newGameStatus(0)._1.asInstanceOf[Array[Card]]
+    val myNewBoard = newGameStatus(0)._2.asInstanceOf[Array[Card]]
+    val hisNewBoard = newGameStatus(1)._2.asInstanceOf[Array[Card]]
+
+    val voterMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
+    val bindMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
+    val futureMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
 
 
 
@@ -485,10 +551,13 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     val myChangedHandMap = mutable.Map[Int, Int]()
     myOldHand foreach {
       case x =>
-        val index = myOldHand.indexWhere(_.id == x.id)
-        if (myNewHand.isDefinedAt(index)) {
-          if (myOldHand(index).id != myNewHand(index).id)
-            myChangedHandMap(myOldHand(index).handPosition) = myNewHand.find(_.id == myOldHand(index).id).getOrElse(new Card).handPosition
+
+        val newIndex = myNewHand.indexWhere(_.id == x.id)
+        if(myNewHand.isDefinedAt(newIndex)){
+          val newHandPos = myNewHand(newIndex).handPosition
+          if(newHandPos != x.handPosition){
+            myChangedHandMap(x.handPosition) = newHandPos
+          }
         }
     }
 
@@ -499,10 +568,14 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
         if (newPos != -1) {
           voterMap foreach {
             case (sender, voteList) =>
+              if(!voterMapChangedIndex.isDefinedAt(sender))
+              voterMapChangedIndex(sender) = new ListBuffer[Int]()
               voteList foreach {
                 case vote =>
                   val index = voteList.indexWhere(_ == vote)
-                  if (vote != previousDecision) {
+                  if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+
+                    voterMapChangedIndex(sender).append(index)
                     vote match {
 
                       //Normal Turn Play Type
@@ -538,21 +611,24 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                         voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(newPos, target, position)
                       case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
                         voterMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(newPos, position)
-                      case _ => println("Unexpected vote: " + vote)
+                      case _ =>
+                        voterMapChangedIndex(sender).trimEnd(1)
                     }
                   }
-                  else voterMap(sender)(index) = PreviousDecision()
               }
           }
 
-          //If vote follows a PreviousDecision() but is before a Break(), do not adjust votes
+
 
           bindMap foreach {
             case (sender, voteList) =>
+              if(!bindMapChangedIndex.isDefinedAt(sender))
+              bindMapChangedIndex(sender) = new ListBuffer[Int]()
               voteList foreach {
                 case vote =>
                   val index = voteList.indexWhere(_ == vote)
-                  if (vote != previousDecision) {
+                  if (vote != PreviousDecision() && bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    bindMapChangedIndex(sender).append(index)
                     vote match {
 
                       //Normal Turn Play Type
@@ -588,31 +664,34 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                         bindMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(newPos, target, position)
                       case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
                         bindMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(newPos, position)
-                      case _ => println("Unexpected vote: " + vote)
+                      case _ => bindMapChangedIndex(sender).trimEnd(1)
                     }
                   }
-                  else bindMap(sender)(index) = PreviousDecision()
               }
           }
         }
 
+
+        //If vote follows a PreviousDecision() but is before a Break(), do not adjust votes
         futureMap foreach {
           case (sender, voteList) =>
+            if(!futureMapChangedIndex.isDefinedAt(sender))
+            futureMapChangedIndex(sender) = new ListBuffer[Int]()
             var futureActive = false
             voteList foreach {
               case vote =>
                 val index = voteList.indexWhere(_ == vote)
-                if (vote == previousDecision) {
+                if (vote == PreviousDecision())  {
                   futureActive = true
-                  futureMap(sender)(index) = PreviousDecision()
                 }
                 if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
                   futureActive = false
                 }
 
 
-                if (vote != previousDecision) {
+                if (vote != PreviousDecision() && futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
                   if (!futureActive) {
+                    futureMapChangedIndex(sender).append(index)
                     vote match {
 
                       //Normal Turn Play Type
@@ -648,7 +727,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                         futureMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(newPos, target, position)
                       case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
                         futureMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(newPos, position)
-                      case _ => println("Unexpected vote: " + vote)
+                      case _ => futureMapChangedIndex(sender).trimEnd(1)
                     }
                   }
                 }
@@ -664,7 +743,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               voteList foreach {
                 case vote =>
                   val index = voterMap(sender).indexWhere(_ == vote)
-                  if (vote != previousDecision) {
+                  if (vote != PreviousDecision()) {
                     vote match {
                       case CardPlay(card) if card == oldPos =>
                         voterMap(sender).remove(index)
@@ -698,10 +777,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                         voterMap(sender).remove(index)
                       case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
                         voterMap(sender).remove(index)
-                      case _ => println("Unexpected vote: " + vote)
+                      case _ =>
                     }
                   }
-                  else voterMap(sender)(index) = PreviousDecision()
               }
           }
 
@@ -710,7 +788,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               voteList foreach {
                 case vote =>
                   val index = bindMap(sender).indexWhere(_ == vote)
-                  if (vote != previousDecision) {
+                  if (vote != PreviousDecision()) {
                     vote match {
                       case CardPlay(card) if card == oldPos =>
                         bindMap(sender).remove(index)
@@ -744,10 +822,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                         bindMap(sender).remove(index)
                       case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
                         bindMap(sender).remove(index)
-                      case _ => println("Unexpected vote: " + vote)
+                      case _ =>
                     }
                   }
-                  else bindMap(sender)(index) = PreviousDecision()
               }
           }
 
@@ -757,7 +834,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               voteList foreach {
                 case vote =>
                   val index = voteList.indexWhere(_ == vote)
-                  if (vote == previousDecision) {
+                  if (vote == PreviousDecision()) {
                     futureActive = true
                   }
                   if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
@@ -765,7 +842,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   }
 
 
-                  if (vote != previousDecision) {
+                  if (vote != PreviousDecision()) {
                     if (!futureActive) {
                       vote match {
 
@@ -802,7 +879,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                           futureMap(sender).remove(index)
                         case CardPlayWithEnemyFaceOptionWithPosition(card, position) if card == oldPos =>
                           futureMap(sender).remove(index)
-                        case _ => println("Unexpected vote: " + vote)
+                        case _ =>
                       }
                     }
                   }
@@ -810,18 +887,32 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
           }
         }
       }
+    }
+    voterMapChangedIndex.clear()
+    bindMapChangedIndex.clear()
+    futureMapChangedIndex.clear()
+
 
         //For each element in myOldBoard, map the oldPos to the newPos if myNewBoard contains the same id
         //If it does not contain the same id, -1 will be mapped
         val myChangedBoardMap = mutable.Map[Int, Int]()
         myOldBoard foreach {
           case x =>
-            val index = myOldBoard.indexWhere(_.id == x.id)
-            if (myNewBoard.isDefinedAt(index)) {
-              if (myOldBoard(index).id != myNewBoard(index).id)
-                myChangedBoardMap(myOldBoard(index).handPosition) = myNewBoard.find(_.id == myOldBoard(index).id).getOrElse(new Card).handPosition
+
+            val newIndex = myNewBoard.indexWhere(_.id == x.id)
+            if(myNewBoard.isDefinedAt(newIndex)) {
+              val newBoardPos = myNewBoard(newIndex).boardPosition
+              if(x.boardPosition != newBoardPos)
+                {
+                  myChangedBoardMap(x.boardPosition) = newBoardPos
+                }
             }
         }
+
+
+
+
+
 
         myChangedBoardMap foreach {
           case (oldPos, newPos) => {
@@ -829,11 +920,16 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
             if (newPos != -1) {
               voterMap foreach {
                 case (sender, voteList) =>
+                  if(!voterMapChangedIndex.isDefinedAt(sender))
+                  voterMapChangedIndex(sender) = new ListBuffer[Int]()
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1 ) {
+                        voterMapChangedIndex(sender).append(index)
                         vote match {
+
+
 
                           //Card Play Type
                           case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
@@ -866,20 +962,30 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             voterMap(sender)(index) = NormalAttack(newPos, enemyPosition)
                           case NormalAttackToFace(position) if position == oldPos =>
                             voterMap(sender)(index) = NormalAttackToFace(newPos)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                            voterMap(sender)(index)= HeroPowerWithFriendlyTarget(newPos)
+
+
+                          case _ =>voterMapChangedIndex(sender).trimEnd(1)
                         }
                       }
-                      else voterMap(sender)(index) = PreviousDecision()
                   }
               }
+
+
+
 
               //Cycle through BindMap
               bindMap foreach {
                 case (sender, voteList) =>
+                  if(!bindMapChangedIndex.isDefinedAt(sender))
+                  bindMapChangedIndex(sender) = new ListBuffer[Int]()
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()&& bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                        bindMapChangedIndex(sender).append(index)
                         vote match {
 
                           //Card Play Type
@@ -913,21 +1019,29 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             bindMap(sender)(index) = NormalAttack(newPos, enemyPosition)
                           case NormalAttackToFace(position) if position == oldPos =>
                             bindMap(sender)(index) = NormalAttackToFace(newPos)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                            bindMap(sender)(index)= HeroPowerWithFriendlyTarget(newPos)
+
+                          case _ =>bindMapChangedIndex(sender).trimEnd(1)
                         }
                       }
-                      else bindMap(sender)(index) = PreviousDecision()
                   }
               }
 
 
+
+
+
               futureMap foreach {
                 case (sender, voteList) =>
+                  if(!futureMapChangedIndex.isDefinedAt(sender))
+                  futureMapChangedIndex(sender) = new ListBuffer[Int]()
                   var futureActive = false
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote == previousDecision) {
+                      if (vote == PreviousDecision()) {
                         futureActive = true
                       }
                       if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
@@ -935,8 +1049,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                       }
 
 
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision() && futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
                         if (!futureActive) {
+                          futureMapChangedIndex(sender).append(index)
                           vote match {
 
 
@@ -971,7 +1086,12 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                               futureMap(sender)(index) = NormalAttack(newPos, enemyPosition)
                             case NormalAttackToFace(position) if position == oldPos =>
                               futureMap(sender)(index) = NormalAttackToFace(newPos)
-                            case _ => println("Unexpected vote: " + vote)
+
+                            case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                              futureMap(sender)(index)= HeroPowerWithFriendlyTarget(newPos)
+
+
+                            case _ =>futureMapChangedIndex(sender).trimEnd(1)
                           }
                         }
                       }
@@ -986,7 +1106,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()) {
                         vote match {
                           case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
                             voterMap(sender).remove(index)
@@ -1006,10 +1126,14 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             voterMap(sender).remove(index)
                           case NormalAttackToFace(position) if position == oldPos =>
                             voterMap(sender).remove(index)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                            voterMap(sender).remove(index)
+
+
+                          case _ =>
                         }
                       }
-                      else voterMap(sender)(index) = PreviousDecision()
                   }
               }
 
@@ -1018,7 +1142,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()) {
                         vote match {
                           case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
                             bindMap(sender).remove(index)
@@ -1038,10 +1162,13 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             bindMap(sender).remove(index)
                           case NormalAttackToFace(position) if position == oldPos =>
                             bindMap(sender).remove(index)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                            bindMap(sender).remove(index)
+
+                          case _ =>
                         }
                       }
-                      else bindMap(sender)(index) = PreviousDecision()
                   }
               }
 
@@ -1052,7 +1179,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote == previousDecision) {
+                      if (vote == PreviousDecision()) {
                         futureActive = true
                       }
                       if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
@@ -1060,30 +1187,91 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                       }
 
 
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()) {
                         if (!futureActive) {
                           vote match {
 
 
                             case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-                              futureMap(sender).remove(index)
+
+                              if (index == 0)
+                                {
+                                  futureMap(sender).remove(index)
+                                }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                                {
+                                  futureMap(sender).remove(index)
+                                }
 
                             //Battlecry Option with Position Type
                             case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
-                              futureMap(sender).remove(index)
+                              if (index == 0)
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
 
                             //Normal Turn Play Type
                             case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                              futureMap(sender).remove(index)
+                              if (index == 0)
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
                             case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                              futureMap(sender).remove(index)
+                              if (index == 0)
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
 
                             //Attack Type
                             case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                              futureMap(sender).remove(index)
+                              if (index == 0)
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
                             case NormalAttackToFace(position) if position == oldPos =>
-                              futureMap(sender).remove(index)
-                            case _ => println("Unexpected vote: " + vote)
+                              if (index == 0)
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                            case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                              if (index == 0)
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                            case _ =>
                           }
                         }
                       }
@@ -1092,7 +1280,9 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
             }
           }
         }
-
+    voterMapChangedIndex.clear()
+    bindMapChangedIndex.clear()
+    futureMapChangedIndex.clear()
 
 
         //For each element in hisOldBoard, map the oldPos to the newPos if hisNewBoard contains the same id
@@ -1100,12 +1290,17 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
         val hisChangedBoardMap = mutable.Map[Int, Int]()
         hisOldBoard foreach {
           case x =>
-            val index = hisOldBoard.indexWhere(_.id == x.id)
-            if (hisNewBoard.isDefinedAt(index)) {
-              if (hisOldBoard(index).id != hisNewBoard(index).id)
-                hisChangedBoardMap(hisOldBoard(index).handPosition) = hisNewBoard.find(_.id == hisOldBoard(index).id).getOrElse(new Card).handPosition
+
+            val newIndex = hisNewBoard.indexWhere(_.id == x.id)
+            if (hisNewBoard.isDefinedAt(newIndex)) {
+              val newBoardPos = hisNewBoard(newIndex).boardPosition
+              if (x.boardPosition != newBoardPos)
+                hisChangedBoardMap(x.boardPosition) = newBoardPos
             }
         }
+
+
+
 
 
         hisChangedBoardMap foreach {
@@ -1114,10 +1309,13 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
             if (newPos != -1) {
               voterMap foreach {
                 case (sender, voteList) =>
+                  if(!voterMapChangedIndex.isDefinedAt(sender))
+                  voterMapChangedIndex(sender) = new ListBuffer[Int]()
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                        voterMapChangedIndex(sender).append(index)
                         vote match {
                           case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
                             voterMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
@@ -1138,19 +1336,30 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             voterMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
                           case FaceAttack(position) if position == oldPos =>
                             voterMap(sender)(index) = FaceAttack(newPos)
-                          case _ => println("Unexpected vote: " + vote)
+
+                            //Hero Power Type
+                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                            voterMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+                          case _ =>voterMapChangedIndex(sender).trimEnd(1)
                         }
                       }
-                      else voterMap(sender).remove(index)
                   }
               }
 
+
+
+
+
               bindMap foreach {
                 case (sender, voteList) =>
+                  if(!bindMapChangedIndex.isDefinedAt(sender))
+                  bindMapChangedIndex(sender) = new ListBuffer[Int]()
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()&& bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                        bindMapChangedIndex(sender).append(index)
                         vote match {
                           case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
                             bindMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
@@ -1171,20 +1380,31 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             bindMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
                           case FaceAttack(position) if position == oldPos =>
                             bindMap(sender)(index) = FaceAttack(newPos)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          //Hero Power Type
+                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                            bindMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+                          case _ =>
+                            bindMapChangedIndex(sender).trimEnd(1)
                         }
                       }
                   }
               }
 
 
+
+
+
               futureMap foreach {
                 case (sender, voteList) =>
+                  if(!futureMapChangedIndex.isDefinedAt(sender))
+                  futureMapChangedIndex(sender) = new ListBuffer[Int]()
                   var futureActive = false
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote == previousDecision) {
+                      if (vote == PreviousDecision()) {
                         futureActive = true
                       }
                       if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
@@ -1192,7 +1412,8 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                       }
 
 
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()&& futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                        futureMapChangedIndex(sender).append(index)
                         if (!futureActive) {
                           vote match {
 
@@ -1216,7 +1437,12 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                               futureMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
                             case FaceAttack(position) if position == oldPos =>
                               futureMap(sender)(index) = FaceAttack(newPos)
-                            case _ => println("Unexpected vote: " + vote)
+
+                            //Hero Power Type
+                            case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                              futureMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+                            case _ =>futureMapChangedIndex(sender).trimEnd(1)
                           }
                         }
                       }
@@ -1233,7 +1459,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   voteList foreach {
                     case vote =>
                       val index = voterMap(sender).indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()) {
                         vote match {
                           case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
                             voterMap(sender).remove(index)
@@ -1254,10 +1480,14 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             voterMap(sender).remove(index)
                           case FaceAttack(position) if position == oldPos =>
                             voterMap(sender).remove(index)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          //Hero Power Type
+                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                            voterMap(sender).remove(index)
+
+                          case _ =>
                         }
                       }
-                      else voterMap(sender).remove(index)
                   }
               }
 
@@ -1266,7 +1496,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   voteList foreach {
                     case vote =>
                       val index = bindMap(sender).indexWhere(_ == vote)
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()) {
                         vote match {
                           case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
                             bindMap(sender).remove(index)
@@ -1287,7 +1517,12 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                             bindMap(sender).remove(index)
                           case FaceAttack(position) if position == oldPos =>
                             bindMap(sender).remove(index)
-                          case _ => println("Unexpected vote: " + vote)
+
+                          //Hero Power Type
+                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                            bindMap(sender).remove(index)
+
+                          case _ =>
                         }
                       }
                   }
@@ -1300,7 +1535,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                   voteList foreach {
                     case vote =>
                       val index = voteList.indexWhere(_ == vote)
-                      if (vote == previousDecision) {
+                      if (vote == PreviousDecision()) {
                         futureActive = true
                       }
                       if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
@@ -1308,31 +1543,89 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                       }
 
 
-                      if (vote != previousDecision) {
+                      if (vote != PreviousDecision()) {
                         if (!futureActive) {
                           vote match {
 
 
                             case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                              futureMap(sender).remove(index)
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
 
                             //Battlecry Option with Position Type
                             case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                              futureMap(sender).remove(index)
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
 
                             //Normal Turn Play Type
                             case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                              futureMap(sender).remove(index)
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
                             case HeroPowerWithEnemyTarget(target) =>
-                              futureMap(sender).remove(index)
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
 
 
                             //Attack Type
                             case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-                              futureMap(sender).remove(index)
+
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                                {
+                                  futureMap(sender).remove(index)
+                                }
+
                             case FaceAttack(position) if position == oldPos =>
-                              futureMap(sender).remove(index)
-                            case _ => println("Unexpected vote: " + vote)
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                            //Hero Power Type
+                            case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                              if(index == 0) {
+                                futureMap(sender).remove(index)
+                              }
+
+                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
+                              {
+                                futureMap(sender).remove(index)
+                              }
+
+                            case _ =>
                           }
                         }
                       }
@@ -1341,8 +1634,11 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
             }
 
         }
+    voterMapChangedIndex.clear()
+    bindMapChangedIndex.clear()
+    futureMapChangedIndex.clear()
     }
-  }
+
 
 
   def CalculateDecision(): Any = {
@@ -1353,9 +1649,6 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
 
     TallyVotes()
-    if (tallyMap.isDefinedAt(EndTurn())) {
-      tallyMap.remove(EndTurn())
-    }
     if (tallyMap.nonEmpty) {
       val tempMaxValue: Int = tallyMap.values.max
       val tempDecision = tallyMap(tallyMap.find(_._2 == tempMaxValue).getOrElse(None, -2)._1)
@@ -1368,6 +1661,8 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       }
       val maxValue = tallyMap.values.max
       val decision = tallyMap.find(_._2 == tempMaxValue).getOrElse(None, -2)._1
+
+
 
       return decision
     }
@@ -1387,7 +1682,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       case (sender, voteList) =>
         voteList foreach {
           case vote =>
-            if (vote != Bind() && vote != Break() && vote != EndTurn() && vote != Bound() && vote != Hurry() && vote != Future() && vote != FutureBound()) {
+            if (vote != Bind() && vote != Break() && vote != Bound() && vote != Hurry() && vote != Future() && vote != FutureBound() && vote != PreviousDecision()) {
               if (tallyMap.isDefinedAt(vote)) {
                 tallyMap(vote) = tallyMap(vote) + 10
               }
@@ -1405,7 +1700,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
             val index = list.indexWhere(_ == x)
             if (index == 0) {
-              if (tallyMap.isDefinedAt(x)) {
+              if (tallyMap.isDefinedAt(x) && x != PreviousDecision() && x != Break() && x != Bound() && x != Bind() && x != FutureBound()) {
                 tallyMap(x) = tallyMap(x) + 10
               }
               else tallyMap(x) = 10
@@ -1415,7 +1710,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               val nextVote = list(index + 1)
 
               if (x == Break()) {
-                if (tallyMap.isDefinedAt(x)) {
+                if (tallyMap.isDefinedAt(nextVote)) {
                   tallyMap(nextVote) = tallyMap(nextVote) + 10
                 }
                 else tallyMap(nextVote) = 10
@@ -1424,7 +1719,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
 
               if (x == PreviousDecision()) {
-                if (tallyMap.isDefinedAt(x)) {
+                if (tallyMap.isDefinedAt(nextVote)) {
                   tallyMap(nextVote) = tallyMap(nextVote) + 20
                 }
                 else {
@@ -1443,7 +1738,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
             val index = list.indexWhere(_ == x)
             if (index == 0) {
-              if (tallyMap.isDefinedAt(x)) {
+              if (tallyMap.isDefinedAt(x) && x != PreviousDecision() && x != Break() && x != Bound() && x != Bind() && x != FutureBound()) {
                 tallyMap(x) = tallyMap(x) + 10
               }
               else tallyMap(x) = 10
@@ -1453,7 +1748,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               val nextVote = list(index + 1)
 
               if (x == Break()) {
-                if (tallyMap.isDefinedAt(x)) {
+                if (tallyMap.isDefinedAt(nextVote)) {
                   tallyMap(nextVote) = tallyMap(nextVote) + 10
                 }
                 else tallyMap(nextVote) = 10
@@ -1511,6 +1806,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
           this.self ! DECIDE
           RemoveNormalVote("all", Hurry())
           hurrySpeed = true
+          hurrySpeed = true
         }
     }
 
@@ -1536,7 +1832,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   }
 
 
-  def GetGameStatus(): Unit = {
+  def GetGameStatus(): Array[(_,_,_,_)] = {
     implicit val timeout = Timeout(30 seconds)
     val future = controller ? "GetGameStatus"
     val result = Await.result(future, timeout.duration)
@@ -1546,9 +1842,18 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       GetGameStatus()
     }
     else {
+
       savedGameStatus = result.asInstanceOf[Array[Player]]
+      val player1Quad = savedGameStatus(0).deepCopy()
+      val player2Quad = savedGameStatus(1).deepCopy
+      val staticStatus = new Array[(_,_,_,_)](2)
+      staticStatus(0) = player1Quad
+      staticStatus(1) = player2Quad
+      return staticStatus
+
     }
   }
+
 
 
   def VoteEntry(vote: Any, sender: String): Unit = {
@@ -1657,6 +1962,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
         case Future() =>
         case Discover(option) =>
         case Hurry() =>
+          voterMap(sender).append(vote)
 
 
         case _ => voterMap(sender).append(vote)
@@ -1766,7 +2072,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
           while (voteList.contains(vote)) {
             val index = futureMap(player).indexWhere(_ == vote)
             if (index != -1) {
-              if (removeBlock == true) {
+              if (removeBlock) {
                 if (index == 0 || futureMap(player)(index - 1) == Break()) {
                   while (futureMap(player).isDefinedAt(index) && futureMap(player)(index) != Break()) {
                     futureMap(player).remove(index)
@@ -1783,26 +2089,25 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       }
     }
 
-
     else {
-      while (futureMap(sender).contains(vote)) {
-        val index = futureMap(sender).indexWhere(_ == vote)
-        if (removeBlock) {
-          if (index != -1) {
-            if (index == 0 || futureMap(sender)(index - 1) == Break()) {
-              while (futureMap(sender).isDefinedAt(index) && futureMap(sender)(index) != Break()) {
-                futureMap(sender).remove(index)
-              }
-              if (futureMap(sender).isDefinedAt(index) && futureMap(sender)(index) == Break())
-                futureMap(sender).remove(index)
+
+      val index = futureMap(sender).indexWhere(_ == vote)
+      if (removeBlock) {
+        if (index != -1) {
+          if (index == 0 || futureMap(sender)(index - 1) == Break()) {
+            while (futureMap(sender).isDefinedAt(index) && futureMap(sender)(index) != Break()) {
+              futureMap(sender).remove(index)
+            }
+            if (futureMap(sender).isDefinedAt(index) && futureMap(sender)(index) == Break())
+              futureMap(sender).remove(index)
           }
         }
-        }
-        else
-          futureMap(sender).remove(index)
       }
+      else
+        futureMap(sender).remove(index)
     }
   }
+
 
 
   def CreateCurrentVoterSet(): Set[String] = {
@@ -1896,5 +2201,18 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       system.scheduler.scheduleOnce(10000.milli, this.self, MENU_DECIDE)
   }
 
+
+  def RunInGameTest(): Unit = {
+    //Input Commands Here
+    inGame = true
+    myTurn = true
+
+
+    //Format:
+    this.self ! "CardPlayWithEnemyBoardTarget(4,1)"
+
+
+
+  }
 }
 

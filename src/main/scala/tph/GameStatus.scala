@@ -3,6 +3,7 @@ package tph
 import java.io._
 
 import akka.actor.{Actor, ActorSystem}
+import akka.event.LoggingReceive
 import tph.LogFileEvents._
 
 import scala.collection.mutable._
@@ -19,7 +20,7 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
   val him: Player = Player("UNKNOWN")
   val USER_NAME: String = "Wizard"
 
-  def receive = {
+  override def receive: Receive = LoggingReceive({
 
     //Friendly Cases
 
@@ -565,8 +566,8 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
           sender ! array
 
 
-        case x => {
-    }
+        case x =>
+
 
     case PrintState(fileName) =>
       {
@@ -576,7 +577,7 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
     case _ => {
       log.debug("GameStatus: DEFAULT case")
     }
-  }
+  })
 
 
   def CleanHand(index: Int, player: Player): Unit = {
@@ -642,6 +643,52 @@ class Player(var name: String, handList: ListBuffer[Card], boardList: ListBuffer
   var board: ListBuffer[Card] = boardList
   var player:Int = -1
   var faceValue = 0
+
+  def deepCopy(): Tuple4[_,_,_,_] ={
+
+    val copiedHand = new Array[Card](hand.length)
+    val copiedBoard = new Array[Card](board.length)
+    val copiedPlayerValue = this.player
+    val copiedPlayerFaceValue = this.faceValue
+
+
+    for (a <- 0 until hand.length)
+      {
+        val copiedCardName = hand(a).name
+        val copiedCardID = hand(a).id
+        val copiedCardZone = hand(a).zone
+        val copiedCardHandPostion = hand(a).handPosition
+        val copiedCardBoardPosition = hand(a).boardPosition
+        val copiedCard = new Card()
+        copiedCard.name = copiedCardName
+        copiedCard.id = copiedCardID
+        copiedCard.zone = copiedCardZone
+        copiedCard.handPosition = copiedCardHandPostion
+        copiedCard.boardPosition = copiedCardBoardPosition
+        copiedHand(a) = copiedCard
+      }
+
+    for (a <- 0 until board.length)
+    {
+      val copiedCardName = board(a).name
+      val copiedCardID = board(a).id
+      val copiedCardZone = board(a).zone
+      val copiedCardHandPostion = board(a).handPosition
+      val copiedCardBoardPosition = board(a).boardPosition
+      val copiedCard = new Card()
+      copiedCard.name = copiedCardName
+      copiedCard.id = copiedCardID
+      copiedCard.zone = copiedCardZone
+      copiedCard.handPosition = copiedCardHandPostion
+      copiedCard.boardPosition = copiedCardBoardPosition
+      copiedBoard(a) = copiedCard
+    }
+
+    return (copiedHand, copiedBoard, copiedPlayerValue, copiedPlayerFaceValue)
+
+  }
+
+
 }
 
 case class Card() {
@@ -650,6 +697,7 @@ case class Card() {
   var zone: String = "UNKNOWN"
   var handPosition = -1
   var boardPosition = -1
+
 }
 
 

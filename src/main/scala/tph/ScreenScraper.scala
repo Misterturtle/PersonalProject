@@ -27,4 +27,25 @@ class ScreenScraper extends FreeSpec with Matchers {
   def GetScreen(): Unit = {
 
   }
+
+  def Get1(): Unit =
+  {
+
+  }
+  def Get2(): Unit =
+  {
+
+  }
+  def Get3(): Unit =
+  {
+
+  }
+  def Get4(): Unit =
+  {
+
+  }
+
+
+
+
 }

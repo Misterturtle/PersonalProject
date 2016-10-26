@@ -18,9 +18,12 @@ object Controller {
 
   trait Message
   object Start extends Message
+
+
 }
 
-class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: ActorRef, ircLogic: ActorRef) extends Actor with ActorLogging {
+class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: ActorRef, ircLogic: ActorRef, ircLogicTests:ActorRef) extends Actor with ActorLogging {
+
 
   var currentMenu = "mainMenu"
   var previousMenu = ""
@@ -37,13 +40,6 @@ class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: Acto
         currentMenu = changeToMenu
         previousMenu = pastMenu
       }
-
-      //Test Purposes
-        if(previousMenu == "")
-          {
-            currentMenu = changeToMenu
-            previousMenu = pastMenu
-          }
 
       else throw new IllegalArgumentException
 
@@ -76,9 +72,9 @@ class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: Acto
 
     case "GetGameStatus" =>
       implicit val timeout = Timeout(30 seconds)
-      val future = logFileReader ? "GetGameStatus"
-      val result = Await.result(future, timeout.duration)
-      sender ! result
+        val future = logFileReader ? "GetGameStatus"
+        val result = Await.result(future, timeout.duration)
+        sender ! result
 
   })
 }

@@ -189,6 +189,7 @@ class Hearthstone(system: ActorSystem, controller: ActorRef, config: Config = Co
 
     case (EndTurn()) =>
       clicker.Click(inGame.clickLocations("endTurn").position)
+      controller ! "Turn End"
 
     case (HeroPower()) =>
       clicker.Click(inGame.clickLocations("heroPower").position)

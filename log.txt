@@ -1,155 +1,1324 @@
-20:47:26.905 [atcher-4] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
-20:47:26.997 [atcher-4] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
-20:47:27.035 [atcher-4] DEBUG  a.event.EventStream - Default Loggers started
-20:47:28.468 [    main] DEBUG           tph.IrcBot - nickname = TPHBot
-20:47:37.221 [    main] DEBUG           tph.IrcBot - connected to irc.freenode.net
-20:47:37.222 [    main] DEBUG           tph.IrcBot - joined #tph
-20:47:37.232 [atcher-8] DEBUG       tph.Controller - received handled message init
-20:47:37.240 [atcher-3] DEBUG      tph.Hearthstone - received handled message Start
-20:47:37.241 [atcher-3] DEBUG         tph.ircLogic - received handled message Start
-20:47:37.989 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
-20:47:37.993 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:38.243 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.244 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.244 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.245 [atcher-6] DEBUG       tph.Controller - received handled message Mulligan
-20:47:38.245 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.247 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.250 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.251 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.253 [atcher-6] DEBUG         tph.ircLogic - received handled message Mulligan
-20:47:38.255 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.256 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.257 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.258 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.263 [atcher-3] DEBUG       tph.Controller - received handled message Turn End
-20:47:38.265 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.266 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.266 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.267 [atcher-6] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:38.335 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
-20:47:38.337 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:38.352 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.355 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.410 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
-20:47:38.411 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:38.491 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
-20:47:38.496 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:38.514 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.515 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.586 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.587 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.647 [tcher-10] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.647 [tcher-10] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.693 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.696 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:38.715 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
-20:47:38.728 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:38.930 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
-20:47:38.931 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:38.950 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:38.951 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:39.005 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:39.009 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:39.044 [atcher-2] DEBUG       tph.Controller - received handled message Turn End
-20:47:39.047 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:39.322 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
-20:47:39.327 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:39.351 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:39.351 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:39.675 [atcher-8] DEBUG       tph.Controller - received handled message Turn End
-20:47:39.676 [atcher-8] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:39.811 [atcher-3] DEBUG       tph.Controller - received handled message Turn Start
-20:47:39.814 [atcher-3] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:39.866 [atcher-3] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:39.867 [atcher-3] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:39.971 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:39.972 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:39.976 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:39.977 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:40.426 [atcher-7] DEBUG       tph.Controller - received handled message Turn End
-20:47:40.426 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:41.105 [atcher-7] DEBUG       tph.Controller - received handled message Turn Start
-20:47:41.107 [atcher-7] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:41.211 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:41.212 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:41.473 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:41.474 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:41.625 [atcher-3] DEBUG       tph.Controller - received handled message Turn End
-20:47:41.626 [atcher-3] DEBUG         tph.ircLogic - received handled message Turn End
-20:47:42.115 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
-20:47:42.124 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:42.190 [atcher-2] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:42.191 [atcher-2] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:42.981 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:42.981 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:42.987 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:42.989 [atcher-7] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:42.989 [atcher-7] DEBUG       tph.Controller - received handled message Mulligan
-20:47:42.990 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:42.990 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:42.991 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:42.992 [atcher-7] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:42.992 [atcher-7] DEBUG         tph.ircLogic - received handled message Mulligan
-20:47:43.025 [atcher-6] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:43.026 [atcher-6] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:43.084 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:43.086 [atcher-4] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:43.087 [atcher-4] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:43.098 [atcher-4] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:43.209 [atcher-2] DEBUG       tph.Controller - received handled message Turn Start
-20:47:43.210 [atcher-2] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:43.402 [atcher-3] DEBUG       tph.Controller - received handled message NewMulliganOption
-20:47:43.403 [atcher-3] DEBUG         tph.ircLogic - received handled message NewMulliganOption
-20:47:47.605 [atcher-9] DEBUG         tph.ircLogic - received handled message Menu Decide
-20:47:52.230 [atcher-8] DEBUG       tph.Controller - received handled message ChangeMenu(playMenu,inGame)
-20:47:52.233 [atcher-6] DEBUG         tph.ircLogic - received handled message Start Game
-20:47:52.234 [atcher-6] DEBUG         tph.ircLogic - received handled message Skip Mulligan
-20:47:52.234 [atcher-6] DEBUG         tph.ircLogic - received handled message Turn Start
-20:47:52.235 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
-20:47:54.238 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
-20:47:54.263 [atcher-6] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#264859495] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
-20:47:54.266 [atcher-6] DEBUG         tph.ircLogic - received handled message ChangeMenu(playMenu,inGame)
-20:47:55.292 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-20:47:57.815 [atcher-8] DEBUG         tph.ircLogic - received handled message Menu Decide
-20:47:58.435 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-20:48:01.460 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-20:48:04.476 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-20:48:07.502 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-20:48:10.511 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-20:48:13.530 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-20:48:16.658 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
-20:48:20.048 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-20:48:23.770 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-20:48:24.033 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!play 5
-20:48:24.053 [atcher-6] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3336aa19)
-20:48:25.204 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!bind
-20:48:25.220 [atcher-8] DEBUG         tph.ircLogic - received handled message (Bind(),MrTurtle)
-20:48:26.607 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=MrTurtle, login=~MrTurtle message=!play 1
-20:48:26.610 [atcher-6] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@19062332)
-20:48:26.804 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-20:48:29.870 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-20:48:32.938 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
-20:48:36.013 [atcher-8] DEBUG         tph.ircLogic - received handled message Check
-20:48:39.037 [atcher-6] DEBUG         tph.ircLogic - received handled message Check
-20:48:39.328 [atcher-6] DEBUG         tph.ircLogic - received handled message Decide
-20:48:45.847 [atcher-2] DEBUG      tph.Hearthstone - received handled message CardPlay(5)
-20:48:45.848 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
-20:48:45.849 [atcher-2] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#264859495] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [2] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
-20:48:46.032 [atcher-7] ERROR .a.OneForOneStrategy - key not found: 11
-java.util.NoSuchElementException: key not found: 11
-	at scala.collection.MapLike$class.default(MapLike.scala:228) ~[scala-library-2.11.7.jar:na]
-	at scala.collection.AbstractMap.default(Map.scala:59) ~[scala-library-2.11.7.jar:na]
-	at scala.collection.MapLike$class.apply(MapLike.scala:141) ~[scala-library-2.11.7.jar:na]
-	at scala.collection.AbstractMap.apply(Map.scala:59) ~[scala-library-2.11.7.jar:na]
-	at tph.Hearthstone$$anonfun$receive$1.applyOrElse(Hearthstone.scala:146) ~[classes/:na]
+17:44:24.958 [atcher-4] INFO     a.e.s.Slf4jLogger - Slf4jLogger started
+17:44:24.980 [atcher-4] DEBUG  a.event.EventStream - logger log1-Slf4jLogger started
+17:44:24.987 [atcher-4] DEBUG  a.event.EventStream - Default Loggers started
+17:44:25.161 [    main] DEBUG           tph.IrcBot - nickname = TPHBot
+17:44:37.642 [    main] DEBUG           tph.IrcBot - connected to irc.freenode.net
+17:44:37.642 [    main] DEBUG           tph.IrcBot - joined #tph
+17:44:37.646 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Start
+17:44:37.647 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:44:37.654 [atcher-4] DEBUG         tph.ircLogic - received handled message Start Tests
+17:44:37.656 [atcher-6] DEBUG  t.research.IrcVoter - nickname = voter1
+17:44:37.656 [atcher-4] DEBUG         tph.ircLogic - received handled message Start Game
+17:44:37.665 [atcher-4] DEBUG       tph.Controller - received handled message ChangeMenu(mainMenu,inGame)
+17:44:37.669 [atcher-4] DEBUG         tph.ircLogic - received handled message Skip Mulligan
+17:44:37.670 [atcher-4] DEBUG         tph.ircLogic - received handled message Turn Start
+17:44:37.671 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:44:37.673 [atcher-4] DEBUG    tph.LogFileReader - Game Status Cleared
+17:44:37.673 [atcher-4] DEBUG    tph.LogFileReader - Reader file changed to testsituations/normalsetup.txt
+17:44:37.677 [atcher-4] DEBUG       tph.GameStatus - received handled message GameOver()
+17:44:37.794 [atcher-5] INFO     tph.LogFileReader - Friendly Player: 1, Enemy Player: 2
+17:44:37.794 [atcher-5] DEBUG       tph.GameStatus - received handled message DefinePlayers(1)
+17:44:37.795 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card One id=1 zone=HAND zonePos=1 cardId=some player=1] pos from 0 -> 1
+17:44:37.795 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card One,1,1,1)
+17:44:37.796 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Two id=2 zone=HAND zonePos=2 cardId=some player=1] pos from 0 -> 2
+17:44:37.796 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Three id=3 zone=HAND zonePos=3 cardId=some player=1] pos from 0 -> 3
+17:44:37.797 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Four id=4 zone=HAND zonePos=4 cardId=some player=1] pos from 0 -> 4
+17:44:37.797 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Two,2,2,1)
+17:44:37.797 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Five id=5 zone=HAND zonePos=5 cardId=some player=1] pos from 0 -> 5
+17:44:37.798 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Three,3,3,1)
+17:44:37.798 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Six id=6 zone=HAND zonePos=6 cardId=some player=1] pos from 0 -> 6
+17:44:37.798 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Four,4,4,1)
+17:44:37.799 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Five,5,5,1)
+17:44:37.799 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Seven id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 0 -> 7
+17:44:37.803 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Six,6,6,1)
+17:44:37.804 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Seven,7,7,1)
+17:44:37.805 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Eight id=8 zone=HAND zonePos=8 cardId=some player=1] pos from 0 -> 8
+17:44:37.805 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Eight,8,8,1)
+17:44:37.805 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Nine id=9 zone=HAND zonePos=9 cardId=some player=1] pos from 0 -> 9
+17:44:37.806 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Nine,9,9,1)
+17:44:37.806 [atcher-5] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Ten id=10 zone=HAND zonePos=10 cardId=some player=1] pos from 0 -> 10
+17:44:37.807 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=11 cardId=some type=some zone=HAND zonePos=1 player=2] pos from 0 -> 1
+17:44:37.807 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=12 cardId=some type=some zone=HAND zonePos=2 player=2] pos from 0 -> 2
+17:44:37.807 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=13 cardId=some type=some zone=HAND zonePos=3 player=2] pos from 0 -> 3
+17:44:37.808 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=14 cardId=some type=some zone=HAND zonePos=4 player=2] pos from 0 -> 4
+17:44:37.808 [atcher-5] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Ten,10,10,1)
+17:44:37.809 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=15 cardId=some type=some zone=HAND zonePos=5 player=2] pos from 0 -> 5
+17:44:37.809 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(11,1,2)
+17:44:37.809 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=16 cardId=some type=some zone=HAND zonePos=6 player=2] pos from 0 -> 6
+17:44:37.810 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=17 cardId=some type=some zone=HAND zonePos=7 player=2] pos from 0 -> 7
+17:44:37.810 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=18 cardId=some type=some zone=HAND zonePos=8 player=2] pos from 0 -> 8
+17:44:37.811 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(12,2,2)
+17:44:37.811 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=19 cardId=some type=some zone=HAND zonePos=9 player=2] pos from 0 -> 9
+17:44:37.811 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(13,3,2)
+17:44:37.811 [atcher-5] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=20 cardId=some type=some zone=HAND zonePos=10 player=2] pos from 0 -> 10
+17:44:37.812 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(14,4,2)
+17:44:37.812 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(15,5,2)
+17:44:37.812 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(16,6,2)
+17:44:37.813 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(17,7,2)
+17:44:37.813 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(18,8,2)
+17:44:37.813 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(19,9,2)
+17:44:37.814 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion One id=21 zone=PLAY zonePos=1 some player=1 some
+17:44:37.814 [atcher-5] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(20,10,2)
+17:44:37.814 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Two id=22 zone=PLAY zonePos=2 some player=1 some
+17:44:37.815 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Three id=23 zone=PLAY zonePos=3 some player=1 some
+17:44:37.815 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion One,21,1,1)
+17:44:37.815 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Two,22,2,1)
+17:44:37.816 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Four id=24 zone=PLAY zonePos=4 some player=1 some
+17:44:37.816 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Three,23,3,1)
+17:44:37.816 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Four,24,4,1)
+17:44:37.816 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Five id=25 zone=PLAY zonePos=5 some player=1 some
+17:44:37.817 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Five,25,5,1)
+17:44:37.817 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion One id=31 zone=PLAY zonePos=1 some player=2 some
+17:44:37.817 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Two id=32 zone=PLAY zonePos=2 some player=2 some
+17:44:37.817 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion One,31,1,2)
+17:44:37.818 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Three id=33 zone=PLAY zonePos=3 some player=2 some
+17:44:37.818 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Two,32,2,2)
+17:44:37.818 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Four id=34 zone=PLAY zonePos=4 some player=2 some
+17:44:37.818 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Three,33,3,2)
+17:44:37.818 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Four,34,4,2)
+17:44:37.819 [atcher-5] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Five id=35 zone=PLAY zonePos=5 some player=2 some
+17:44:37.819 [atcher-5] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Five,35,5,2)
+17:44:39.675 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:44:41.676 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:44:41.677 [atcher-5] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:44:41.681 [tcher-10] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:44:41.682 [tcher-10] DEBUG         tph.ircLogic - received handled message Activate
+17:44:41.683 [tcher-10] DEBUG         tph.ircLogic - received handled message ChangeMenu(mainMenu,inGame)
+17:44:41.683 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:44:44.703 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:44:47.724 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:44:47.761 [atcher-6] DEBUG  t.research.IrcVoter - connected to irc.freenode.net
+17:44:47.762 [atcher-6] DEBUG  t.research.IrcVoter - voter1 joined #tph
+17:44:47.762 [atcher-6] DEBUG  t.research.IrcVoter - nickname = voter2
+17:44:50.743 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:44:53.764 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:44:56.784 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:44:57.618 [atcher-6] DEBUG  t.research.IrcVoter - connected to irc.freenode.net
+17:44:57.619 [atcher-6] DEBUG  t.research.IrcVoter - voter2 joined #tph
+17:44:57.620 [atcher-6] DEBUG  t.research.IrcVoter - nickname = voter3
+17:44:59.806 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:02.823 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:45:05.833 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:07.609 [atcher-6] DEBUG  t.research.IrcVoter - connected to irc.freenode.net
+17:45:07.610 [atcher-6] DEBUG  t.research.IrcVoter - voter3 joined #tph
+17:45:07.611 [atcher-6] DEBUG  t.research.IrcVoter - nickname = voter4
+17:45:08.844 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:45:11.864 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:14.886 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:17.734 [atcher-6] DEBUG  t.research.IrcVoter - connected to irc.freenode.net
+17:45:17.734 [atcher-6] DEBUG  t.research.IrcVoter - voter4 joined #tph
+17:45:17.735 [atcher-6] DEBUG  t.research.IrcVoter - nickname = voter5
+17:45:17.907 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:20.928 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:45:23.948 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:26.969 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:27.609 [atcher-6] DEBUG  t.research.IrcVoter - connected to irc.freenode.net
+17:45:27.610 [atcher-6] DEBUG  t.research.IrcVoter - voter5 joined #tph
+17:45:29.988 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:45:33.009 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:36.029 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:45:37.948 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 1
+17:45:37.950 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@fe62ebe)
+17:45:38.462 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!play 1
+17:45:38.463 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@2b2c3929)
+17:45:38.952 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 1
+17:45:38.952 [tcher-10] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@68e45729)
+17:45:39.049 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:39.387 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 1
+17:45:39.388 [tcher-10] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@61af7006)
+17:45:39.779 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!play 2
+17:45:39.779 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!play 1
+17:45:39.780 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@1501712c)
+17:45:39.781 [tcher-10] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@445e6fb)
+17:45:41.243 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 3
+17:45:41.243 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!play 1
+17:45:41.243 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!play 4
+17:45:41.243 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 2
+17:45:41.243 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@1a58e1b2)
+17:45:41.244 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@50f766a1)
+17:45:41.244 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@4ee1e582)
+17:45:41.244 [atcher-2] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@65b8a09b)
+17:45:41.388 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!play 5
+17:45:41.389 [tcher-10] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@67764052)
+17:45:42.059 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:45:43.361 [tcher-10] DEBUG         tph.ircLogic - received handled message Direct Decide
+17:45:43.375 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:43.376 [atcher-6] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:45:43.376 [atcher-6] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [2] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:45:43.379 [atcher-9] DEBUG    t.r.ircLogicTests - received handled message CardPlay(1)
+17:45:43.379 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:43.380 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:45:43.380 [atcher-8] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [3] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:45:43.382 [tcher-11] DEBUG    tph.LogFileReader - Reader file changed to testsituations/normalsetupcommands.txt
+17:45:43.451 [tcher-11] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=2 some zone=HAND zonePos=2 player=1 dstPos=1
+17:45:43.451 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(2,2,1,1)
+17:45:43.452 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=3 some zone=HAND zonePos=3 player=1 dstPos=2
+17:45:43.452 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=4 some zone=HAND zonePos=4 player=1 dstPos=3
+17:45:43.452 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=5 some zone=HAND zonePos=5 player=1 dstPos=4
+17:45:43.452 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=6 some zone=HAND zonePos=6 player=1 dstPos=5
+17:45:43.452 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(3,3,1,2)
+17:45:43.453 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(4,4,1,3)
+17:45:43.453 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(5,5,1,4)
+17:45:43.453 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=7 some zone=HAND zonePos=7 player=1 dstPos=6
+17:45:43.454 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(6,6,1,5)
+17:45:43.454 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(7,7,1,6)
+17:45:43.454 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=8 some zone=HAND zonePos=8 player=1 dstPos=7
+17:45:43.454 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(8,8,1,7)
+17:45:43.454 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=9 some zone=HAND zonePos=9 player=1 dstPos=8
+17:45:43.454 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(9,9,1,8)
+17:45:43.454 [tcher-10] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=10 some zone=HAND zonePos=10 player=1 dstPos=9
+17:45:43.455 [tcher-10] INFO     tph.LogFileReader - Card Played: [Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Friendly Card One id=1 zone=PLAY zonePos=6 cardId=.+ player=1]
+17:45:43.455 [tcher-10] DEBUG       tph.GameStatus - received handled message HandPositionChange(10,10,1,9)
+17:45:43.455 [tcher-10] DEBUG       tph.GameStatus - received handled message CardPlayed(Friendly Card One,1,6,1)
+17:45:47.379 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:48.370 [atcher-8] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:45:49.380 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:49.380 [atcher-6] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:45:49.381 [atcher-6] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [4] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:45:49.392 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:49.392 [atcher-6] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:45:49.393 [atcher-6] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [5] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:45:49.394 [tcher-11] DEBUG    t.r.ircLogicTests - received handled message CardPlay(1)
+17:45:49.394 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:49.394 [tcher-11] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:45:49.394 [tcher-11] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [6] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:45:49.502 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=3 some zone=HAND zonePos=2 player=1 dstPos=1
+17:45:49.502 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=4 some zone=HAND zonePos=3 player=1 dstPos=2
+17:45:49.502 [atcher-3] DEBUG       tph.GameStatus - received handled message HandPositionChange(3,2,1,1)
+17:45:49.502 [atcher-3] DEBUG       tph.GameStatus - received handled message HandPositionChange(4,3,1,2)
+17:45:49.502 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=5 some zone=HAND zonePos=4 player=1 dstPos=3
+17:45:49.503 [atcher-3] DEBUG       tph.GameStatus - received handled message HandPositionChange(5,4,1,3)
+17:45:49.503 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=6 some zone=HAND zonePos=5 player=1 dstPos=4
+17:45:49.503 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=7 some zone=HAND zonePos=6 player=1 dstPos=5
+17:45:49.503 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=8 some zone=HAND zonePos=7 player=1 dstPos=6
+17:45:49.503 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=9 some zone=HAND zonePos=8 player=1 dstPos=7
+17:45:49.503 [atcher-3] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=10 some zone=HAND zonePos=9 player=1 dstPos=8
+17:45:49.503 [atcher-3] INFO     tph.LogFileReader - Card Played: [Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Friendly Card Two id=2 zone=PLAY zonePos=7 cardId=.+ player=1]
+17:45:49.503 [atcher-3] DEBUG       tph.GameStatus - received handled message HandPositionChange(6,5,1,4)
+17:45:49.504 [atcher-3] DEBUG       tph.GameStatus - received handled message HandPositionChange(7,6,1,5)
+17:45:49.505 [atcher-6] DEBUG       tph.GameStatus - received handled message HandPositionChange(8,7,1,6)
+17:45:49.505 [atcher-6] DEBUG       tph.GameStatus - received handled message HandPositionChange(9,8,1,7)
+17:45:49.505 [atcher-6] DEBUG       tph.GameStatus - received handled message HandPositionChange(10,9,1,8)
+17:45:49.505 [atcher-6] DEBUG       tph.GameStatus - received handled message CardPlayed(Friendly Card Two,2,7,1)
+17:45:53.386 [tcher-11] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:45:53.393 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:55.393 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:45:55.394 [tcher-11] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:45:55.394 [tcher-11] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [7] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:45:55.395 [tcher-11] DEBUG         tph.ircLogic - received handled message Check
+17:45:55.396 [tcher-11] DEBUG    t.r.ircLogicTests - received handled message EndTurn()
+17:45:55.396 [tcher-11] DEBUG         tph.ircLogic - received handled message Activate
+17:45:58.406 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:45:58.406 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:46:01.426 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:46:03.426 [tcher-10] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:04.447 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:46:07.468 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:46:08.448 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:10.488 [tcher-10] DEBUG         tph.ircLogic - received handled message Check
+17:46:13.378 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message CardPlayedAdjustmentResults
+17:46:13.378 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:13.379 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:13.379 [tcher-12] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [8] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:46:13.379 [tcher-12] INFO     t.r.ircLogicTests - CardPlayedAdjustmentTest Passed!
+17:46:13.468 [tcher-10] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:13.468 [tcher-10] DEBUG    tph.LogFileReader - Game Status Cleared
+17:46:13.469 [tcher-10] DEBUG       tph.GameStatus - received handled message GameOver()
+17:46:13.469 [tcher-10] DEBUG    tph.LogFileReader - Reader file changed to testsituations/fullboard.txt
+17:46:13.508 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+17:46:13.519 [tcher-10] INFO     tph.LogFileReader - Friendly Player: 1, Enemy Player: 2
+17:46:13.519 [tcher-10] DEBUG       tph.GameStatus - received handled message DefinePlayers(1)
+17:46:13.519 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion One id=21 zone=PLAY zonePos=1 some player=1 some
+17:46:13.519 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion One,21,1,1)
+17:46:13.519 [tcher-11] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Two id=22 zone=PLAY zonePos=2 some player=1 some
+17:46:13.519 [tcher-11] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Three id=23 zone=PLAY zonePos=3 some player=1 some
+17:46:13.519 [tcher-11] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Two,22,2,1)
+17:46:13.520 [tcher-11] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Four id=24 zone=PLAY zonePos=4 some player=1 some
+17:46:13.520 [tcher-11] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Three,23,3,1)
+17:46:13.520 [tcher-11] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Five id=25 zone=PLAY zonePos=5 some player=1 some
+17:46:13.520 [tcher-11] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Four,24,4,1)
+17:46:13.520 [tcher-11] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Five,25,5,1)
+17:46:13.520 [tcher-11] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Six id=26 zone=PLAY zonePos=6 some player=1 some
+17:46:13.520 [tcher-11] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Seven id=27 zone=PLAY zonePos=7 some player=1 some
+17:46:13.521 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Six,26,6,1)
+17:46:13.521 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Seven,27,7,1)
+17:46:13.521 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion One id=31 zone=PLAY zonePos=1 some player=2 some
+17:46:13.521 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion One,31,1,2)
+17:46:13.521 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Two id=32 zone=PLAY zonePos=2 some player=2 some
+17:46:13.521 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Two,32,2,2)
+17:46:13.521 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Three id=33 zone=PLAY zonePos=3 some player=2 some
+17:46:13.521 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Three,33,3,2)
+17:46:13.521 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Four id=34 zone=PLAY zonePos=4 some player=2 some
+17:46:13.522 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Four,34,4,2)
+17:46:13.522 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Five id=35 zone=PLAY zonePos=5 some player=2 some
+17:46:13.522 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Five,35,5,2)
+17:46:13.522 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Six id=36 zone=PLAY zonePos=6 some player=2 some
+17:46:13.523 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Six,36,6,2)
+17:46:13.524 [atcher-4] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Seven id=37 zone=PLAY zonePos=7 some player=2 some
+17:46:13.525 [atcher-4] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Seven,37,7,2)
+17:46:16.528 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+17:46:19.548 [tcher-11] DEBUG         tph.ircLogic - received handled message Check
+17:46:22.568 [atcher-4] DEBUG         tph.ircLogic - received handled message Check
+17:46:23.663 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 1, target his 1
+17:46:23.664 [tcher-11] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@4735e4ee)
+17:46:24.814 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 1, target his 1
+17:46:24.814 [tcher-11] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@33194444)
+17:46:25.525 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 1, target his 1
+17:46:25.525 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 1, target his 1
+17:46:25.526 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@359ce4e2)
+17:46:25.526 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3b5b0c21)
+17:46:25.590 [tcher-11] DEBUG         tph.ircLogic - received handled message Check
+17:46:25.889 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!att my 1, target his 1
+17:46:25.890 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 1, target his 3
+17:46:25.890 [tcher-11] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3f648f92)
+17:46:25.890 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!att my 1, target his 1
+17:46:25.890 [tcher-11] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@711a0d7d)
+17:46:25.890 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7a66061a)
+17:46:26.291 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!att my 1, target his 4
+17:46:26.291 [tcher-11] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@288f4640)
+17:46:26.797 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 3, target his 3
+17:46:26.799 [tcher-11] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@4b567d74)
+17:46:27.316 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!att my 1, target his 5
+17:46:27.317 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@25f6d37d)
+17:46:28.243 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 1, target his 2
+17:46:28.243 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 3, target his 3
+17:46:28.243 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@50556393)
+17:46:28.243 [atcher-4] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@1a49f955)
+17:46:28.612 [tcher-11] DEBUG         tph.ircLogic - received handled message Check
+17:46:29.219 [tcher-12] DEBUG         tph.ircLogic - received handled message Direct Decide
+17:46:29.220 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.220 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.221 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:31.221 [atcher-9] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [9] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:46:31.222 [atcher-6] DEBUG    t.r.ircLogicTests - received handled message NormalAttack(1,1)
+17:46:31.223 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.223 [atcher-6] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:31.223 [atcher-6] INFO  a.DeadLetterActorRef - Message [scala.None$] from Actor[akka://TwitchPlaysHearthstone/user/logFileReader#-929163595] to Actor[akka://TwitchPlaysHearthstone/deadLetters] was not delivered. [10] dead letters encountered, no more dead letters will be logged. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+17:46:31.248 [tcher-11] DEBUG    tph.LogFileReader - Reader file changed to testsituations/fullboardcommands.txt
+17:46:31.248 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.250 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.251 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.251 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.252 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.252 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.252 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.252 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.253 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.253 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.253 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.253 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.254 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.254 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.255 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.255 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.256 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.256 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.257 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.260 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.261 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.262 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.263 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.263 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.263 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.264 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.265 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.265 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.266 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.267 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.267 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.267 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.268 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.268 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.268 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.269 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.269 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.270 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.270 [atcher-6] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.271 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.272 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.273 [tcher-18] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.274 [tcher-18] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=21 zone=some zonePos=55 some player=1 some tag=ZONE value=GRAVEYARD
+17:46:31.274 [tcher-18] DEBUG       tph.GameStatus - received handled message CardDeath(some,21,55,1)
+17:46:31.274 [tcher-18] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=22 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+17:46:31.274 [tcher-18] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=23 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:46:31.274 [tcher-18] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=24 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:46:31.275 [tcher-18] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=25 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:46:31.275 [tcher-15] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=26 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+17:46:31.275 [tcher-15] DEBUG       tph.GameStatus - received handled message BoardPositionChange(22,1,1)
+17:46:31.275 [tcher-15] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=27 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
+17:46:31.276 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:31.276 [tcher-19] DEBUG       tph.GameStatus - received handled message BoardPositionChange(23,1,2)
+17:46:31.276 [tcher-19] DEBUG       tph.GameStatus - received handled message BoardPositionChange(24,1,3)
+17:46:31.276 [tcher-19] DEBUG       tph.GameStatus - received handled message BoardPositionChange(25,1,4)
+17:46:31.276 [tcher-19] DEBUG       tph.GameStatus - received handled message BoardPositionChange(26,1,5)
+17:46:31.276 [tcher-19] DEBUG       tph.GameStatus - received handled message BoardPositionChange(27,1,6)
+17:46:31.277 [tcher-19] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:31.393 [tcher-13] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=31 zone=some zonePos=55 some player=2 some tag=ZONE value=GRAVEYARD
+17:46:31.393 [tcher-13] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=32 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+17:46:31.393 [tcher-13] DEBUG       tph.GameStatus - received handled message CardDeath(some,31,55,2)
+17:46:31.393 [tcher-13] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=33 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:46:31.393 [tcher-13] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=34 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:46:31.393 [tcher-13] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=35 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:46:31.394 [tcher-13] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=36 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+17:46:31.394 [tcher-13] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=37 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
+17:46:31.394 [tcher-13] DEBUG       tph.GameStatus - received handled message BoardPositionChange(32,2,1)
+17:46:31.394 [tcher-13] DEBUG       tph.GameStatus - received handled message BoardPositionChange(33,2,2)
+17:46:31.394 [tcher-13] DEBUG       tph.GameStatus - received handled message BoardPositionChange(34,2,3)
+17:46:31.394 [tcher-13] DEBUG       tph.GameStatus - received handled message BoardPositionChange(35,2,4)
+17:46:31.394 [tcher-13] DEBUG       tph.GameStatus - received handled message BoardPositionChange(36,2,5)
+17:46:31.394 [tcher-13] DEBUG       tph.GameStatus - received handled message BoardPositionChange(37,2,6)
+17:46:34.232 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:35.223 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.224 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.224 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:37.235 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.235 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:37.235 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message NormalAttack(2,2)
+17:46:37.235 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.236 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:37.236 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.236 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.237 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.237 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.237 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.238 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.238 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.238 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.238 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.239 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.239 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.239 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.239 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.239 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.240 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.240 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.240 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.240 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.240 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.241 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.241 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.241 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.241 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.242 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.243 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.244 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.245 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.246 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.251 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.252 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.252 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.253 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.253 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.254 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.255 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.255 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.256 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.256 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.257 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.257 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.258 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.258 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.258 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.259 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.259 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.260 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.260 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.261 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.261 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.261 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.262 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.262 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.262 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.262 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.263 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.263 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.263 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.263 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.264 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.264 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.264 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.264 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.265 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.265 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.265 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.266 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.266 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.266 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.267 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.267 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.267 [tcher-19] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.267 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.268 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.268 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.268 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.268 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.268 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.269 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.269 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.269 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.269 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.269 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.270 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.270 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.270 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.270 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.270 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.271 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.271 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.271 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.271 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.272 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.273 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.274 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.275 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.275 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.275 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.275 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.275 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.275 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.276 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.276 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.276 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.277 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.278 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.279 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.279 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.279 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.279 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.280 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.281 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.282 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.282 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.283 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.284 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.284 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.285 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.285 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.285 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.286 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.286 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.287 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.287 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.287 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.288 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.288 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.289 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.290 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.290 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.291 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.291 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.291 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.291 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.292 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.293 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.293 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.294 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.295 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.295 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.295 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.296 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.296 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.297 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.298 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.299 [tcher-14] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.301 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.301 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.301 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.302 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.302 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.302 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.303 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.304 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.305 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.305 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.306 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.307 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.308 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.308 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.309 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.309 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.309 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.310 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.310 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.310 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.311 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.311 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.311 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.312 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.312 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.313 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.314 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.314 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.315 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.315 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.315 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.315 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.317 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.317 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.317 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.318 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.319 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.320 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.320 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.322 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.323 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.323 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.323 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.323 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.323 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.324 [tcher-15] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.325 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.326 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.327 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.328 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.328 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.329 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.330 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.330 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.331 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.332 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.332 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.332 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.332 [tcher-11] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.333 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.333 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.334 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.335 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.335 [atcher-8] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.336 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.336 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.337 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.338 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.338 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.338 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.339 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.340 [tcher-10] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=23 zone=some zonePos=55 some player=1 some tag=ZONE value=GRAVEYARD
+17:46:37.340 [tcher-10] DEBUG       tph.GameStatus - received handled message CardDeath(some,23,55,1)
+17:46:37.340 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.340 [tcher-10] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=24 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:46:37.340 [tcher-10] DEBUG       tph.GameStatus - received handled message BoardPositionChange(24,1,2)
+17:46:37.340 [tcher-10] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=25 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:46:37.340 [tcher-10] DEBUG       tph.GameStatus - received handled message BoardPositionChange(25,1,3)
+17:46:37.340 [tcher-10] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=26 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:46:37.340 [tcher-10] DEBUG       tph.GameStatus - received handled message BoardPositionChange(26,1,4)
+17:46:37.340 [tcher-10] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=27 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+17:46:37.340 [tcher-10] DEBUG       tph.GameStatus - received handled message BoardPositionChange(27,1,5)
+17:46:37.341 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:37.341 [tcher-10] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:37.460 [tcher-16] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=33 zone=some zonePos=55 some player=2 some tag=ZONE value=GRAVEYARD
+17:46:37.460 [tcher-16] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=34 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:46:37.460 [tcher-16] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=35 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:46:37.460 [tcher-16] DEBUG       tph.GameStatus - received handled message CardDeath(some,33,55,2)
+17:46:37.461 [tcher-16] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=36 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:46:37.461 [tcher-16] DEBUG       tph.GameStatus - received handled message BoardPositionChange(34,2,2)
+17:46:37.461 [tcher-16] DEBUG       tph.GameStatus - received handled message BoardPositionChange(35,2,3)
+17:46:37.461 [tcher-16] DEBUG       tph.GameStatus - received handled message BoardPositionChange(36,2,4)
+17:46:37.461 [tcher-16] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=37 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+17:46:37.461 [tcher-16] DEBUG       tph.GameStatus - received handled message BoardPositionChange(37,2,5)
+17:46:39.250 [atcher-9] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:41.235 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:43.236 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:43.236 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:43.237 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:46:43.237 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message EndTurn()
+17:46:43.237 [tcher-20] DEBUG         tph.ircLogic - received handled message Activate
+17:46:44.261 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:46.243 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
+17:46:49.263 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:46:49.273 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:52.282 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
+17:46:54.293 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:55.293 [atcher-9] DEBUG         tph.ircLogic - received handled message Check
+17:46:58.313 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:46:59.234 [atcher-9] DEBUG    t.r.ircLogicTests - received handled message MinionDeathAdjustmentResults
+17:46:59.235 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:46:59.235 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:46:59.235 [tcher-16] INFO     t.r.ircLogicTests - MinionDeathAdjustmentTest Passed!
+17:46:59.304 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:46:59.304 [tcher-20] DEBUG    tph.LogFileReader - Game Status Cleared
+17:46:59.304 [tcher-20] DEBUG       tph.GameStatus - received handled message GameOver()
+17:46:59.305 [tcher-20] DEBUG    tph.LogFileReader - Reader file changed to testsituations/normalsetup.txt
+17:46:59.355 [atcher-4] INFO     tph.LogFileReader - Friendly Player: 1, Enemy Player: 2
+17:46:59.355 [atcher-4] DEBUG       tph.GameStatus - received handled message DefinePlayers(1)
+17:46:59.355 [atcher-4] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card One id=1 zone=HAND zonePos=1 cardId=some player=1] pos from 0 -> 1
+17:46:59.355 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Two id=2 zone=HAND zonePos=2 cardId=some player=1] pos from 0 -> 2
+17:46:59.355 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card One,1,1,1)
+17:46:59.355 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Two,2,2,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Three id=3 zone=HAND zonePos=3 cardId=some player=1] pos from 0 -> 3
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Three,3,3,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Four id=4 zone=HAND zonePos=4 cardId=some player=1] pos from 0 -> 4
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Four,4,4,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Five id=5 zone=HAND zonePos=5 cardId=some player=1] pos from 0 -> 5
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Five,5,5,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Six id=6 zone=HAND zonePos=6 cardId=some player=1] pos from 0 -> 6
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Seven id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 0 -> 7
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Six,6,6,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Eight id=8 zone=HAND zonePos=8 cardId=some player=1] pos from 0 -> 8
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Seven,7,7,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Nine id=9 zone=HAND zonePos=9 cardId=some player=1] pos from 0 -> 9
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Eight,8,8,1)
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Nine,9,9,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Ten id=10 zone=HAND zonePos=10 cardId=some player=1] pos from 0 -> 10
+17:46:59.356 [tcher-10] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Ten,10,10,1)
+17:46:59.356 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=11 cardId=some type=some zone=HAND zonePos=1 player=2] pos from 0 -> 1
+17:46:59.357 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=12 cardId=some type=some zone=HAND zonePos=2 player=2] pos from 0 -> 2
+17:46:59.357 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(11,1,2)
+17:46:59.357 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(12,2,2)
+17:46:59.357 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=13 cardId=some type=some zone=HAND zonePos=3 player=2] pos from 0 -> 3
+17:46:59.357 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=14 cardId=some type=some zone=HAND zonePos=4 player=2] pos from 0 -> 4
+17:46:59.357 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=15 cardId=some type=some zone=HAND zonePos=5 player=2] pos from 0 -> 5
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=16 cardId=some type=some zone=HAND zonePos=6 player=2] pos from 0 -> 6
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=17 cardId=some type=some zone=HAND zonePos=7 player=2] pos from 0 -> 7
+17:46:59.359 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(13,3,2)
+17:46:59.359 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(14,4,2)
+17:46:59.359 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(15,5,2)
+17:46:59.359 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(16,6,2)
+17:46:59.359 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(17,7,2)
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=18 cardId=some type=some zone=HAND zonePos=8 player=2] pos from 0 -> 8
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=19 cardId=some type=some zone=HAND zonePos=9 player=2] pos from 0 -> 9
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=20 cardId=some type=some zone=HAND zonePos=10 player=2] pos from 0 -> 10
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion One id=21 zone=PLAY zonePos=1 some player=1 some
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Two id=22 zone=PLAY zonePos=2 some player=1 some
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Three id=23 zone=PLAY zonePos=3 some player=1 some
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Four id=24 zone=PLAY zonePos=4 some player=1 some
+17:46:59.359 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(18,8,2)
+17:46:59.359 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Five id=25 zone=PLAY zonePos=5 some player=1 some
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(19,9,2)
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(20,10,2)
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion One,21,1,1)
+17:46:59.360 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion One id=31 zone=PLAY zonePos=1 some player=2 some
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Two,22,2,1)
+17:46:59.360 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Two id=32 zone=PLAY zonePos=2 some player=2 some
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Three,23,3,1)
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Four,24,4,1)
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Five,25,5,1)
+17:46:59.360 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Three id=33 zone=PLAY zonePos=3 some player=2 some
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion One,31,1,2)
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Two,32,2,2)
+17:46:59.360 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Four id=34 zone=PLAY zonePos=4 some player=2 some
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Three,33,3,2)
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Four,34,4,2)
+17:46:59.360 [tcher-10] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Five id=35 zone=PLAY zonePos=5 some player=2 some
+17:46:59.360 [tcher-10] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Five,35,5,2)
+17:47:01.325 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:04.335 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:07.345 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:10.356 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:10.437 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 1, spot 1
+17:47:10.438 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@23fce908)
+17:47:12.331 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!bind
+17:47:12.332 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter1)
+17:47:13.366 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:16.376 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:16.777 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!play 1, spot 1
+17:47:16.777 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@72f78f06)
+17:47:17.134 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 5, target his 1
+17:47:17.134 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!bind
+17:47:17.134 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 1, target his 5
+17:47:17.134 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!bind
+17:47:17.134 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 5, target his 1
+17:47:17.134 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@5d868589)
+17:47:17.134 [tcher-12] DEBUG         tph.ircLogic - received handled message (Bind(),voter1)
+17:47:17.135 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7c88a4c6)
+17:47:17.135 [tcher-12] DEBUG         tph.ircLogic - received handled message (Bind(),voter2)
+17:47:17.135 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@38f8a6f6)
+17:47:18.268 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!bind
+17:47:18.268 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter2)
+17:47:19.388 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:19.806 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 1, target his 5
+17:47:19.807 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@79f59a23)
+17:47:22.398 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:22.899 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 1, spot 1
+17:47:22.899 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@2b6cbf23)
+17:47:25.409 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:28.429 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:31.439 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:34.451 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:35.421 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!bind
+17:47:35.421 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 5, target his 1
+17:47:35.421 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!bind
+17:47:35.421 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 1, target his 5
+17:47:35.421 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter3)
+17:47:35.421 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!play 1, spot 1
+17:47:35.421 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@79901d2e)
+17:47:35.422 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter3)
+17:47:35.422 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!bind
+17:47:35.422 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@6fdc3714)
+17:47:35.422 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!att my 5, target his 1
+17:47:35.422 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3a2d8c4e)
+17:47:35.422 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter4)
+17:47:35.422 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@76b99150)
+17:47:37.471 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:37.812 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!bind
+17:47:37.812 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!att my 1, target his 5
+17:47:37.812 [tcher-12] DEBUG         tph.ircLogic - received handled message (Bind(),voter4)
+17:47:37.812 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@1ffae8c3)
+17:47:38.977 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!play 1, spot 1
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!bind
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!att my 5, target his 1
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!bind
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter5, login=~PircBot message=!att my 1, target his 5
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 1, target his 5
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 5, target his 1
+17:47:38.978 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 5, target his 1
+17:47:38.978 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7476b98f)
+17:47:38.978 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter5)
+17:47:38.979 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@d76b342)
+17:47:38.979 [tcher-13] DEBUG         tph.ircLogic - received handled message (Bind(),voter5)
+17:47:38.979 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@31c516f)
+17:47:38.979 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@5505f2be)
+17:47:38.979 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@14fe9350)
+17:47:38.979 [tcher-13] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@2c2ace2e)
+17:47:40.482 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:47:43.502 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:47:46.306 [tcher-16] DEBUG         tph.ircLogic - received handled message Direct Decide
+17:47:46.309 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:48.309 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:48.309 [atcher-4] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:47:48.309 [tcher-10] DEBUG    t.r.ircLogicTests - received handled message CardPlayWithPosition(1,1)
+17:47:48.310 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:48.310 [tcher-10] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:47:48.311 [tcher-16] DEBUG    tph.LogFileReader - Reader file changed to testsituations/normalsetupcommands.txt
+17:47:48.413 [tcher-16] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=2 some zone=HAND zonePos=2 player=1 dstPos=1
+17:47:48.413 [tcher-16] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=3 some zone=HAND zonePos=3 player=1 dstPos=2
+17:47:48.413 [tcher-16] DEBUG       tph.GameStatus - received handled message HandPositionChange(2,2,1,1)
+17:47:48.413 [tcher-16] DEBUG       tph.GameStatus - received handled message HandPositionChange(3,3,1,2)
+17:47:48.413 [tcher-16] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=4 some zone=HAND zonePos=4 player=1 dstPos=3
+17:47:48.413 [tcher-16] DEBUG       tph.GameStatus - received handled message HandPositionChange(4,4,1,3)
+17:47:48.413 [tcher-16] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=5 some zone=HAND zonePos=5 player=1 dstPos=4
+17:47:48.413 [tcher-16] DEBUG       tph.GameStatus - received handled message HandPositionChange(5,5,1,4)
+17:47:48.413 [tcher-16] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=6 some zone=HAND zonePos=6 player=1 dstPos=5
+17:47:48.413 [tcher-16] DEBUG       tph.GameStatus - received handled message HandPositionChange(6,6,1,5)
+17:47:48.414 [atcher-9] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=7 some zone=HAND zonePos=7 player=1 dstPos=6
+17:47:48.414 [atcher-9] DEBUG       tph.GameStatus - received handled message HandPositionChange(7,7,1,6)
+17:47:48.414 [atcher-9] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=8 some zone=HAND zonePos=8 player=1 dstPos=7
+17:47:48.414 [atcher-9] DEBUG       tph.GameStatus - received handled message HandPositionChange(8,8,1,7)
+17:47:48.414 [atcher-9] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=9 some zone=HAND zonePos=9 player=1 dstPos=8
+17:47:48.414 [atcher-9] DEBUG       tph.GameStatus - received handled message HandPositionChange(9,9,1,8)
+17:47:48.414 [atcher-9] INFO     tph.LogFileReader - Hand_Position_Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some tag=ZONE_POSITION value=55] complete=False] entity=some id=10 some zone=HAND zonePos=10 player=1 dstPos=9
+17:47:48.414 [atcher-9] DEBUG       tph.GameStatus - received handled message HandPositionChange(10,10,1,9)
+17:47:48.414 [atcher-9] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=21 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:47:48.417 [atcher-9] DEBUG       tph.GameStatus - received handled message BoardPositionChange(21,1,2)
+17:47:48.417 [atcher-9] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=22 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:47:48.417 [atcher-9] DEBUG       tph.GameStatus - received handled message BoardPositionChange(22,1,3)
+17:47:48.417 [atcher-9] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=23 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:47:48.417 [atcher-9] DEBUG       tph.GameStatus - received handled message BoardPositionChange(23,1,4)
+17:47:48.417 [atcher-9] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=24 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+17:47:48.417 [atcher-9] DEBUG       tph.GameStatus - received handled message BoardPositionChange(24,1,5)
+17:47:48.417 [atcher-9] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=25 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
+17:47:48.417 [atcher-9] DEBUG       tph.GameStatus - received handled message BoardPositionChange(25,1,6)
+17:47:48.417 [atcher-9] INFO     tph.LogFileReader - Card Played: [Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Friendly Card One id=1 zone=PLAY zonePos=1 cardId=.+ player=1]
+17:47:48.417 [atcher-9] DEBUG       tph.GameStatus - received handled message CardPlayed(Friendly Card One,1,1,1)
+17:47:51.316 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:47:52.311 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.311 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.311 [tcher-12] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:47:54.316 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.316 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:47:54.317 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message NormalAttack(6,1)
+17:47:54.317 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.317 [tcher-12] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:47:54.317 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.317 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.317 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.317 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.317 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.317 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.318 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.319 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.320 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.321 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.322 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.322 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.322 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.322 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.322 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.322 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.327 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.328 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.329 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.329 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.329 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.329 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.329 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.330 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.330 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.330 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.330 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.330 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.330 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.331 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.332 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.333 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.334 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.334 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.335 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.336 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.336 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.337 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.338 [tcher-17] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.339 [tcher-10] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=25 zone=some zonePos=55 some player=1 some tag=ZONE value=GRAVEYARD
+17:47:54.339 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.339 [tcher-10] DEBUG       tph.GameStatus - received handled message CardDeath(some,25,55,1)
+17:47:54.340 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:47:54.340 [tcher-12] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:47:54.458 [tcher-20] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=31 zone=some zonePos=55 some player=2 some tag=ZONE value=GRAVEYARD
+17:47:54.458 [tcher-20] DEBUG       tph.GameStatus - received handled message CardDeath(some,31,55,2)
+17:47:54.458 [tcher-20] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=32 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+17:47:54.458 [tcher-20] DEBUG       tph.GameStatus - received handled message BoardPositionChange(32,2,1)
+17:47:54.458 [tcher-20] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=33 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:47:54.458 [tcher-20] DEBUG       tph.GameStatus - received handled message BoardPositionChange(33,2,2)
+17:47:54.458 [tcher-20] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=34 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:47:54.459 [tcher-20] DEBUG       tph.GameStatus - received handled message BoardPositionChange(34,2,3)
+17:47:54.459 [tcher-20] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=35 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:47:54.459 [tcher-20] DEBUG       tph.GameStatus - received handled message BoardPositionChange(35,2,4)
+17:47:56.338 [atcher-4] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:47:58.316 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.316 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.316 [tcher-20] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:48:00.319 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.319 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:48:00.319 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message NormalAttack(2,4)
+17:48:00.319 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.319 [tcher-20] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:48:00.319 [atcher-3] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.319 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.320 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.321 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.321 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.321 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.321 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.321 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.321 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.326 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.327 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.327 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.328 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.328 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.328 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.328 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.328 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.329 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.329 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.329 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.329 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.330 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.330 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.331 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.331 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.331 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.331 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.331 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.332 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.332 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.332 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.332 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.332 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.332 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.333 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.334 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.335 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.335 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.335 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.335 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.335 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.335 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.336 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.337 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.338 [tcher-10] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.338 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.338 [atcher-4] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=21 zone=some zonePos=55 some player=1 some tag=ZONE value=GRAVEYARD
+17:48:00.339 [atcher-4] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=22 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+17:48:00.339 [atcher-4] DEBUG       tph.GameStatus - received handled message CardDeath(some,21,55,1)
+17:48:00.339 [atcher-4] DEBUG       tph.GameStatus - received handled message BoardPositionChange(22,1,2)
+17:48:00.339 [atcher-4] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=23 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+17:48:00.339 [atcher-4] DEBUG       tph.GameStatus - received handled message BoardPositionChange(23,1,3)
+17:48:00.339 [atcher-4] INFO     tph.LogFileReader - Board Position Change: [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=24 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+17:48:00.339 [atcher-4] DEBUG       tph.GameStatus - received handled message BoardPositionChange(24,1,4)
+17:48:00.345 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:00.346 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:48:00.458 [atcher-9] INFO     tph.LogFileReader - Card Death: [Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=35 zone=some zonePos=55 some player=2 some tag=ZONE value=GRAVEYARD
+17:48:00.458 [atcher-9] DEBUG       tph.GameStatus - received handled message CardDeath(some,35,55,2)
+17:48:01.358 [atcher-7] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:48:04.319 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:06.319 [atcher-9] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:06.319 [atcher-9] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:48:06.320 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:48:06.320 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message EndTurn()
+17:48:06.320 [atcher-2] DEBUG         tph.ircLogic - received handled message Activate
+17:48:06.378 [tcher-13] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:48:09.339 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:48:11.399 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:48:12.359 [tcher-13] DEBUG         tph.ircLogic - received handled message Check
+17:48:15.379 [atcher-2] DEBUG         tph.ircLogic - received handled message Check
+17:48:16.318 [tcher-13] DEBUG    t.r.ircLogicTests - received handled message MultipleBindAdjustmentResults
+17:48:16.318 [tcher-13] DEBUG       tph.Controller - received handled message GetGameStatus
+17:48:16.318 [tcher-13] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:48:16.324 [atcher-2] INFO     t.r.ircLogicTests - MultipleBindAdjustmentTest Passed!
+17:48:16.418 [tcher-13] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:48:16.418 [tcher-13] DEBUG       tph.GameStatus - received handled message GameOver()
+17:48:16.418 [tcher-13] DEBUG    tph.LogFileReader - Game Status Cleared
+17:48:16.418 [tcher-13] DEBUG    tph.LogFileReader - Reader file changed to testsituations/normalsetup.txt
+17:48:16.518 [tcher-20] INFO     tph.LogFileReader - Friendly Player: 1, Enemy Player: 2
+17:48:16.518 [tcher-20] DEBUG       tph.GameStatus - received handled message DefinePlayers(1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card One id=1 zone=HAND zonePos=1 cardId=some player=1] pos from 0 -> 1
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card One,1,1,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Two id=2 zone=HAND zonePos=2 cardId=some player=1] pos from 0 -> 2
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Two,2,2,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Three id=3 zone=HAND zonePos=3 cardId=some player=1] pos from 0 -> 3
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Three,3,3,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Four id=4 zone=HAND zonePos=4 cardId=some player=1] pos from 0 -> 4
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Four,4,4,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Five id=5 zone=HAND zonePos=5 cardId=some player=1] pos from 0 -> 5
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Five,5,5,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Six id=6 zone=HAND zonePos=6 cardId=some player=1] pos from 0 -> 6
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Six,6,6,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Seven id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 0 -> 7
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Seven,7,7,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Eight id=8 zone=HAND zonePos=8 cardId=some player=1] pos from 0 -> 8
+17:48:16.519 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Eight,8,8,1)
+17:48:16.519 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Nine id=9 zone=HAND zonePos=9 cardId=some player=1] pos from 0 -> 9
+17:48:16.520 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Nine,9,9,1)
+17:48:16.520 [tcher-20] INFO     tph.LogFileReader - Known Card Drawn: some id=0 local=False [name=Friendly Card Ten id=10 zone=HAND zonePos=10 cardId=some player=1] pos from 0 -> 10
+17:48:16.520 [tcher-20] DEBUG       tph.GameStatus - received handled message KnownCardDrawn(Friendly Card Ten,10,10,1)
+17:48:16.520 [tcher-20] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=11 cardId=some type=some zone=HAND zonePos=1 player=2] pos from 0 -> 1
+17:48:16.520 [tcher-20] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=12 cardId=some type=some zone=HAND zonePos=2 player=2] pos from 0 -> 2
+17:48:16.520 [tcher-20] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=13 cardId=some type=some zone=HAND zonePos=3 player=2] pos from 0 -> 3
+17:48:16.520 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=14 cardId=some type=some zone=HAND zonePos=4 player=2] pos from 0 -> 4
+17:48:16.520 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=15 cardId=some type=some zone=HAND zonePos=5 player=2] pos from 0 -> 5
+17:48:16.520 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(11,1,2)
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=16 cardId=some type=some zone=HAND zonePos=6 player=2] pos from 0 -> 6
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(12,2,2)
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=17 cardId=some type=some zone=HAND zonePos=7 player=2] pos from 0 -> 7
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(13,3,2)
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(14,4,2)
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(15,5,2)
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(16,6,2)
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(17,7,2)
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=18 cardId=some type=some zone=HAND zonePos=8 player=2] pos from 0 -> 8
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=19 cardId=some type=some zone=HAND zonePos=9 player=2] pos from 0 -> 9
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Enemy Card Drawn: some id=0 local=false [id=20 cardId=some type=some zone=HAND zonePos=10 player=2] pos from 0 -> 10
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion One id=21 zone=PLAY zonePos=1 some player=1 some
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Two id=22 zone=PLAY zonePos=2 some player=1 some
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Three id=23 zone=PLAY zonePos=3 some player=1 some
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Four id=24 zone=PLAY zonePos=4 some player=1 some
+17:48:16.523 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Friendly Minion Five id=25 zone=PLAY zonePos=5 some player=1 some
+17:48:16.523 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(18,8,2)
+17:48:16.524 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion One id=31 zone=PLAY zonePos=1 some player=2 some
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(19,9,2)
+17:48:16.524 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Two id=32 zone=PLAY zonePos=2 some player=2 some
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message EnemyCardDrawnEvent(20,10,2)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion One,21,1,1)
+17:48:16.524 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Three id=33 zone=PLAY zonePos=3 some player=2 some
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Two,22,2,1)
+17:48:16.524 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Four id=34 zone=PLAY zonePos=4 some player=2 some
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Three,23,3,1)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Four,24,4,1)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Friendly Minion Five,25,5,1)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion One,31,1,2)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Two,32,2,2)
+17:48:16.524 [tcher-13] INFO     tph.LogFileReader - Minion Summoned: some FULL_ENTITY - Updating [name=Enemy Minion Five id=35 zone=PLAY zonePos=5 some player=2 some
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Three,33,3,2)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Four,34,4,2)
+17:48:16.524 [tcher-13] DEBUG       tph.GameStatus - received handled message MinionSummoned(Enemy Minion Five,35,5,2)
+17:48:18.398 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:21.409 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:48:24.429 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:26.581 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 1, spot 1
+17:48:26.581 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@4ddc65ed)
+17:48:27.441 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:27.613 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 3, spot 1
+17:48:27.613 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@37b6eeea)
+17:48:29.562 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 4, target his 1
+17:48:29.562 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@38016526)
+17:48:30.001 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 2, spot 1
+17:48:30.001 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@57b29f5f)
+17:48:30.451 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:30.595 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!future
+17:48:30.595 [atcher-7] DEBUG         tph.ircLogic - received handled message (Future(),voter1)
+17:48:31.601 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 1, target his 2
+17:48:31.602 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@1670987b)
+17:48:32.762 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!future
+17:48:32.763 [atcher-7] DEBUG         tph.ircLogic - received handled message (Future(),voter1)
+17:48:33.461 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:33.662 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!play 4, spot 1
+17:48:33.663 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@2d137039)
+17:48:35.875 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!future
+17:48:35.875 [tcher-12] DEBUG         tph.ircLogic - received handled message (Future(),voter1)
+17:48:36.472 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:39.486 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:48:40.136 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter1, login=~PircBot message=!att my 1, target his 2
+17:48:40.136 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@5c5cf233)
+17:48:42.506 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:48:45.527 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:48.547 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:48:49.610 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!play 1, spot 1
+17:48:49.611 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@b3fb72e)
+17:48:50.919 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 1, spot 1
+17:48:50.919 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@3ce9b7b)
+17:48:51.567 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:48:54.587 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:48:55.056 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 3, spot 1
+17:48:55.056 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@38a4cb3a)
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 4, target his 1
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 2, spot 1
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!future
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 1, target his 2
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!future
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!play 4, spot 1
+17:48:56.813 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!future
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@2a852f15)
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@11f38d1c)
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message (Future(),voter3)
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@6783decb)
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message (Future(),voter3)
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@79e0341a)
+17:48:56.814 [tcher-12] DEBUG         tph.ircLogic - received handled message (Future(),voter3)
+17:48:57.607 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:48:58.333 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!play 1, spot 1
+17:48:58.333 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7a1e51b4)
+17:48:59.020 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter3, login=~PircBot message=!att my 1, target his 2
+17:48:59.020 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!play 3, spot 1
+17:48:59.020 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@38ff456)
+17:48:59.020 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@4004db1f)
+17:49:00.628 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:49:01.155 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!att my 4, target his 1
+17:49:01.156 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@76a0e99e)
+17:49:02.038 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!play 2, spot 1
+17:49:02.038 [tcher-12] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7788b886)
+17:49:02.738 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter4, login=~PircBot message=!future
+17:49:02.738 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!play 3, spot 1
+17:49:02.738 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!att my 4, target his 1
+17:49:02.738 [d-Thread] DEBUG           tph.IrcBot - IRC message: sender=voter2, login=~PircBot message=!play 2, spot 1
+17:49:02.738 [atcher-7] DEBUG         tph.ircLogic - received handled message (Future(),voter4)
+17:49:02.738 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@142a172)
+17:49:02.738 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@7d13c848)
+17:49:02.738 [atcher-7] DEBUG         tph.ircLogic - received handled message CommandVote(tph.Command@1b2938d6)
+17:49:03.649 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:49:06.669 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:49:09.689 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:49:12.709 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:49:15.729 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:49:18.749 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:49:21.761 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:49:23.422 [atcher-7] DEBUG         tph.ircLogic - received handled message Direct Decide
+17:49:23.423 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:25.423 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:25.423 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:25.423 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message CardPlayWithPosition(2,1)
+17:49:25.423 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:25.423 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:28.442 [atcher-2] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:49:29.424 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:29.424 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:29.425 [tcher-16] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:29.425 [tcher-16] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:29.425 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message CardPlayWithPosition(1,1)
+17:49:29.425 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:29.425 [atcher-5] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:33.425 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:33.425 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:33.426 [atcher-2] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:33.426 [atcher-2] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:33.426 [atcher-7] DEBUG    t.r.ircLogicTests - received handled message CardPlayWithPosition(3,1)
+17:49:33.426 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:33.426 [atcher-7] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:33.462 [tcher-10] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:49:37.427 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:37.427 [tcher-20] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:37.428 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:37.428 [atcher-5] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:37.428 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message NormalAttack(4,1)
+17:49:37.428 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:37.428 [tcher-20] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:37.428 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:37.428 [tcher-20] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:38.474 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:49:41.428 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:41.428 [atcher-7] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:41.429 [tcher-20] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:41.429 [tcher-20] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:41.429 [atcher-7] DEBUG    t.r.ircLogicTests - received handled message NormalAttack(1,2)
+17:49:41.429 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:41.429 [atcher-7] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:41.429 [atcher-4] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:41.429 [atcher-4] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:43.484 [atcher-7] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:49:45.429 [atcher-5] DEBUG       tph.Controller - received handled message GetGameStatus
+17:49:45.429 [atcher-5] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:49:45.430 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
+17:49:45.430 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message EndTurn()
+17:49:45.430 [atcher-5] DEBUG         tph.ircLogic - received handled message Activate
+17:49:48.435 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:49:48.495 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:49:51.445 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:49:53.506 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:49:54.457 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:49:57.467 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:49:58.517 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:00.477 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:03.488 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:50:03.528 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:06.508 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:08.539 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:09.519 [tcher-20] DEBUG         tph.ircLogic - received handled message Check
+17:50:12.540 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:13.550 [tcher-20] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:15.550 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:18.561 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:18.561 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
+17:50:21.581 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:23.581 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:24.592 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
+17:50:27.602 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:28.592 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:30.616 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:33.606 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:33.636 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:36.656 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
+17:50:38.626 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:39.676 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
+17:50:42.696 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:43.646 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:45.716 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:48.667 [atcher-5] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:48.737 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:50:51.757 [atcher-5] DEBUG         tph.ircLogic - received handled message Check
+17:50:53.457 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message MultipleFutureAdjustmentResults
+17:50:53.458 [tcher-12] DEBUG       tph.Controller - received handled message GetGameStatus
+17:50:53.458 [tcher-12] DEBUG       tph.GameStatus - received handled message GetGameStatus
+17:50:53.499 [tcher-12] ERROR .a.OneForOneStrategy - -1
+java.lang.IndexOutOfBoundsException: -1
+	at scala.collection.mutable.ListBuffer.apply(ListBuffer.scala:126) ~[scala-library-2.11.7.jar:na]
+	at tph.research.ircLogicTests.MultipleFutureAdjustmentResults(ircLogicTests.scala:913) ~[classes/:na]
+	at tph.research.ircLogicTests$$anonfun$receive$1.applyOrElse(ircLogicTests.scala:75) ~[classes/:na]
 	at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:36) ~[scala-library-2.11.7.jar:na]
 	at akka.event.LoggingReceive.apply(LoggingReceive.scala:64) ~[akka-actor_2.11-2.4.1.jar:na]
 	at akka.event.LoggingReceive.apply(LoggingReceive.scala:50) ~[akka-actor_2.11-2.4.1.jar:na]
 	at scala.PartialFunction$class.applyOrElse(PartialFunction.scala:123) ~[scala-library-2.11.7.jar:na]
 	at akka.event.LoggingReceive.applyOrElse(LoggingReceive.scala:50) ~[akka-actor_2.11-2.4.1.jar:na]
 	at akka.actor.Actor$class.aroundReceive(Actor.scala:480) ~[akka-actor_2.11-2.4.1.jar:na]
-	at tph.Hearthstone.aroundReceive(Hearthstone.scala:26) ~[classes/:na]
+	at tph.research.ircLogicTests.aroundReceive(ircLogicTests.scala:22) ~[classes/:na]
 	at akka.actor.ActorCell.receiveMessage(ActorCell.scala:526) [akka-actor_2.11-2.4.1.jar:na]
 	at akka.actor.ActorCell.invoke(ActorCell.scala:495) [akka-actor_2.11-2.4.1.jar:na]
 	at akka.dispatch.Mailbox.processMailbox(Mailbox.scala:257) [akka-actor_2.11-2.4.1.jar:na]
@@ -159,4 +1328,10 @@ java.util.NoSuchElementException: key not found: 11
 	at scala.concurrent.forkjoin.ForkJoinPool$WorkQueue.runTask(ForkJoinPool.java:1339) [scala-library-2.11.7.jar:na]
 	at scala.concurrent.forkjoin.ForkJoinPool.runWorker(ForkJoinPool.java:1979) [scala-library-2.11.7.jar:na]
 	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:107) [scala-library-2.11.7.jar:na]
-20:51:29.729 [atcher-7] DEBUG       tph.Controller - received handled message GetGameStatus
+17:50:53.688 [tcher-12] DEBUG    t.r.ircLogicTests - received handled message Full Test
+17:50:53.688 [tcher-20] DEBUG  t.research.IrcVoter - nickname = voter1
+17:50:53.688 [tcher-12] DEBUG    tph.LogFileReader - Game Status Cleared
+17:50:53.688 [tcher-12] DEBUG       tph.GameStatus - received handled message GameOver()
+17:50:54.770 [atcher-7] DEBUG         tph.ircLogic - received handled message Check
+17:50:57.790 [tcher-12] DEBUG         tph.ircLogic - received handled message Check
+17:51:00.808 [atcher-7] DEBUG         tph.ircLogic - received handled message Check

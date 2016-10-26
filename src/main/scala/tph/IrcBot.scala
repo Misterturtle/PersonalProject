@@ -40,11 +40,10 @@ object IrcBot {
   val THREE_PART_COMMAND = """!(.+), (.+), (.+)""".r
   val PLAY_COMMAND = """play (\d+)""".r
   val ATTACK_COMMAND = """att (.+)""".r
-  val REGEX_NUMBER = """(\d+)""".r
   val MY_REGEX_NUMBER = """my (\d+)""".r
   val HIS_REGEX_NUMBER = """his (\d+)""".r
   val SPOT_COMMAND = """spot (\d+)""".r
-  val TARGET_COMMAND = """cast (.+)""".r
+  val TARGET_COMMAND = """target (.+)""".r
   val BATTLECRY_COMMAND = """battlecry (.+)""".r
   val HERO_POWER_COMMAND = """hero power (.+)""".r
   val DISCOVER_COMMAND = """discover (\d+)""".r
@@ -76,6 +75,8 @@ object IrcBot {
 
 
 object IrcMessages {
+
+  case class ChangeReaderFile(fileName: String)
 
   case class CommandVote(builtCommand: Command)
 
@@ -388,12 +389,12 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
                 builtCommand.secondName = "WithFriendlyFaceTarget"
               case "his face" =>
                 builtCommand.secondName = "WithEnemyFaceTarget"
-              case MY_REGEX_NUMBER(target) =>
+              case MY_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithFriendlyTarget"
-                builtCommand.target = target.toInt
-              case HIS_REGEX_NUMBER(target) =>
+                builtCommand.target = targetPos.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithEnemyTarget"
-                builtCommand.target = target.toInt
+                builtCommand.target = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
@@ -402,11 +403,12 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
                 builtCommand.secondName = "WithFriendlyFaceOption"
               case "his face" =>
                 builtCommand.secondName = "WithEnemyFaceOption"
-              case MY_REGEX_NUMBER(target) =>
+              case MY_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithFriendlyOption"
-                builtCommand.battlecry = target.toInt
-              case HIS_REGEX_NUMBER(target) =>
+                builtCommand.battlecry = targetPos.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithEnemyOption"
+                builtCommand.battlecry = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -423,12 +425,12 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
                 builtCommand.thirdName = "WithFriendlyFaceTarget"
               case "his face" =>
                 builtCommand.thirdName = "WithEnemyFaceTarget"
-              case MY_REGEX_NUMBER(target) =>
+              case MY_REGEX_NUMBER(targetPos) =>
                 builtCommand.thirdName = "WithFriendlyTarget"
-                builtCommand.target = target.toInt
-              case HIS_REGEX_NUMBER(target) =>
+                builtCommand.target = targetPos.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
                 builtCommand.thirdName = "WithEnemyTarget"
-                builtCommand.target = target.toInt
+                builtCommand.target = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
@@ -437,12 +439,12 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
                 builtCommand.thirdName = "WithFriendlyFaceOption"
               case "his face" =>
                 builtCommand.thirdName = "WithEnemyFaceOption"
-              case MY_REGEX_NUMBER(target) =>
+              case MY_REGEX_NUMBER(targetPos) =>
                 builtCommand.thirdName = "WithFriendlyOption"
-                builtCommand.battlecry = target.toInt
-              case HIS_REGEX_NUMBER(target) =>
+                builtCommand.battlecry = targetPos.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
                 builtCommand.thirdName = "WithEnemyOption"
-                builtCommand.battlecry = target.toInt
+                builtCommand.battlecry = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -457,9 +459,9 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
             builtCommand.card = cardNumber.toInt
           case ATTACK_COMMAND(attacker) =>
             attacker match {
-              case REGEX_NUMBER(attacker) =>
+              case MY_REGEX_NUMBER(attackerPos) =>
                 builtCommand.firstName = "NormalAttack"
-                builtCommand.card = attacker.toInt
+                builtCommand.card = attackerPos.toInt
               case "my face" =>
                 builtCommand.firstName = "FaceAttack"
               case _ =>
@@ -478,12 +480,12 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
                 builtCommand.secondName = "WithFriendlyFaceTarget"
               case "his face" =>
                 builtCommand.secondName = "WithEnemyFaceTarget"
-              case MY_REGEX_NUMBER(target) =>
+              case MY_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithFriendlyTarget"
-                builtCommand.target = target.toInt
-              case HIS_REGEX_NUMBER(target) =>
+                builtCommand.target = targetPos.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithEnemyTarget"
-                builtCommand.target = target.toInt
+                builtCommand.target = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
@@ -492,12 +494,12 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
                 builtCommand.secondName = "WithFriendlyFaceOption"
               case "his face" =>
                 builtCommand.secondName = "WithEnemyFaceOption"
-              case MY_REGEX_NUMBER(target) =>
+              case MY_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithFriendlyOption"
-                builtCommand.battlecry = target.toInt
-              case HIS_REGEX_NUMBER(target) =>
+                builtCommand.battlecry = targetPos.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
                 builtCommand.secondName = "WithEnemyOption"
-                builtCommand.battlecry = target.toInt
+                builtCommand.battlecry = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -514,11 +516,11 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
           case HERO_POWER_COMMAND(target) =>
             builtCommand.firstName = "HeroPower"
             target match {
-              case MY_REGEX_NUMBER(target) =>
-                builtCommand.target = target.toInt
+              case MY_REGEX_NUMBER(targetPos) =>
+                builtCommand.target = targetPos.toInt
                 builtCommand.secondName = "WithFriendlyTarget"
-              case HIS_REGEX_NUMBER(target) =>
-                builtCommand.target = target.toInt
+              case HIS_REGEX_NUMBER(targetPos) =>
+                builtCommand.target = targetPos.toInt
                 builtCommand.secondName = "WithEnemyTarget"
               case "my face" =>
                 builtCommand.secondName = "WithFriendlyFace"
