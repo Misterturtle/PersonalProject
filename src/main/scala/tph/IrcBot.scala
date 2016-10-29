@@ -211,13 +211,13 @@ import tph.IrcMessages._
 class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: String = IrcBot.NICKNAME) extends PircBot with LazyLogging {
 
 
-  setName(nickname)
-  logger.debug(s"nickname = $nickname")
-  setVerbose(false)
-  connect(hostName)
-  logger.debug(s"connected to $hostName")
-  joinChannel(channel)
-  logger.debug(s"joined $channel")
+//  setName(nickname)
+//  logger.debug(s"nickname = $nickname")
+//  setVerbose(false)
+//  connect(hostName)
+//  logger.debug(s"connected to $hostName")
+//  joinChannel(channel)
+//  logger.debug(s"joined $channel")
 
 
   override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
@@ -240,6 +240,10 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
               watcher !(Collection("mainMenu"), sender)
             case QUEST_LOG =>
               watcher !(QuestLog(), sender)
+            case _ =>
+
+
+
           }
         }
 
@@ -263,6 +267,7 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
               watcher !(SecondPage(), sender)
             case COLLECTION =>
               watcher !(Collection("playmenu"), sender)
+            case _ =>
           }
         }
 
@@ -274,6 +279,7 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
               watcher !(Quest(number.toInt), sender)
             case BACK =>
               watcher !(Back("questMenu"), sender)
+            case _ =>
           }
         }
 
@@ -362,6 +368,8 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
     }
 
   }
+
+
 
 
   def ParseCommand(message: String, sender: String): Command = {

@@ -20,7 +20,7 @@ package tph
 
 import java.util.concurrent.TimeUnit
 
-import akka.actor.{Actor, ActorRef, ActorSystem}
+import akka.actor.{Cancellable, Actor, ActorRef, ActorSystem}
 import akka.event.LoggingReceive
 import akka.pattern.ask
 import akka.util.Timeout
@@ -77,6 +77,11 @@ object ircLogic {
 
 }
 
+class Scheduler(system: ActorSystem) {
+  def once(delay: FiniteDuration,
+           receiver: ActorRef,
+           message: Any) = system.scheduler.scheduleOnce(delay, receiver, message)
+}
 
 class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef) extends Actor with akka.actor.ActorLogging {
   //Input comes in
@@ -244,7 +249,6 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
               concedeVoterMap(sender) = Concede()
 
 
-
             case DECIDE => Decide()
 
 
@@ -323,7 +327,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
                     VoteEntry(NormalAttack(builtCommand.card: Int, builtCommand.target: Int), builtCommand.sender)
 
                   case "NormalAttackWithEnemyFaceTarget" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
-                    VoteEntry(NormalAttackToFace(builtCommand.card:Int), builtCommand.sender)
+                    VoteEntry(NormalAttackToFace(builtCommand.card: Int), builtCommand.sender)
 
                   case "FaceAttackWithEnemyTarget" if (builtCommand.target >= 1 && builtCommand.target <= savedGameStatus(1).board.length) =>
                     VoteEntry(FaceAttack(builtCommand.target: Int), builtCommand.sender)
@@ -384,10 +388,10 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
     GetGameStatus()
 
-    if (!testMode){
+    if (!testMode) {
       if (doneWithMulligan)
         system.scheduler.scheduleOnce(45.seconds, this.self, DECIDE)
-  }
+    }
     myTurn = true
   }
 
@@ -406,13 +410,13 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     //Sends hearthstone the decision
     //Removes old decision from voterMap
     //After all decisions made, clears maps associated with normal votes
-    if(!myTurn && endTurn){
+    if (!myTurn && endTurn) {
       endTurn = false
     }
 
     if (myTurn) {
       if (gameMode == "ordered") {
-        if(!endTurn) {
+        if (!endTurn) {
           active = false
           val numberOfMoves = CalculateAmountOfMoves()
           for (a <- 0 until numberOfMoves) {
@@ -494,43 +498,45 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     else return 0
   }
 
-  def AdjustVotes(oldGameStatus: Array[(_,_,_,_)]): Unit = {
+  def AdjustVotes(oldGameStatus: Array[(_, _, _, _)]): Unit = {
 
-    voterMap foreach{
+
+    voterMap foreach {
       case (sender, voteList) =>
-        voteList foreach{
+        voteList foreach {
           case x =>
             val index = voteList.indexWhere(_ == x)
-            if(x == previousDecision)
-              {
-                voteList(index) = PreviousDecision()
-              }
-        }
-    }
-
-    bindMap foreach{
-      case (sender, voteList) =>
-        voteList foreach{
-          case x =>
-            val index = voteList.indexWhere(_ == x)
-            if(x == previousDecision)
-            {
+            if (x == previousDecision) {
               voteList(index) = PreviousDecision()
             }
         }
     }
 
-    futureMap foreach{
+    bindMap foreach {
       case (sender, voteList) =>
-        voteList foreach{
+        voteList foreach {
           case x =>
             val index = voteList.indexWhere(_ == x)
-            if(x == previousDecision)
-            {
+            if (x == previousDecision) {
               voteList(index) = PreviousDecision()
             }
         }
     }
+
+
+    futureMap foreach {
+      case (sender, voteList) =>
+        voteList foreach {
+          case vote =>
+            val index = voteList.indexWhere(_ == vote)
+            if (vote == previousDecision)
+              if(index == 0 || futureMap(sender)(index - 1) == Break() ){
+              voteList(index) = PreviousDecision()
+            }
+        }
+    }
+
+
 
     val myOldHand = oldGameStatus(0)._1.asInstanceOf[Array[Card]]
     val myOldBoard = oldGameStatus(0)._2.asInstanceOf[Array[Card]]
@@ -540,22 +546,23 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     val myNewBoard = newGameStatus(0)._2.asInstanceOf[Array[Card]]
     val hisNewBoard = newGameStatus(1)._2.asInstanceOf[Array[Card]]
 
-    val voterMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
-    val bindMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
-    val futureMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
+
 
 
 
     //For each element in myOldHand, map the oldPos to the newPos if myNewHand contains the same id
     //If it does not contain the same id, -1 will be mapped
     val myChangedHandMap = mutable.Map[Int, Int]()
+    val voterMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
+    val bindMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
+    val futureMapChangedIndex = mutable.Map[String, ListBuffer[Int]]()
     myOldHand foreach {
       case x =>
 
         val newIndex = myNewHand.indexWhere(_.id == x.id)
-        if(myNewHand.isDefinedAt(newIndex)){
+        if (myNewHand.isDefinedAt(newIndex)) {
           val newHandPos = myNewHand(newIndex).handPosition
-          if(newHandPos != x.handPosition){
+          if (newHandPos != x.handPosition) {
             myChangedHandMap(x.handPosition) = newHandPos
           }
         }
@@ -564,12 +571,13 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     //For each changed card, search voterMap for the vote and reassign the modified position
     myChangedHandMap foreach {
       case (oldPos, newPos) => {
+
         //If myNewHand does contain the card
         if (newPos != -1) {
           voterMap foreach {
             case (sender, voteList) =>
-              if(!voterMapChangedIndex.isDefinedAt(sender))
-              voterMapChangedIndex(sender) = new ListBuffer[Int]()
+              if (!voterMapChangedIndex.isDefinedAt(sender))
+                voterMapChangedIndex(sender) = new ListBuffer[Int]()
               voteList foreach {
                 case vote =>
                   val index = voteList.indexWhere(_ == vote)
@@ -622,8 +630,8 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
           bindMap foreach {
             case (sender, voteList) =>
-              if(!bindMapChangedIndex.isDefinedAt(sender))
-              bindMapChangedIndex(sender) = new ListBuffer[Int]()
+              if (!bindMapChangedIndex.isDefinedAt(sender))
+                bindMapChangedIndex(sender) = new ListBuffer[Int]()
               voteList foreach {
                 case vote =>
                   val index = voteList.indexWhere(_ == vote)
@@ -675,16 +683,19 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
         //If vote follows a PreviousDecision() but is before a Break(), do not adjust votes
         futureMap foreach {
           case (sender, voteList) =>
-            if(!futureMapChangedIndex.isDefinedAt(sender))
-            futureMapChangedIndex(sender) = new ListBuffer[Int]()
+
+
+
+            if (!futureMapChangedIndex.isDefinedAt(sender))
+              futureMapChangedIndex(sender) = new ListBuffer[Int]()
             var futureActive = false
             voteList foreach {
               case vote =>
                 val index = voteList.indexWhere(_ == vote)
-                if (vote == PreviousDecision())  {
+                if (vote == PreviousDecision()) {
                   futureActive = true
                 }
-                if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
+                if (vote == Break() || !voteList.isDefinedAt(index)) {
                   futureActive = false
                 }
 
@@ -893,752 +904,747 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
     futureMapChangedIndex.clear()
 
 
-        //For each element in myOldBoard, map the oldPos to the newPos if myNewBoard contains the same id
-        //If it does not contain the same id, -1 will be mapped
-        val myChangedBoardMap = mutable.Map[Int, Int]()
-        myOldBoard foreach {
-          case x =>
-
-            val newIndex = myNewBoard.indexWhere(_.id == x.id)
-            if(myNewBoard.isDefinedAt(newIndex)) {
-              val newBoardPos = myNewBoard(newIndex).boardPosition
-              if(x.boardPosition != newBoardPos)
-                {
-                  myChangedBoardMap(x.boardPosition) = newBoardPos
-                }
-            }
-        }
-
-
-
-
-
-
-        myChangedBoardMap foreach {
-          case (oldPos, newPos) => {
-            //If myNewBoard does contain the card
-            if (newPos != -1) {
-              voterMap foreach {
-                case (sender, voteList) =>
-                  if(!voterMapChangedIndex.isDefinedAt(sender))
-                  voterMapChangedIndex(sender) = new ListBuffer[Int]()
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1 ) {
-                        voterMapChangedIndex(sender).append(index)
-                        vote match {
-
-
-
-                          //Card Play Type
-                          case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
-                            voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
-                          case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
-                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
-                          case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithPosition(card, position) if position == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithPosition(card, newPos)
-                          case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
-                          case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                            voterMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                            voterMap(sender)(index) = NormalAttack(newPos, enemyPosition)
-                          case NormalAttackToFace(position) if position == oldPos =>
-                            voterMap(sender)(index) = NormalAttackToFace(newPos)
-
-                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
-                            voterMap(sender)(index)= HeroPowerWithFriendlyTarget(newPos)
-
-
-                          case _ =>voterMapChangedIndex(sender).trimEnd(1)
-                        }
-                      }
-                  }
-              }
-
-
-
-
-              //Cycle through BindMap
-              bindMap foreach {
-                case (sender, voteList) =>
-                  if(!bindMapChangedIndex.isDefinedAt(sender))
-                  bindMapChangedIndex(sender) = new ListBuffer[Int]()
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote != PreviousDecision()&& bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
-                        bindMapChangedIndex(sender).append(index)
-                        vote match {
-
-                          //Card Play Type
-                          case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
-                            bindMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
-                          case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
-                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
-                          case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithPosition(card, position) if position == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithPosition(card, newPos)
-                          case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
-                          case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                            bindMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                            bindMap(sender)(index) = NormalAttack(newPos, enemyPosition)
-                          case NormalAttackToFace(position) if position == oldPos =>
-                            bindMap(sender)(index) = NormalAttackToFace(newPos)
-
-                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
-                            bindMap(sender)(index)= HeroPowerWithFriendlyTarget(newPos)
-
-                          case _ =>bindMapChangedIndex(sender).trimEnd(1)
-                        }
-                      }
-                  }
-              }
-
-
-
-
-
-              futureMap foreach {
-                case (sender, voteList) =>
-                  if(!futureMapChangedIndex.isDefinedAt(sender))
-                  futureMapChangedIndex(sender) = new ListBuffer[Int]()
-                  var futureActive = false
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote == PreviousDecision()) {
-                        futureActive = true
-                      }
-                      if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
-                        futureActive = false
-                      }
-
-
-                      if (vote != PreviousDecision() && futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
-                        if (!futureActive) {
-                          futureMapChangedIndex(sender).append(index)
-                          vote match {
-
-
-                            //Card Play Type
-                            case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
-
-                            //Battlecry Option with Position Type
-                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
-                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
-                              futureMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
-                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
-                            case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
-                            case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
-                            case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
-
-                            //Normal Turn Play Type
-                            case CardPlayWithPosition(card, position) if position == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithPosition(card, newPos)
-                            case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
-                            case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                              futureMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
-
-                            //Attack Type
-                            case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                              futureMap(sender)(index) = NormalAttack(newPos, enemyPosition)
-                            case NormalAttackToFace(position) if position == oldPos =>
-                              futureMap(sender)(index) = NormalAttackToFace(newPos)
-
-                            case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
-                              futureMap(sender)(index)= HeroPowerWithFriendlyTarget(newPos)
-
-
-                            case _ =>futureMapChangedIndex(sender).trimEnd(1)
-                          }
-                        }
-                      }
-                  }
-              }
-            }
-
-            //If myNewBoard does not contain the card
-            if (newPos == -1) {
-              voterMap foreach {
-                case (sender, voteList) =>
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote != PreviousDecision()) {
-                        vote match {
-                          case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                            voterMap(sender).remove(index)
-                          case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                            voterMap(sender).remove(index)
-                          case NormalAttackToFace(position) if position == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
-                            voterMap(sender).remove(index)
-
-
-                          case _ =>
-                        }
-                      }
-                  }
-              }
-
-              bindMap foreach {
-                case (sender, voteList) =>
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote != PreviousDecision()) {
-                        vote match {
-                          case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                            bindMap(sender).remove(index)
-                          case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                            bindMap(sender).remove(index)
-                          case NormalAttackToFace(position) if position == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          case _ =>
-                        }
-                      }
-                  }
-              }
-
-
-              futureMap foreach {
-                case (sender, voteList) =>
-                  var futureActive = false
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote == PreviousDecision()) {
-                        futureActive = true
-                      }
-                      if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
-                        futureActive = false
-                      }
-
-
-                      if (vote != PreviousDecision()) {
-                        if (!futureActive) {
-                          vote match {
-
-
-                            case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
-
-                              if (index == 0)
-                                {
-                                  futureMap(sender).remove(index)
-                                }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                                {
-                                  futureMap(sender).remove(index)
-                                }
-
-                            //Battlecry Option with Position Type
-                            case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
-                              if (index == 0)
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            //Normal Turn Play Type
-                            case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
-                              if (index == 0)
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-                            case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
-                              if (index == 0)
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            //Attack Type
-                            case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
-                              if (index == 0)
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-                            case NormalAttackToFace(position) if position == oldPos =>
-                              if (index == 0)
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
-                              if (index == 0)
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            case _ =>
-                          }
-                        }
-                      }
-                  }
-              }
-            }
+    //For each element in myOldBoard, map the oldPos to the newPos if myNewBoard contains the same id
+    //If it does not contain the same id, -1 will be mapped
+    val myChangedBoardMap = mutable.Map[Int, Int]()
+    myOldBoard foreach {
+      case x =>
+
+        val newIndex = myNewBoard.indexWhere(_.id == x.id)
+        if (myNewBoard.isDefinedAt(newIndex)) {
+          val newBoardPos = myNewBoard(newIndex).boardPosition
+          if (x.boardPosition != newBoardPos) {
+            myChangedBoardMap(x.boardPosition) = newBoardPos
           }
         }
-    voterMapChangedIndex.clear()
-    bindMapChangedIndex.clear()
-    futureMapChangedIndex.clear()
-
-
-        //For each element in hisOldBoard, map the oldPos to the newPos if hisNewBoard contains the same id
-        //If it does not contain the same id, -1 will be mapped
-        val hisChangedBoardMap = mutable.Map[Int, Int]()
-        hisOldBoard foreach {
-          case x =>
-
-            val newIndex = hisNewBoard.indexWhere(_.id == x.id)
-            if (hisNewBoard.isDefinedAt(newIndex)) {
-              val newBoardPos = hisNewBoard(newIndex).boardPosition
-              if (x.boardPosition != newBoardPos)
-                hisChangedBoardMap(x.boardPosition) = newBoardPos
-            }
-        }
-
-
-
-
-
-        hisChangedBoardMap foreach {
-          case (oldPos, newPos) => {
-            //If hisNewBoard does contain the card
-            if (newPos != -1) {
-              voterMap foreach {
-                case (sender, voteList) =>
-                  if(!voterMapChangedIndex.isDefinedAt(sender))
-                  voterMapChangedIndex(sender) = new ListBuffer[Int]()
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1) {
-                        voterMapChangedIndex(sender).append(index)
-                        vote match {
-                          case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                            voterMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
-                          case HeroPowerWithEnemyTarget(target) =>
-                            voterMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
-
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-                            voterMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
-                          case FaceAttack(position) if position == oldPos =>
-                            voterMap(sender)(index) = FaceAttack(newPos)
-
-                            //Hero Power Type
-                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
-                            voterMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
-
-                          case _ =>voterMapChangedIndex(sender).trimEnd(1)
-                        }
-                      }
-                  }
-              }
-
-
-
-
-
-              bindMap foreach {
-                case (sender, voteList) =>
-                  if(!bindMapChangedIndex.isDefinedAt(sender))
-                  bindMapChangedIndex(sender) = new ListBuffer[Int]()
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote != PreviousDecision()&& bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
-                        bindMapChangedIndex(sender).append(index)
-                        vote match {
-                          case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                            bindMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
-                          case HeroPowerWithEnemyTarget(target) =>
-                            bindMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
-
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-                            bindMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
-                          case FaceAttack(position) if position == oldPos =>
-                            bindMap(sender)(index) = FaceAttack(newPos)
-
-                          //Hero Power Type
-                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
-                            bindMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
-
-                          case _ =>
-                            bindMapChangedIndex(sender).trimEnd(1)
-                        }
-                      }
-                  }
-              }
-
-
-
-
-
-              futureMap foreach {
-                case (sender, voteList) =>
-                  if(!futureMapChangedIndex.isDefinedAt(sender))
-                  futureMapChangedIndex(sender) = new ListBuffer[Int]()
-                  var futureActive = false
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote == PreviousDecision()) {
-                        futureActive = true
-                      }
-                      if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
-                        futureActive = false
-                      }
-
-
-                      if (vote != PreviousDecision()&& futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
-                        futureMapChangedIndex(sender).append(index)
-                        if (!futureActive) {
-                          vote match {
-
-
-                            case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
-
-                            //Battlecry Option with Position Type
-                            case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
-
-                            //Normal Turn Play Type
-                            case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                              futureMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
-                            case HeroPowerWithEnemyTarget(target) =>
-                              futureMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
-
-
-                            //Attack Type
-                            case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-                              futureMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
-                            case FaceAttack(position) if position == oldPos =>
-                              futureMap(sender)(index) = FaceAttack(newPos)
-
-                            //Hero Power Type
-                            case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
-                              futureMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
-
-                            case _ =>futureMapChangedIndex(sender).trimEnd(1)
-                          }
-                        }
-                      }
-                  }
-              }
-
-            }
-          }
-
-            //If hisNewBoard does not contain the card anymore
-            if (newPos == -1) {
-              voterMap foreach {
-                case (sender, voteList) =>
-                  voteList foreach {
-                    case vote =>
-                      val index = voterMap(sender).indexWhere(_ == vote)
-                      if (vote != PreviousDecision()) {
-                        vote match {
-                          case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                            voterMap(sender).remove(index)
-                          case HeroPowerWithEnemyTarget(target) =>
-                            voterMap(sender).remove(index)
-
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-                            voterMap(sender).remove(index)
-                          case FaceAttack(position) if position == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          //Hero Power Type
-                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
-                            voterMap(sender).remove(index)
-
-                          case _ =>
-                        }
-                      }
-                  }
-              }
-
-              bindMap foreach {
-                case (sender, voteList) =>
-                  voteList foreach {
-                    case vote =>
-                      val index = bindMap(sender).indexWhere(_ == vote)
-                      if (vote != PreviousDecision()) {
-                        vote match {
-                          case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          //Battlecry Option with Position Type
-                          case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          //Normal Turn Play Type
-                          case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                            bindMap(sender).remove(index)
-                          case HeroPowerWithEnemyTarget(target) =>
-                            bindMap(sender).remove(index)
-
-
-                          //Attack Type
-                          case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-                            bindMap(sender).remove(index)
-                          case FaceAttack(position) if position == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          //Hero Power Type
-                          case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
-                            bindMap(sender).remove(index)
-
-                          case _ =>
-                        }
-                      }
-                  }
-              }
-
-
-              futureMap foreach {
-                case (sender, voteList) =>
-                  var futureActive = false
-                  voteList foreach {
-                    case vote =>
-                      val index = voteList.indexWhere(_ == vote)
-                      if (vote == PreviousDecision()) {
-                        futureActive = true
-                      }
-                      if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
-                        futureActive = false
-                      }
-
-
-                      if (vote != PreviousDecision()) {
-                        if (!futureActive) {
-                          vote match {
-
-
-                            case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            //Battlecry Option with Position Type
-                            case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-
-                            //Normal Turn Play Type
-                            case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            case HeroPowerWithEnemyTarget(target) =>
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-
-                            //Attack Type
-                            case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
-
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                                {
-                                  futureMap(sender).remove(index)
-                                }
-
-                            case FaceAttack(position) if position == oldPos =>
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            //Hero Power Type
-                            case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
-                              if(index == 0) {
-                                futureMap(sender).remove(index)
-                              }
-
-                              if(voteList.isDefinedAt(index-1) && voteList(index-1) == Break())
-                              {
-                                futureMap(sender).remove(index)
-                              }
-
-                            case _ =>
-                          }
-                        }
-                      }
-                  }
-              }
-            }
-
-        }
-    voterMapChangedIndex.clear()
-    bindMapChangedIndex.clear()
-    futureMapChangedIndex.clear()
     }
 
+
+
+
+
+
+    myChangedBoardMap foreach {
+      case (oldPos, newPos) => {
+        //If myNewBoard does contain the card
+        if (newPos != -1) {
+          voterMap foreach {
+            case (sender, voteList) =>
+              if (!voterMapChangedIndex.isDefinedAt(sender))
+                voterMapChangedIndex(sender) = new ListBuffer[Int]()
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    voterMapChangedIndex(sender).append(index)
+
+                    vote match {
+
+
+                      //Card Play Type
+                      case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
+                      case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
+                      case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithPosition(card, position) if position == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithPosition(card, newPos)
+                      case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
+                      case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                        voterMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+                      //Attack Type
+
+                      case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                        voterMap(sender)(index) = NormalAttack(newPos, enemyPosition)
+                      case NormalAttackToFace(position) if position == oldPos =>
+                        voterMap(sender)(index) = NormalAttackToFace(newPos)
+
+                      case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                        voterMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+
+                      case _ => voterMapChangedIndex(sender).trimEnd(1)
+                    }
+                  }
+              }
+          }
+
+
+
+
+
+
+
+
+          //Cycle through BindMap
+          bindMap foreach {
+            case (sender, voteList) =>
+              if (!bindMapChangedIndex.isDefinedAt(sender))
+                bindMapChangedIndex(sender) = new ListBuffer[Int]()
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != PreviousDecision() && bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    bindMapChangedIndex(sender).append(index)
+                    vote match {
+
+                      //Card Play Type
+                      case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
+                        bindMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
+                      case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
+                      case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithPosition(card, position) if position == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithPosition(card, newPos)
+                      case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
+                      case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                        bindMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                        bindMap(sender)(index) = NormalAttack(newPos, enemyPosition)
+                      case NormalAttackToFace(position) if position == oldPos =>
+                        bindMap(sender)(index) = NormalAttackToFace(newPos)
+
+                      case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                        bindMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+                      case _ => bindMapChangedIndex(sender).trimEnd(1)
+                    }
+                  }
+              }
+          }
+
+
+
+
+
+          futureMap foreach {
+            case (sender, voteList) =>
+              if (!futureMapChangedIndex.isDefinedAt(sender))
+                futureMapChangedIndex(sender) = new ListBuffer[Int]()
+              var futureActive = false
+              voteList foreach {
+                case vote =>
+
+
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote == PreviousDecision()) {
+                    futureActive = true
+                  }
+
+                  if (vote == Break() || !voteList.isDefinedAt(index)) {
+                    futureActive = false
+                  }
+
+
+
+
+
+                  if (vote != PreviousDecision() && futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    if (!futureActive) {
+                      futureMapChangedIndex(sender).append(index)
+
+
+                      vote match {
+
+
+                        //Card Play Type
+                        case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithFriendlyOption(card, newPos)
+
+                        //Battlecry Option with Position Type
+                        case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, newPos)
+                        case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos && position != oldPos =>
+                          futureMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, newPos, position)
+                        case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target != oldPos && position == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithFriendlyOptionWithPosition(card, target, newPos)
+                        case CardPlayWithFriendlyFaceOptionWithPosition(card, position) if position == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithFriendlyFaceOptionWithPosition(card, newPos)
+                        case CardPlayWithEnemyOptionWithPosition(card, target, position) if position == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, target, newPos)
+                        case CardPlayWithEnemyFaceOptionWithPosition(card, position) if position == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithEnemyFaceOptionWithPosition(card, newPos)
+
+                        //Normal Turn Play Type
+                        case CardPlayWithPosition(card, position) if position == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithPosition(card, newPos)
+                        case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithFriendlyBoardTarget(card, newPos)
+                        case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                          futureMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+                        //Attack Type
+                        case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                          futureMap(sender)(index) = NormalAttack(newPos, enemyPosition)
+                        case NormalAttackToFace(position) if position == oldPos =>
+                          futureMap(sender)(index) = NormalAttackToFace(newPos)
+
+                        case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                          futureMap(sender)(index) = HeroPowerWithFriendlyTarget(newPos)
+
+
+                        case _ => futureMapChangedIndex(sender).trimEnd(1)
+                      }
+                    }
+                  }
+              }
+          }
+        }
+
+        //If myNewBoard does not contain the card
+        if (newPos == -1) {
+          voterMap foreach {
+            case (sender, voteList) =>
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != PreviousDecision()) {
+                    vote match {
+                      case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                        voterMap(sender).remove(index)
+                      case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                        voterMap(sender).remove(index)
+                      case NormalAttackToFace(position) if position == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                        voterMap(sender).remove(index)
+
+
+                      case _ =>
+                    }
+                  }
+              }
+          }
+
+          bindMap foreach {
+            case (sender, voteList) =>
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != PreviousDecision()) {
+                    vote match {
+                      case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                        bindMap(sender).remove(index)
+                      case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                        bindMap(sender).remove(index)
+                      case NormalAttackToFace(position) if position == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      case _ =>
+                    }
+                  }
+              }
+          }
+
+
+          futureMap foreach {
+            case (sender, voteList) =>
+              var futureActive = false
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote == PreviousDecision()) {
+                    futureActive = true
+                  }
+
+
+
+                  if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
+                    futureActive = false
+                  }
+
+
+                  if (vote != PreviousDecision()) {
+                    if (!futureActive) {
+                      vote match {
+
+
+                        case CardPlayWithFriendlyOption(card, boardTarget) if boardTarget == oldPos =>
+
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        //Battlecry Option with Position Type
+                        case CardPlayWithFriendlyOptionWithPosition(card, target, position) if target == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        //Normal Turn Play Type
+                        case CardPlayWithFriendlyBoardTarget(card, target) if target == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+                        case HeroPowerWithFriendlyTarget(target) if target == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        //Attack Type
+                        case NormalAttack(friendlyPosition, enemyPosition) if friendlyPosition == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+                        case NormalAttackToFace(position) if position == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        case HeroPowerWithFriendlyTarget(friendlyPosition) if friendlyPosition == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        case _ =>
+                      }
+                    }
+                  }
+              }
+          }
+        }
+      }
+    }
+    voterMapChangedIndex.clear()
+    bindMapChangedIndex.clear()
+    futureMapChangedIndex.clear()
+
+
+    //For each element in hisOldBoard, map the oldPos to the newPos if hisNewBoard contains the same id
+    //If it does not contain the same id, -1 will be mapped
+    val hisChangedBoardMap = mutable.Map[Int, Int]()
+    hisOldBoard foreach {
+      case x =>
+
+        val newIndex = hisNewBoard.indexWhere(_.id == x.id)
+        if (hisNewBoard.isDefinedAt(newIndex)) {
+          val newBoardPos = hisNewBoard(newIndex).boardPosition
+          if (x.boardPosition != newBoardPos)
+            hisChangedBoardMap(x.boardPosition) = newBoardPos
+        }
+    }
+
+
+
+
+
+    hisChangedBoardMap foreach {
+      case (oldPos, newPos) => {
+        //If hisNewBoard does contain the card
+        if (newPos != -1) {
+          voterMap foreach {
+            case (sender, voteList) =>
+              if (!voterMapChangedIndex.isDefinedAt(sender))
+                voterMapChangedIndex(sender) = new ListBuffer[Int]()
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != PreviousDecision() && voterMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    voterMapChangedIndex(sender).append(index)
+                    vote match {
+                      case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                        voterMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
+                      case HeroPowerWithEnemyTarget(target) =>
+                        voterMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                        voterMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
+                      case FaceAttack(position) if position == oldPos =>
+                        voterMap(sender)(index) = FaceAttack(newPos)
+
+                      //Hero Power Type
+                      case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                        voterMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+                      case _ => voterMapChangedIndex(sender).trimEnd(1)
+                    }
+                  }
+              }
+          }
+
+
+
+
+
+          bindMap foreach {
+            case (sender, voteList) =>
+              if (!bindMapChangedIndex.isDefinedAt(sender))
+                bindMapChangedIndex(sender) = new ListBuffer[Int]()
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote != PreviousDecision() && bindMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    bindMapChangedIndex(sender).append(index)
+                    vote match {
+                      case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                        bindMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
+                      case HeroPowerWithEnemyTarget(target) =>
+                        bindMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                        bindMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
+                      case FaceAttack(position) if position == oldPos =>
+                        bindMap(sender)(index) = FaceAttack(newPos)
+
+                      //Hero Power Type
+                      case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                        bindMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+                      case _ =>
+                        bindMapChangedIndex(sender).trimEnd(1)
+                    }
+                  }
+              }
+          }
+
+
+
+
+
+          futureMap foreach {
+            case (sender, voteList) =>
+              if (!futureMapChangedIndex.isDefinedAt(sender))
+                futureMapChangedIndex(sender) = new ListBuffer[Int]()
+              var futureActive = false
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote == PreviousDecision()) {
+                    futureActive = true
+                  }
+                  if (vote == Break() || !voteList.isDefinedAt(index)) {
+                    futureActive = false
+                  }
+
+
+                  if (vote != PreviousDecision() && futureMapChangedIndex(sender).indexWhere(_ == index) == -1) {
+                    futureMapChangedIndex(sender).append(index)
+                    if (!futureActive) {
+                      vote match {
+
+
+                        case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithEnemyOption(card, newPos)
+
+                        //Battlecry Option with Position Type
+                        case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithEnemyOptionWithPosition(card, newPos, position)
+
+                        //Normal Turn Play Type
+                        case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                          futureMap(sender)(index) = CardPlayWithEnemyBoardTarget(card, newPos)
+                        case HeroPowerWithEnemyTarget(target) =>
+                          futureMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+
+                        //Attack Type
+                        case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                          futureMap(sender)(index) = NormalAttack(friendlyPosition, newPos)
+                        case FaceAttack(position) if position == oldPos =>
+                          futureMap(sender)(index) = FaceAttack(newPos)
+
+                        //Hero Power Type
+                        case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                          futureMap(sender)(index) = HeroPowerWithEnemyTarget(newPos)
+
+                        case _ => futureMapChangedIndex(sender).trimEnd(1)
+                      }
+                    }
+                  }
+              }
+          }
+
+        }
+      }
+
+        //If hisNewBoard does not contain the card anymore
+        if (newPos == -1) {
+          voterMap foreach {
+            case (sender, voteList) =>
+              voteList foreach {
+                case vote =>
+                  val index = voterMap(sender).indexWhere(_ == vote)
+                  if (vote != PreviousDecision()) {
+                    vote match {
+                      case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                        voterMap(sender).remove(index)
+                      case HeroPowerWithEnemyTarget(target) =>
+                        voterMap(sender).remove(index)
+
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                        voterMap(sender).remove(index)
+                      case FaceAttack(position) if position == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      //Hero Power Type
+                      case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                        voterMap(sender).remove(index)
+
+                      case _ =>
+                    }
+                  }
+              }
+          }
+
+          bindMap foreach {
+            case (sender, voteList) =>
+              voteList foreach {
+                case vote =>
+                  val index = bindMap(sender).indexWhere(_ == vote)
+                  if (vote != PreviousDecision()) {
+                    vote match {
+                      case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      //Battlecry Option with Position Type
+                      case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      //Normal Turn Play Type
+                      case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                        bindMap(sender).remove(index)
+                      case HeroPowerWithEnemyTarget(target) =>
+                        bindMap(sender).remove(index)
+
+
+                      //Attack Type
+                      case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+                        bindMap(sender).remove(index)
+                      case FaceAttack(position) if position == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      //Hero Power Type
+                      case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                        bindMap(sender).remove(index)
+
+                      case _ =>
+                    }
+                  }
+              }
+          }
+
+
+          futureMap foreach {
+            case (sender, voteList) =>
+              var futureActive = false
+              voteList foreach {
+                case vote =>
+                  val index = voteList.indexWhere(_ == vote)
+                  if (vote == PreviousDecision()) {
+                    futureActive = true
+                  }
+                  if (vote == Break() || !voteList.isDefinedAt(index + 1)) {
+                    futureActive = false
+                  }
+
+
+                  if (vote != PreviousDecision()) {
+                    if (!futureActive) {
+                      vote match {
+
+
+                        case CardPlayWithEnemyOption(card, boardTarget) if boardTarget == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        //Battlecry Option with Position Type
+                        case CardPlayWithEnemyOptionWithPosition(card, target, position) if target == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+
+                        //Normal Turn Play Type
+                        case CardPlayWithEnemyBoardTarget(card, target) if target == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        case HeroPowerWithEnemyTarget(target) =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+
+                        //Attack Type
+                        case NormalAttack(friendlyPosition, enemyPosition) if enemyPosition == oldPos =>
+
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        case FaceAttack(position) if position == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        //Hero Power Type
+                        case HeroPowerWithEnemyTarget(enemyPosition) if enemyPosition == oldPos =>
+                          if (index == 0) {
+                            futureMap(sender).remove(index)
+                          }
+
+                          if (voteList.isDefinedAt(index - 1) && voteList(index - 1) == Break()) {
+                            futureMap(sender).remove(index)
+                          }
+
+                        case _ =>
+                      }
+                    }
+                  }
+              }
+          }
+        }
+
+    }
+    voterMapChangedIndex.clear()
+    bindMapChangedIndex.clear()
+    futureMapChangedIndex.clear()
+
+
+  }
 
 
   def CalculateDecision(): Any = {
@@ -1832,7 +1838,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   }
 
 
-  def GetGameStatus(): Array[(_,_,_,_)] = {
+  def GetGameStatus(): Array[(_, _, _, _)] = {
     implicit val timeout = Timeout(30 seconds)
     val future = controller ? "GetGameStatus"
     val result = Await.result(future, timeout.duration)
@@ -1846,14 +1852,13 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
       savedGameStatus = result.asInstanceOf[Array[Player]]
       val player1Quad = savedGameStatus(0).deepCopy()
       val player2Quad = savedGameStatus(1).deepCopy
-      val staticStatus = new Array[(_,_,_,_)](2)
+      val staticStatus = new Array[(_, _, _, _)](2)
       staticStatus(0) = player1Quad
       staticStatus(1) = player2Quad
       return staticStatus
 
     }
   }
-
 
 
   def VoteEntry(vote: Any, sender: String): Unit = {
@@ -1995,7 +2000,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
           while (voteList.contains(vote)) {
             voteList.remove(index)
           }
-    }
+      }
     }
 
     else {
@@ -2109,7 +2114,6 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
   }
 
 
-
   def CreateCurrentVoterSet(): Set[String] = {
     //Combines all known voterMaps into one sender list
     //Essentially obtains amount of people that have voted this turn
@@ -2210,7 +2214,6 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
 
     //Format:
     this.self ! "CardPlayWithEnemyBoardTarget(4,1)"
-
 
 
   }

@@ -37,7 +37,7 @@ object Main extends App {
 
 
 
-    lazy val ircLogicTests: ActorRef = system.actorOf(Props(new ircLogicTests(system, controller, ircLogic, gameStatus, logFileReader)))
+    lazy val ircLogicTests: ActorRef = system.actorOf(Props(new ircLogicTests(system, controller, ircLogic, gameStatus, logFileReader,ircBot)))
     lazy val controller: ActorRef = system.actorOf(Props(new Controller(system, hearthstone, logFileReader, ircLogic, ircLogicTests)), "Controller")
     lazy val hearthstone: ActorRef = system.actorOf(Props(new Hearthstone(system, controller, config, screenScraper, mouseClicker)), "hearthStone")
     lazy val gameStatus: ActorRef = system.actorOf(Props(new GameStatus(system)), "gameStatus")
@@ -60,24 +60,25 @@ object Main extends App {
   //TEST MODE
   if (testMode) {
 
+
+    val ircHost = config.getString("tph.irc.host")
+    val ircChannel = config.getString("tph.irc.channel")
+    //ircBot has disabled functionality for test mode. Remember to remove comments.
+    lazy val ircBot = new IrcBot(ircHost, ircChannel, ircLogic)
     lazy val ircLogic = system.actorOf(Props(new ircLogic(system, controller, ircLogicTests)), "ircLogic")
 
 
-    lazy val ircLogicTests: ActorRef = system.actorOf(Props(new ircLogicTests(system, controller, ircLogic, gameStatus, logFileReader)))
+    lazy val ircLogicTests: ActorRef = system.actorOf(Props(new ircLogicTests(system, controller, ircLogic, gameStatus, logFileReader, ircBot)))
     lazy val logFileReader = system.actorOf(Props(new LogFileReader(system, new File("testsituations/blank.txt"), gameStatus, controller)), "logFileReader")
     lazy val controller: ActorRef = system.actorOf(Props(new Controller(system, ircLogicTests, logFileReader, ircLogic, ircLogicTests)), "Controller")
     lazy val gameStatus: ActorRef = system.actorOf(Props(new GameStatus(system)), "gameStatus")
 
 
-    val ircHost = config.getString("tph.irc.host")
-    val ircChannel = config.getString("tph.irc.channel")
-    val ircBot = new IrcBot(ircHost, ircChannel, ircLogic)
+
 
 
 
     ircLogicTests ! "Start"
-    ircLogicTests ! "Full Test"
-
 }
 
 
