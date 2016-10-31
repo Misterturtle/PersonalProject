@@ -5,26 +5,9 @@ package tph
   */
 
 
-class Flag(name: String) {
-
-  var callsActive = 0
-  var booleanInit = false
-  var booleanFlagStatus = false
+class Flag() {
 
 
-
-  def GetName():String = {
-    return name
-  }
-
-  def GetStatusAsBoolean(): Boolean = {
-
-    if(booleanInit)
-    return booleanFlagStatus
-    else{
-      return false
-    }
-  }
 
 
 

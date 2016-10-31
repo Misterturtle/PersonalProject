@@ -2008,10 +2008,7 @@ class ircLogic(system: ActorSystem, controller: ActorRef, hearthstone: ActorRef)
         val index = voterMap(sender).indexWhere(_ == vote)
         voterMap(sender).remove(index)
       }
-
-
     }
-
   }
 
   def RemoveBindVote(sender: String, vote: Any, removeBlock: Boolean): Unit = {

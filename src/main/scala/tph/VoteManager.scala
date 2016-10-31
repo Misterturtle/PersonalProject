@@ -1,38 +1,48 @@
 package tph
 
-import scala.collection.mutable.ListBuffer
+import scala.collection._
+
 
 class VoteManager {
 
-  val voteLog = new VoteList
-  val normalList = new VoteList
-  val bindList = new VoteList
-  val futureList = new VoteList
+  val totalActionList = new ActionVoteList
+  val totalEmojiList = new EmojiVoteList
+  val totalMenuList = new MenuVoteList
 
-  val flagSystem = new FlagSystem
-  flagSystem.AddFlag(new Flag("bindActive"))
-  flagSystem.AddFlag(new Flag("futureActive"))
+  val listOfVoters = mutable.Map[String, Voter]()
 
 
+  def VoteEntry(vote: Vote): Unit = {
 
+      //If voter is not in listOfVoters
+      if(!listOfVoters.isDefinedAt(vote.sender)){
+        //Assign a new voter to our voterList
+        listOfVoters(vote.sender) = new Voter(vote.sender)
+      }
 
+        //Call that voter's VoteEntry method
+        listOfVoters(vote.sender).VoteEntry(vote)
 
-  def AddVote(vote:Vote): Unit ={
-    voteLog.AddVote(vote:Vote)
-
-    vote.GetVoteType() match {
-      case Constants.UNINIT =>
-            println ("Vote " +vote + " has an uninitilized vote type. Will add vote to normalList as default")
-            normalList.AddVote(vote)
-
-      case Constants.NORMAL_VOTE_TYPE =>
-        normalList.AddVote(vote)
-
-      case Constants.BIND_VOTE_TYPE =>
-        bindList.AddVote(vote)
-
-      case Constants.FUTURE_VOTE_TYPE =>
-        futureList.AddVote(vote)
     }
+
+
+  def AdjustVotes(previousDecision: Vote): Unit =
+  {
+
+    listOfVoters foreach{
+      case(sender,voter) =>
+
+
+
+
+    }
+
+
+
+
+
   }
+
+
 }
+
