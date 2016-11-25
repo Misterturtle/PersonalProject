@@ -8,7 +8,18 @@ package tph
 class Flag() {
 
 
+  var active = false
 
+  def GetStatus(): Boolean = {
+  // Probably more complex logic later
+
+
+  return active
+
+  }
+
+
+  val name = ""
 
 
 

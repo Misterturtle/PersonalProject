@@ -14,6 +14,4 @@ class ActionVote(sender:String, voteCode:String) extends Vote(sender, voteCode) 
   var target = Constants.UNINIT
   var battlecry = Constants.UNINIT
 
-
-
 }

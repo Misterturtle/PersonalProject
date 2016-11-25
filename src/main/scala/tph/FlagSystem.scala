@@ -10,11 +10,11 @@ class FlagSystem {
   val flags = mutable.Map[String, Flag]()
 
   def AddFlag(flag:Flag): Unit ={
-  flags(flag.GetName()) == flag
+  flags(flag.name) == flag
 }
 
   def GetFlagStatus(flagName:String): Boolean ={
-    return flags(flagName).GetStatusAsBoolean()
+    return flags(flagName).GetStatus()
   }
 
 

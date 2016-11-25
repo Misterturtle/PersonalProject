@@ -14,7 +14,7 @@ object Constants {
   val UNINIT = -5
 
 
-  object IrcMessages {
+  object voteCodes {
 
 
     case class ChangeReaderFile(fileName: String)
@@ -148,9 +148,9 @@ object Constants {
 
   object CommandVotes{
 
-    val DISCOVER = IrcMessages.Discover(1)
+    val DISCOVER = "Discover"
 
-    val CARD_PLAY_WITH_FRIENDLY_OPTION = IrcMessages.CardPlayWithFriendlyOption
+    val CARD_PLAY_WITH_FRIENDLY_OPTION = "CardPlayWithFriendlyOption"
     val CARD_PLAY_WITH_FRIENDLY_FACE_OPTION = "CardPlayWithFriendlyFaceOption"
     val CARD_PLAY_WITH_ENEMY_OPTION = "CardPlayWithEnemyOption"
     val CARD_PLAY_WITH_ENEMY_FACE_OPTION = "CardPlayWithEnemyFaceOption"
@@ -192,7 +192,7 @@ object Constants {
 
     //!att f1 e3, !p c1 s1
 
-    //"NormalAttckWithEnemyTarget
+    //"BN
 
   }
 

@@ -1,6 +1,6 @@
 package tph
 
-
+import scala.Tuple1
 
 
 /**
@@ -9,11 +9,25 @@ package tph
 
 
 
-class Vote(ircSender : String, stringVoteCode:String) {
+class Vote(ircSender : String, origVoteCode: (_)) {
 
   val voteType = this.getClass
   val sender = ircSender
-  val voteCode = stringVoteCode
+  var voteCode = origVoteCode
+
+
+
+  def GetVoteCode(): (_) ={
+    return voteCode
+  }
+
+  def SetVoteCode(newVoteCode:(_)): Unit = {
+    voteCode = newVoteCode
+  }
+
+
+
+
 
 
 }

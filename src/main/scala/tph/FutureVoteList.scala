@@ -5,4 +5,19 @@ package tph
   */
 class FutureVoteList extends VoteList {
 
+
+
+  def AdjustVotes(previousDecision: Vote): Unit ={
+
+
+
+  }
+
+  def TallyVotes(): scala.collection.mutable.Map[(_), Int] =
+  {
+
+
+  }
+
+
 }
