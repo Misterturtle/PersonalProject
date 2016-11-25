@@ -1,0 +1,2 @@
+[Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Friendly Card Two id=2 zone=PLAY zonePos=11 cardId=.+ player=1]
+

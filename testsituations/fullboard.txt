@@ -1,0 +1,22 @@
+//Define Players
+[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=Wizard id=90 zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)
+
+
+//7 friendly minions on board
+some FULL_ENTITY - Updating [name=Friendly Minion One id=21 zone=PLAY zonePos=1 some player=1 some
+some FULL_ENTITY - Updating [name=Friendly Minion Two id=22 zone=PLAY zonePos=2 some player=1 some
+some FULL_ENTITY - Updating [name=Friendly Minion Three id=23 zone=PLAY zonePos=3 some player=1 some
+some FULL_ENTITY - Updating [name=Friendly Minion Four id=24 zone=PLAY zonePos=4 some player=1 some
+some FULL_ENTITY - Updating [name=Friendly Minion Five id=25 zone=PLAY zonePos=5 some player=1 some
+some FULL_ENTITY - Updating [name=Friendly Minion Six id=26 zone=PLAY zonePos=6 some player=1 some
+some FULL_ENTITY - Updating [name=Friendly Minion Seven id=27 zone=PLAY zonePos=7 some player=1 some
+
+
+//7 Enemy Minions on board
+some FULL_ENTITY - Updating [name=Enemy Minion One id=31 zone=PLAY zonePos=1 some player=2 some
+some FULL_ENTITY - Updating [name=Enemy Minion Two id=32 zone=PLAY zonePos=2 some player=2 some
+some FULL_ENTITY - Updating [name=Enemy Minion Three id=33 zone=PLAY zonePos=3 some player=2 some
+some FULL_ENTITY - Updating [name=Enemy Minion Four id=34 zone=PLAY zonePos=4 some player=2 some
+some FULL_ENTITY - Updating [name=Enemy Minion Five id=35 zone=PLAY zonePos=5 some player=2 some
+some FULL_ENTITY - Updating [name=Enemy Minion Six id=36 zone=PLAY zonePos=6 some player=2 some
+some FULL_ENTITY - Updating [name=Enemy Minion Seven id=37 zone=PLAY zonePos=7 some player=2 some

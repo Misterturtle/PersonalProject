@@ -1,0 +1,48 @@
+[Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=21 zone=some zonePos=55 some player=1 some tag=ZONE value=GRAVEYARD
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=22 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=23 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=24 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=25 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=26 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=27 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
+
+[Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=31 zone=some zonePos=55 some player=2 some tag=ZONE value=GRAVEYARD
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=32 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=33 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=34 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=35 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=36 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=37 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
+
+[Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=23 zone=some zonePos=55 some player=1 some tag=ZONE value=GRAVEYARD
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=24 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=25 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=26 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=27 zone=PLAY zonePos=55 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+
+[Power] PowerTaskList some TAG_CHANGE Entity=[name=some id=33 zone=some zonePos=55 some player=2 some tag=ZONE value=GRAVEYARD
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=34 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=35 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=36 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=some id=37 zone=PLAY zonePos=55 cardId=some player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+
