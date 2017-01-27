@@ -8,22 +8,14 @@ import scala.Tuple1
   */
 
 
+class Vote(ircSender: String, origVoteCode: Constants.VoteCode) {
 
-class Vote(ircSender : String, origVoteCode: (_)) {
 
-  val voteType = this.getClass
   val sender = ircSender
   var voteCode = origVoteCode
+  var voteValue = Constants.UNINIT
 
 
-
-  def GetVoteCode(): (_) ={
-    return voteCode
-  }
-
-  def SetVoteCode(newVoteCode:(_)): Unit = {
-    voteCode = newVoteCode
-  }
 
 
 

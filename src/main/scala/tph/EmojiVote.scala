@@ -1,32 +1,16 @@
 package tph
 
+import tph.Constants.EmojiVoteCodes.EmojiVoteCode
+
 /**
   * Created by Harambe on 10/30/2016.
   */
 
 
+class EmojiVote(sender: String, voteCode: Constants.EmojiVoteCodes.EmojiVoteCode) extends Vote(sender: String, voteCode: Constants.EmojiVoteCodes.EmojiVoteCode) {
 
 
-class EmojiVote(sender:String, voteCode:String) extends Vote(sender:String, voteCode:String) {
-
-
-
-  voteCase = Constants.EmoteVotes.OOPS
-
-  def SetVoteCase(): Any ={
-
-//    voteCode match {
-//
-//      case Constants.EmoteVotes.GREETINGS =>
-
-        println("Changing to oops. Currently" + voteCase)
-        println(voteCase)
-
-
-
-
-
-    }
+  var emojiVoteCode: EmojiVoteCode = voteCode
 
   }
 

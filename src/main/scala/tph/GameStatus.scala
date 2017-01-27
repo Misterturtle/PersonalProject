@@ -4,6 +4,7 @@ import java.io._
 
 import akka.actor.{Actor, ActorSystem}
 import akka.event.LoggingReceive
+import com.typesafe.scalalogging.LazyLogging
 import tph.LogFileEvents._
 
 import scala.collection.mutable._
@@ -11,187 +12,188 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 
-class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging {
-
+class GameStatus(theBrain: TheBrain) extends LazyLogging {
 
 
   var turn: Int = 0
-  val me: Player = Player("UNKNOWN")
-  val him: Player = Player("UNKNOWN")
+  val me: Player = new Player()
+  val him: Player = new Player()
   val USER_NAME: String = "Wizard"
 
-  override def receive: Receive = LoggingReceive({
+  //Friendly Cases
 
-    //Friendly Cases
 
-        case OldZoneChangeEvent(id, zone, player, dstZone) =>
+  def OldZoneChangeEvent(id: Int, zone: String, player: Int, dstZone: String): Unit = {
 
-          if(player == me.player) {
-            if (dstZone == "HAND") {
-              var index = me.board.indexWhere(_.id == id)
-              if (index >= 0 && me.board(index).zone == "PLAY")
-                me.board(index).zone = "HAND"
-            }
+    if (player == me.player) {
+      if (dstZone == "HAND") {
+        var index = me.board.indexWhere(_.id == id)
+        if (index >= 0 && me.board(index).zone == "PLAY")
+          me.board(index).zone = "HAND"
+      }
 
-            if (dstZone == "DECK" && zone == "HAND") {
-              var index = me.hand.indexWhere(_.id == id)
-              if (index >= 0)
-                me.hand.remove(index)
-            }
+      if (dstZone == "DECK" && zone == "HAND") {
+        var index = me.hand.indexWhere(_.id == id)
+        if (index >= 0)
+          me.hand.remove(index)
+      }
 
-            if (dstZone == "DECK" && zone == "PLAY") {
-              var index = me.board.indexWhere(_.id == id)
-              if (index >= 0)
-                me.board.remove(index)
-            }
-          }
+      if (dstZone == "DECK" && zone == "PLAY") {
+        var index = me.board.indexWhere(_.id == id)
+        if (index >= 0)
+          me.board.remove(index)
+      }
+    }
 
-          if(player == him.player) {
-            if (dstZone == "HAND" && zone == "PLAY") {
-              var index = him.board.indexWhere(_.id == id)
-              if (index >= 0)
-                him.board.remove(index)
-            }
+    if (player == him.player) {
+      if (dstZone == "HAND" && zone == "PLAY") {
+        var index = him.board.indexWhere(_.id == id)
+        if (index >= 0)
+          him.board.remove(index)
+      }
 
-            if (dstZone == "DECK" && zone == "HAND") {
-              var index = him.hand.indexWhere(_.id == id)
-              if (index >= 0)
-                him.hand.remove(index)
-            }
+      if (dstZone == "DECK" && zone == "HAND") {
+        var index = him.hand.indexWhere(_.id == id)
+        if (index >= 0)
+          him.hand.remove(index)
+      }
 
-            if (dstZone == "DECK" && zone == "PLAY") {
-              var index = him.board.indexWhere(_.id == id)
-              if (index >= 0)
-                him.board.remove(index)
-            }
-          }
+      if (dstZone == "DECK" && zone == "PLAY") {
+        var index = him.board.indexWhere(_.id == id)
+        if (index >= 0)
+          him.board.remove(index)
+      }
+    }
+  }
 
-// Forseen problem: No dstPos passed in. Relying on Position Change methods to fix. Position change methods must come after ZoneChangeEvent
-    case ZoneChangeEvent(id, player, zone, dstZone) => {
+  // Forseen problem: No dstPos passed in. Relying on Position Change methods to fix. Position change methods must come after ZoneChangeEvent
+  def ZoneChangeEvent(id: Int, player: Int, zone: String, dstZone: String): Unit = {
 
-      var index = -2
+    var index = -2
 
-      if (zone == "OPPOSING PLAY") {
-        index = him.board.indexWhere(_.id == id)
-        if (index >= 0) {
-          if (dstZone == "FRIENDLY PLAY") {
+    if (zone == "OPPOSING PLAY") {
+      index = him.board.indexWhere(_.id == id)
+      if (index >= 0) {
+        if (dstZone == "FRIENDLY PLAY") {
 
-            val name = him.board(index).name
-            him.board.remove(index)
+          val name = him.board(index).name
+          him.board.remove(index)
+          val changedCard = new Card
+          changedCard.name = name
+          changedCard.id = id
+          changedCard.handPosition = -1
+          changedCard.boardPosition = -5
+          me.board.append(changedCard)
+        }
+
+        if (dstZone == "OPPOSING HAND") {
+          val name = him.board(index).name
+          him.board.remove(index)
+          if (him.hand.indexWhere(_.id == id) == -1) {
+            // If his hand doesn't already contain the card
             val changedCard = new Card
             changedCard.name = name
             changedCard.id = id
-            changedCard.handPosition = -1
-            changedCard.boardPosition = -5
-            me.board.append(changedCard)
+            changedCard.handPosition = -5
+            changedCard.boardPosition = -1
+            him.hand.append(changedCard)
           }
+        }
 
-          if (dstZone == "OPPOSING HAND") {
-            val name = him.board(index).name
-            him.board.remove(index)
-            if (him.hand.indexWhere(_.id == id) == -1) {
-              // If his hand doesn't already contain the card
-              val changedCard = new Card
-              changedCard.name = name
-              changedCard.id = id
-              changedCard.handPosition = -5
-              changedCard.boardPosition = -1
-              him.hand.append(changedCard)
-            }
-          }
-
-          if (dstZone == "OPPOSING DECK") {
-            him.board.remove(index)
-          }
+        if (dstZone == "OPPOSING DECK") {
+          him.board.remove(index)
         }
       }
+    }
 
-      if (zone == "OPPOSING HAND") {
-        index = him.hand.indexWhere(_.id == id)
-        if (index >= 0) {
-          if (dstZone == "OPPOSING GRAVEYARD") {
-            him.hand.remove(index)
-          }
+    if (zone == "OPPOSING HAND") {
+      index = him.hand.indexWhere(_.id == id)
+      if (index >= 0) {
+        if (dstZone == "OPPOSING GRAVEYARD") {
+          him.hand.remove(index)
         }
       }
-
-
-
-      if (zone == "FRIENDLY PLAY") {
-        index = me.board.indexWhere(_.id == id)
-        if (index >= 0) {
-          if (dstZone == "OPPOSING PLAY") {
-
-            val name = me.board(index).name
-            me.board.remove(index)
-            val changedCard = new Card
-            changedCard.name = name
-            changedCard.id = id
-            changedCard.handPosition = -1
-            changedCard.boardPosition = -5
-            him.board.append(changedCard)
-          }
-
-          if (dstZone == "FRIENDLY HAND") {
-            val name = me.board(index).name
-            me.board.remove(index)
-            if (me.hand.indexWhere(_.id == id) == -1) {
-              // If my hand doesn't already contain the card
-              val changedCard = new Card
-              changedCard.name = name
-              changedCard.id = id
-              changedCard.handPosition = -5
-              changedCard.boardPosition = -1
-              me.hand.append(changedCard)
-            }
-          }
-          if (dstZone == "FRIENDLY DECK") {
-            me.hand.remove(index)
-          }
-        }
-
-
-      }
-
-
-
-      if (zone == "FRIENDLY HAND") {
-        index = me.hand.indexWhere(_.id == id)
-        if (index >= 0) {
-          if (dstZone == "FRIENDLY GRAVEYARD") {
-            me.hand.remove(index)
-          }
-        }
-        }
     }
 
 
-        case FaceAttackValueEvent(player: Int, value: Int) => {
-          if (player == me.player) {
-            me.faceValue = value
-          }
-          if (player == him.player) {
-            him.faceValue = value
-          }
+
+    if (zone == "FRIENDLY PLAY") {
+      index = me.board.indexWhere(_.id == id)
+      if (index >= 0) {
+        if (dstZone == "OPPOSING PLAY") {
+
+          val name = me.board(index).name
+          me.board.remove(index)
+          val changedCard = new Card
+          changedCard.name = name
+          changedCard.id = id
+          changedCard.handPosition = -1
+          changedCard.boardPosition = -5
+          him.board.append(changedCard)
         }
 
-        case WeaponPlayedEvent(id: Int, player: Int) =>
-          if (player == me.player) {
-            val index = me.hand.indexWhere(_.id == id)
-            if (index >= 0)
-              me.hand.remove(index)
+        if (dstZone == "FRIENDLY HAND") {
+          val name = me.board(index).name
+          me.board.remove(index)
+          if (me.hand.indexWhere(_.id == id) == -1) {
+            // If my hand doesn't already contain the card
+            val changedCard = new Card
+            changedCard.name = name
+            changedCard.id = id
+            changedCard.handPosition = -5
+            changedCard.boardPosition = -1
+            me.hand.append(changedCard)
           }
-
-          if (player == him.player) {
-            val index = him.hand.indexWhere(_.id == id)
-            if (index >= 0)
-              him.hand.remove(index)
-          }
-
+        }
+        if (dstZone == "FRIENDLY DECK") {
+          me.hand.remove(index)
+        }
+      }
 
 
-    case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == me.player && dstPos != 0 => {
-      // """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
+    }
+
+
+
+    if (zone == "FRIENDLY HAND") {
+      index = me.hand.indexWhere(_.id == id)
+      if (index >= 0) {
+        if (dstZone == "FRIENDLY GRAVEYARD") {
+          me.hand.remove(index)
+        }
+      }
+    }
+  }
+
+
+  def FaceAttackValueEvent(player: Int, value: Int): Unit = {
+    if (player == me.player) {
+      me.faceValue = value
+    }
+    if (player == him.player) {
+      him.faceValue = value
+    }
+  }
+
+  def WeaponPlayedEvent(id: Int, player: Int): Unit = {
+    if (player == me.player) {
+      val index = me.hand.indexWhere(_.id == id)
+      if (index >= 0)
+        me.hand.remove(index)
+    }
+
+    if (player == him.player) {
+      val index = him.hand.indexWhere(_.id == id)
+      if (index >= 0)
+        him.hand.remove(index)
+    }
+  }
+
+
+  def BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) = {
+    // """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
+
+    if (player == me.player && dstPos != 0) {
       var index = -2
 
       index = me.board.indexWhere(_.id == id)
@@ -200,65 +202,9 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
         me.board(index).boardPosition = dstPos
         CleanBoard(index, me)
       }
-
-    }
-    case CardDeath(name: String, id: Int, zonePos: Int, player: Int) => {
-      //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
-      var index = -2
-      if (player == me.player) {
-        index = me.board.indexWhere(_.id == id)
-        if (index >= 0) {
-          me.board.remove(index)
-        }
-        else {
-          index = me.hand.indexWhere(_.id == id)
-          if (index != -1) {
-            me.hand.remove(index)
-          }
-        }
-      }
-      if (player == him.player)
-        {
-          index = him.board.indexWhere(_.id == id)
-          if (index >= 0) {
-            him.board.remove(index)
-          }
-          else {
-            index = him.hand.indexWhere(_.id == id)
-            if (index != -1) {
-              him.hand.remove(index)
-            }
-          }
-        }
     }
 
-    case FriendlyMinionControlled(name: String, id: Int) =>
-      var index = -2
-      index = him.board.indexWhere(_.id == id)
-      if (index >= 0) {
-        me.board.append(him.board(index))
-        him.board.remove(index)
-      }
-
-
-
-    //Enemy Events
-    case EnemyCardDrawnEvent(id: Int, position: Int, player: Int) if player == him.player => {
-      //"""^.+id=\d+ local=.+ \[id=(\d+) cardId=.+type=.+zone=HAND zonePos=(\d+) player=2\] pos from \d+ -> \d+""".r
-
-      if(him.hand.indexWhere(_.id == id) == -1) {
-        var drawnCard: Card = Card()
-        drawnCard.id = id
-        drawnCard.zone = "HAND"
-        drawnCard.handPosition = position
-        him.hand.append(drawnCard)
-      }
-
-    }
-
-
-    case BoardChangeEvent(name: String, id: Int, zonePos: Int, player: Int, dstPos: Int) if player == him.player && dstPos != 0 => {
-      // """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d)\] tag=ZONE_POSITION value=(\d+)""".r
+    if (player == him.player && dstPos != 0) {
       var index = -2
 
       him.board.indexWhere(_.id == id) match {
@@ -269,96 +215,155 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
         him.board(index).boardPosition = dstPos
         CleanBoard(index, him)
       }
-
     }
+  }
 
-
-
-    //Neutral Events
-
-    case KnownCardDrawn(name: String, id: Int, position: Int, player: Int) =>
-
-      if (player == me.player &&
-        me.hand.indexWhere(_.id == id) == -1) {
-        // Prevents bug of drawing a returned card
-        var drawnCard: Card = Card()
-        drawnCard.name = name
-        drawnCard.id = id
-        drawnCard.zone = "HAND"
-        drawnCard.handPosition = position
-        me.hand.append(drawnCard)
+  def CardDeath(name: String, id: Int, zonePos: Int, player: Int): Unit = {
+    //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
+    var index = -2
+    if (player == me.player) {
+      index = me.board.indexWhere(_.id == id)
+      if (index >= 0) {
+        me.board.remove(index)
       }
+      else {
+        index = me.hand.indexWhere(_.id == id)
+        if (index != -1) {
+          me.hand.remove(index)
+        }
+      }
+    }
+    if (player == him.player) {
+      index = him.board.indexWhere(_.id == id)
+      if (index >= 0) {
+        him.board.remove(index)
+      }
+      else {
+        index = him.hand.indexWhere(_.id == id)
+        if (index != -1) {
+          him.hand.remove(index)
+        }
+      }
+    }
+  }
 
-      if (player == him.player
-      && him.hand.indexWhere(_.id == id) == -1 // Prevents bug where a returned enemy card is "drawn" again
-      ) {
-        var drawnCard: Card = Card()
+  def FriendlyMinionControlled(name: String, id: Int): Unit = {
+    var index = -2
+    index = him.board.indexWhere(_.id == id)
+    if (index >= 0) {
+      me.board.append(him.board(index))
+      him.board.remove(index)
+    }
+  }
+
+
+  //Enemy Events
+  def EnemyCardDrawnEvent(id: Int, position: Int, player: Int): Unit = {
+    //"""^.+id=\d+ local=.+ \[id=(\d+) cardId=.+type=.+zone=HAND zonePos=(\d+) player=2\] pos from \d+ -> \d+""".r
+
+    if (player == him.player) {
+      if (him.hand.indexWhere(_.id == id) == -1) {
+        var drawnCard: Card = new Card()
         drawnCard.id = id
         drawnCard.zone = "HAND"
         drawnCard.handPosition = position
         him.hand.append(drawnCard)
       }
-
-    case Sap(name: String, id: Int, player: Int) =>
-      if (player == me.player) {
-        var index = -2
-        index = me.board.indexWhere(_.id == id)
-        me.board.remove(index)
-      }
-
-      if (player == him.player) {
-        var index = -2
-        index = him.board.indexWhere(_.id == id)
-        him.board.remove(index)
-      }
+    }
+  }
 
 
-    case CardPlayed(name: String, id: Int, dstPos: Int, player: Int) =>
-      if (player == me.player) {
-        var index = -2
+  //Neutral Events
 
-        index = me.hand.indexWhere(_.id == id)
-        if (index >= 0) {
-          me.hand(index).zone = "PLAY"
-          me.hand(index).name = name
-          me.hand(index).boardPosition = dstPos
-          me.hand(index).handPosition = 0
-          if (dstPos > 0) {
-            me.board.append(me.hand(index))
-          }
-          me.hand.remove(index)
+  def KnownCardDrawn(name: String, id: Int, position: Int, player: Int): Unit = {
+
+    if (player == me.player &&
+      me.hand.indexWhere(_.id == id) == -1) {
+      // Prevents bug of drawing a returned card
+      var drawnCard: Card = new Card()
+      drawnCard.name = name
+      drawnCard.id = id
+      drawnCard.zone = "HAND"
+      drawnCard.handPosition = position
+      me.hand.append(drawnCard)
+    }
+
+    if (player == him.player
+      && him.hand.indexWhere(_.id == id) == -1 // Prevents bug where a returned enemy card is "drawn" again
+    ) {
+      var drawnCard: Card = new Card()
+      drawnCard.id = id
+      drawnCard.zone = "HAND"
+      drawnCard.handPosition = position
+      him.hand.append(drawnCard)
+    }
+  }
+
+  def Sap(name: String, id: Int, player: Int): Unit = {
+    if (player == me.player) {
+      var index = -2
+      index = me.board.indexWhere(_.id == id)
+      me.board.remove(index)
+    }
+
+    if (player == him.player) {
+      var index = -2
+      index = him.board.indexWhere(_.id == id)
+      him.board.remove(index)
+    }
+  }
+
+
+  def CardPlayed(name: String, id: Int, dstPos: Int, player: Int): Unit = {
+    if (player == me.player) {
+      var index = -2
+
+      index = me.hand.indexWhere(_.id == id)
+      if (index >= 0) {
+        me.hand(index).zone = "PLAY"
+        me.hand(index).name = name
+        me.hand(index).boardPosition = dstPos
+        me.hand(index).handPosition = 0
+        if (dstPos > 0) {
+          me.board.append(me.hand(index))
         }
+        me.hand.remove(index)
       }
+    }
 
-      if (player == him.player) {
-        var index = -2
+    if (player == him.player) {
+      var index = -2
 
-        index = him.hand.indexWhere(_.id == id)
-        if (index >= 0) {
-          him.hand(index).zone = "PLAY"
-          him.hand(index).name = name
-          him.hand(index).boardPosition = dstPos
-          him.hand(index).handPosition = 0
-          if (dstPos > 0) {
-            him.board.append(him.hand(index))
-          }
-          him.hand.remove(index)
+      index = him.hand.indexWhere(_.id == id)
+      if (index >= 0) {
+        him.hand(index).zone = "PLAY"
+        him.hand(index).name = name
+        him.hand(index).boardPosition = dstPos
+        him.hand(index).handPosition = 0
+        if (dstPos > 0) {
+          him.board.append(him.hand(index))
         }
+        him.hand.remove(index)
       }
+    }
+  }
 
-    case DefinePlayers(friendlyPlayerID: Int) =>
-      if (friendlyPlayerID == 1) {
-        me.player = 1
-        him.player = 2
-      }
-      if (friendlyPlayerID == 2) {
-        me.player = 2
-        him.player = 1
-      }
+  def DefinePlayers(friendlyPlayerID: Int): Unit = {
+    if (friendlyPlayerID == 1) {
+      me.player = 1
+      him.player = 2
+    }
+    if (friendlyPlayerID == 2) {
+      me.player = 2
+      him.player = 1
+    }
+  }
 
+  def MinionSummoned(name: String, id: Int, zonePos: Int, player: Int) = {
+    //"""^.+FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+player=(\d+).+"""
 
-    case MinionSummoned(name: String, id: Int, zonePos: Int, player: Int) if zonePos != 0 => {
-      //"""^.+FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+player=(\d+).+"""
+    if (zonePos != 0) {
+
       if (player == me.player) {
         var playedCard = new Card()
         playedCard.name = name
@@ -377,82 +382,86 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
         him.board.append(playedCard)
       }
     }
+  }
 
 
-    case BoardPositionChange(id: Int, player: Int, dstPos: Int) => {
-      //\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
+  def BoardPositionChange(id: Int, player: Int, dstPos: Int): Unit = {
+    //\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
+    var index = -2
+
+    if (me.board.indexWhere(_.id == id) >= 0) {
+      index = me.board.indexWhere(_.id == id)
+      me.board(index).boardPosition = dstPos
+    }
+    if (him.board.indexWhere(_.id == id) >= 0) {
+      index = him.board.indexWhere(_.id == id)
+      him.board(index).boardPosition = dstPos
+    }
+  }
+
+  def HandPositionChange(id: Int, pos: Int, player: Int, dstPos: Int): Unit = {
+    if (pos != 0) {
       var index = -2
-
-      if (me.board.indexWhere(_.id == id) >= 0) {
-        index = me.board.indexWhere(_.id == id)
-        me.board(index).boardPosition = dstPos
+      if (player == me.player) {
+        index = me.hand.indexWhere(_.id == id)
+        if (index >= 0)
+          me.hand(index).handPosition = dstPos
       }
-      if (him.board.indexWhere(_.id == id) >= 0) {
-        index = him.board.indexWhere(_.id == id)
-        him.board(index).boardPosition = dstPos
+      if (player == him.player) {
+        index = him.hand.indexWhere(_.id == id)
+        if (index >= 0)
+          him.hand(index).handPosition = dstPos
       }
     }
+  }
 
-        case HandPositionChange(id, pos, player, dstPos)
-          if pos != 0 =>
+
+  def Transform(oldId: Int, newId: Int): Unit = {
+    //\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)
+    if (newId != 0) {
       var index = -2
-      if (player == me.player)
-        {
-          index = me.hand.indexWhere(_.id == id)
-          if(index >= 0)
-          me.hand(index).handPosition = dstPos
-        }
-      if (player == him.player)
-        {
-          index = him.hand.indexWhere(_.id == id)
-          if (index >= 0)
-          him.hand(index).handPosition = dstPos
-        }
+      //These conditions are needed due to some transform cards creating an instance on the board and some not.
+      if (me.hand.indexWhere(_.id == oldId) >= 0) //Old card in my hand
+      {
+        index = me.hand.indexWhere(_.id == oldId)
+        me.hand.remove(index)
+        var changedCard = new Card
+        changedCard.name = "Transformed Minion"
+        changedCard.id = newId
+        changedCard.boardPosition = -5
+        changedCard.handPosition = -1
+        me.board.append(changedCard)
+      }
 
+      if (me.board.indexWhere(_.id == oldId) >= 0) //Old card on him board
+      {
+        index = me.board.indexWhere(_.id == oldId)
+        me.board(index).id = newId
+        me.board(index).name = "Transformed Minion"
+      }
 
-        case Transform(oldId, newId) if (newId != 0) =>
-          //\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)
-          var index = -2
-          //These conditions are needed due to some transform cards creating an instance on the board and some not.
-          if (me.hand.indexWhere(_.id == oldId) >= 0) //Old card in my hand
-          {
-            index = me.hand.indexWhere(_.id == oldId)
-            me.hand.remove(index)
-            var changedCard = new Card
-            changedCard.name = "Transformed Minion"
-            changedCard.id = newId
-            changedCard.boardPosition = -5
-            changedCard.handPosition = -1
-            me.board.append(changedCard)
-          }
+      if (him.hand.indexWhere(_.id == oldId) >= 0) // Old card in his hand
+      {
+        index = him.hand.indexWhere(_.id == oldId)
+        him.hand.remove(index)
+        var changedCard = new Card
+        changedCard.name = "Transformed Minion"
+        changedCard.id = newId
+        changedCard.boardPosition = -5
+        changedCard.handPosition = -1
+        him.board.append(changedCard)
+      }
 
-          if (me.board.indexWhere(_.id == oldId) >= 0) //Old card on him board
-          {
-            index = me.board.indexWhere(_.id == oldId)
-            me.board(index).id = newId
-            me.board(index).name = "Transformed Minion"
-          }
+      if (him.board.indexWhere(_.id == oldId) >= 0) //Old card on his board
+      {
+        index = him.board.indexWhere(_.id == oldId)
+        him.board(index).id = newId
+        him.board(index).name = "Transformed Minion"
+      }
+    }
+  }
 
-          if (him.hand.indexWhere(_.id == oldId) >= 0) // Old card in his hand
-          {
-            index = him.hand.indexWhere(_.id == oldId)
-            him.hand.remove(index)
-            var changedCard = new Card
-            changedCard.name = "Transformed Minion"
-            changedCard.id = newId
-            changedCard.boardPosition = -5
-            changedCard.handPosition = -1
-            him.board.append(changedCard)
-          }
-
-          if (him.board.indexWhere(_.id == oldId) >= 0) //Old card on his board
-          {
-            index = him.board.indexWhere(_.id == oldId)
-            him.board(index).id = newId
-            him.board(index).name = "Transformed Minion"
-          }
-
-    case Hex(name, id,player, zonePos) => {
+  def Hex(name: String, id: Int, player: Int, zonePos: Int): Unit = {
       var oldIndex = -2
       var changedCard = new Card()
       if (player == me.player) {
@@ -474,32 +483,26 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
     }
 
 
-    case SecretPlayedEvent(id,player) =>
+  def SecretPlayedEvent(id: Int, player: Int): Unit = {
       var index = -2
-      if (player == me.player)
-        {
-          index = me.hand.indexWhere(_.id == id)
-          if (index != -1)
+    if (player == me.player) {
+      index = me.hand.indexWhere(_.id == id)
+      if (index != -1)
           me.hand.remove(index)
-        }
-      if (player == him.player)
-      {
+    }
+    if (player == him.player) {
         index = him.hand.indexWhere(_.id == id)
         if (index != -1)
           him.hand.remove(index)
       }
+  }
 
 
-
-
-    case TurnStartEvent(value: Int) => {
+  def TurnStartEvent(value: Int): Unit = {
       turn = value
     }
-    case GameOver() => {
-      Reset()
-    }
 
-    case "Display Status" => {
+  def DisplayStatus(): Unit = {
 
 
       var a: Int = 0
@@ -507,10 +510,10 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       for (a <- 0 until me.hand.length) {
         var index = me.hand.indexWhere(_.handPosition == a + 1)
         if (index >= 0) {
-          log.info("My hand, card " + (a + 1) + ": " + me.hand(index).name)
+          logger.info("My hand, card " + (a + 1) + ": " + me.hand(index).name)
         }
         else
-          log.info("Something is wrong with my handPosition in index " + index)
+          logger.info("Something is wrong with my handPosition in index " + index)
       }
 
 
@@ -520,16 +523,16 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       for (b <- 0 until me.board.length) {
         var index = me.board.indexWhere(_.boardPosition == b + 1)
         if (index >= 0) {
-          log.info("My board position " + (b + 1) + ": " + me.board(index).name)
+          logger.info("My board position " + (b + 1) + ": " + me.board(index).name)
         }
         else {
-          log.info("Something is wrong with my boardPosition in index " + index)
+          logger.info("Something is wrong with my boardPosition in index " + index)
         }
       }
 
-      log.info("\n\nMy face value is " + me.faceValue)
-      log.info("\n\nHis hand has " + him.hand.length + " cards.\n")
-      log.info("\nHis face value is " + him.faceValue)
+    logger.info("\n\nMy face value is " + me.faceValue)
+    logger.info("\n\nHis hand has " + him.hand.length + " cards.\n")
+    logger.info("\nHis face value is " + him.faceValue)
 
 
 
@@ -537,10 +540,10 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       for (c <- 0 until him.board.length) {
         var index = him.board.indexWhere(_.boardPosition == c + 1)
         if (index >= 0) {
-          log.info("His board position " + (c + 1) + ": " + him.board(index).name)
+          logger.info("His board position " + (c + 1) + ": " + him.board(index).name)
         }
         else {
-          log.info("Something is wrong with his boardPosition in index " + index)
+          logger.info("Something is wrong with his boardPosition in index " + index)
         }
       }
 
@@ -548,36 +551,14 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
       for (d <- 0 until him.hand.length) {
         var index = him.hand.indexWhere(_.handPosition == d + 1)
         if (index >= 0) {
-          log.info("His hand, card " + (d + 1) + ": " + him.hand(index).id)
+          logger.info("His hand, card " + (d + 1) + ": " + him.hand(index).id)
         }
         else
-          log.info("Something is wrong with his handPosition in index " + index)
+          logger.info("Something is wrong with his handPosition in index " + index)
       }
 
-      log.info("It is turn: " + turn)
-      system.scheduler.scheduleOnce(10000.milli, this.self, "Display Status")
-
+    logger.info("It is turn: " + turn)
     }
-
-        case "GetGameStatus" =>
-          val array: Array[Player] = new Array[Player](2)
-          array(0) = me
-          array(1) = him
-          sender ! array
-
-
-        case x =>
-
-
-    case PrintState(fileName) =>
-      {
-        PrintState(fileName)
-      }
-
-    case _ => {
-      log.debug("GameStatus: DEFAULT case")
-    }
-  })
 
 
   def CleanHand(index: Int, player: Player): Unit = {
@@ -588,6 +569,18 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
   def CleanBoard(index: Int, player: Player): Unit = {
     if (player.board(index).boardPosition == 0)
       player.board.remove(index)
+  }
+
+  def GetGameStatus(): Array[Player] = {
+
+    val currentGameStatus = new Array[Player](2)
+
+    currentGameStatus(0) = me
+    currentGameStatus(1) = him
+
+
+    return currentGameStatus
+
   }
 
 
@@ -606,41 +599,36 @@ class GameStatus(system: ActorSystem) extends Actor with akka.actor.ActorLogging
   }
 
   def PrintState(fileName: String): Unit = {
-    val writer = new PrintWriter(new FileWriter("C:\\Users\\RC\\Documents\\GitHubRepository\\TwitchPlaysHearthstone\\debugsituations\\Results\\" + fileName ))
+    val writer = new PrintWriter(new FileWriter("C:\\Users\\RC\\Documents\\GitHubRepository\\TwitchPlaysHearthstone\\debugsituations\\Results\\" + fileName))
 
     for (a <- 0 until me.hand.length) {
-      writer.println("Friendly Hand Index "+ (a+1) +": HandPosition: " + me.hand(a).handPosition + " BoardPosition: " + me.hand(a).boardPosition + " Id: "+ me.hand(a).id+"\n" )
+      writer.println("Friendly Hand Index " + (a + 1) + ": HandPosition: " + me.hand(a).handPosition + " BoardPosition: " + me.hand(a).boardPosition + " Id: " + me.hand(a).id + "\n")
       writer.flush()
     }
 
     for (b <- 0 until me.board.length) {
-      writer.println("Friendly Board Index "+ (b+1) +": HandPosition: " + me.board(b).handPosition + " BoardPosition: " + me.board(b).boardPosition + " Id: "+ me.board(b).id+"\n" )
+      writer.println("Friendly Board Index " + (b + 1) + ": HandPosition: " + me.board(b).handPosition + " BoardPosition: " + me.board(b).boardPosition + " Id: " + me.board(b).id + "\n")
       writer.flush()
     }
 
     for (c <- 0 until him.hand.length) {
-      writer.println("Enemy Hand Index "+ (c+1) +": HandPosition: " + him.hand(c).handPosition + " BoardPosition: " + him.hand(c).boardPosition + " Id: "+ him.hand(c).id+"\n" )
+      writer.println("Enemy Hand Index " + (c + 1) + ": HandPosition: " + him.hand(c).handPosition + " BoardPosition: " + him.hand(c).boardPosition + " Id: " + him.hand(c).id + "\n")
       writer.flush()
     }
 
     for (d <- 0 until him.board.length) {
-      writer.println("Enemy Board Index "+ (d+1) +": HandPosition: " + him.board(d).handPosition + " BoardPosition: " + him.board(d).boardPosition + " Id: "+ him.board(d).id+"\n" )
+      writer.println("Enemy Board Index " + (d + 1) + ": HandPosition: " + him.board(d).handPosition + " BoardPosition: " + him.board(d).boardPosition + " Id: " + him.board(d).id + "\n")
       writer.flush()
     }
   }
-
-}
-
-
-object Player {
-  def apply(name: String) = new Player(name, new ListBuffer[Card], new ListBuffer[Card])
-}
+  }
 
 
-class Player(var name: String, handList: ListBuffer[Card], boardList: ListBuffer[Card]) {
+class Player() {
 
-  var hand: ListBuffer[Card] = handList
-  var board: ListBuffer[Card] = boardList
+  var name = ""
+  var hand: ListBuffer[Card] = new ListBuffer[Card]()
+  var board: ListBuffer[Card] = new ListBuffer[Card]()
   var player:Int = -1
   var faceValue = 0
 
@@ -687,17 +675,16 @@ class Player(var name: String, handList: ListBuffer[Card], boardList: ListBuffer
     return (copiedHand, copiedBoard, copiedPlayerValue, copiedPlayerFaceValue)
 
   }
-
-
 }
 
-case class Card() {
-  var name: String = "UNKNOWN"
-  var id: Int = 0
-  var zone: String = "UNKNOWN"
+class Card() {
+  var name = "UNKNOWN"
+  var id = 0
+  var zone = "UNKNOWN"
   var handPosition = -1
   var boardPosition = -1
-
 }
+
+
 
 

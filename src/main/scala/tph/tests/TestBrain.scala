@@ -1,25 +1,48 @@
-package tph.research
+package tph.tests
 
-import java.io.{FileWriter, PrintWriter, File}
+import java.io.{File, FileWriter, PrintWriter}
 import java.util.concurrent.TimeUnit
 
-import akka.actor.{Props, ActorRef, ActorSystem, Actor}
+import akka.actor.{Actor, ActorRef, ActorSystem}
 import akka.event.LoggingReceive
+import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
-import org.apache.commons.io.FileUtils
-import tph.IrcMessages.ChangeMenu
-import tph.{LogFileReader, IrcBot, Player, Card}
-import tph.IrcMessages._
-import akka.pattern.ask
+import tph.{Card, IrcBot, Player}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Await
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import tph._
 
 
-class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRef, gameStatusActor: ActorRef, logFileReader: ActorRef, ircBot: IrcBot) extends Actor with akka.actor.ActorLogging {
+class Tests() {
+
+
+  val theBrain = new TheBrain()
+  val config = ConfigFactory.load()
+  val system = ActorSystem("TwitchPlaysHearthstone")
+  val mouseClicker = new MouseClicker()
+  val voteManager = new VoteManager()
+
+
+  //ircBot has disabled functionality for test mode. Remember to remove comments.
+  lazy val ircBot = new IrcBot(voteManager)
+  lazy val ircLogic = new ircLogic(theBrain)
+
+
+  lazy val logFileReader = new LogFileReader(new File("testsituations/blank.txt"), gameStatus, theBrain)
+  lazy val gameStatus = new GameStatus(theBrain)
+  lazy val hearthstone = new Hearthstone(theBrain)
+
+
+
+
+
+
+
+
 
   val FULL_TEST = "Full Test"
   val ADJUST_VOTES = "Adjust Votes"
@@ -35,6 +58,15 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
   var minionDeathAdjustmentComplete = false
   var multipleBindAdjustmentComplete = false
   var multipleFutureAdjustmentComplete = false
+
+
+  logFileReader ! "LogFileReader.start"
+  theBrain.ChangeMenu("inGame")
+
+  ircLogic ! "Start Tests"
+  ircLogic ! "Start Game"
+  ircLogic ! "Turn Start"
+  ircLogic ! "Activate"
 
 
   override def receive: Receive = LoggingReceive({
@@ -71,23 +103,23 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
       MultipleFutureAdjustmentResults()
 
 
-    case (Greetings()) =>
+    case (Constants.EmojiVoteCodes.Greetings()) =>
 
-    case (Thanks()) =>
+    case (Constants.EmojiVoteCodes.Thanks()) =>
 
-    case (WellPlayed()) =>
+    case (Constants.EmojiVoteCodes.WellPlayed()) =>
 
-    case (Wow()) =>
+    case (Constants.EmojiVoteCodes.Wow()) =>
 
-    case (Oops()) =>
+    case (Constants.EmojiVoteCodes.Oops()) =>
 
-    case (Threaten()) =>
+    case (Constants.EmojiVoteCodes.Threaten()) =>
 
-    case (Concede()) =>
+    case (Constants.ActionVoteCodes.Concede()) =>
 
-    case (Discover(option: Int)) =>
+    case (Constants.ActionVoteCodes.Discover(option: Int)) =>
 
-    case (CardPlayWithFriendlyOption(card: Int, boardTarget: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithFriendlyOption(card: Int, boardTarget: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -102,7 +134,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
       if (cardsInHand > 10)
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
-    case (CardPlayWithFriendlyFaceOption(card: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithFriendlyFaceOption(card: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -118,7 +150,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
 
-    case (CardPlayWithEnemyOption(card: Int, boardTarget: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithEnemyOption(card: Int, boardTarget: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -134,7 +166,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
 
-    case (CardPlayWithEnemyFaceOption(card: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithEnemyFaceOption(card: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -150,7 +182,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
     //Normal Turn Play Type
-    case (CardPlay(card: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlay(card: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -165,7 +197,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
       if (cardsInHand > 10)
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
-    case (CardPlayWithPosition(card: Int, position: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithPosition(card: Int, position: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -185,7 +217,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
 
-    case (CardPlayWithFriendlyBoardTarget(card: Int, target: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithFriendlyBoardTarget(card: Int, target: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -201,7 +233,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
 
-    case (CardPlayWithEnemyBoardTarget(card: Int, target: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithEnemyBoardTarget(card: Int, target: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -217,7 +249,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
 
-    case (CardPlayWithFriendlyFaceTarget(card: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithFriendlyFaceTarget(card: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -233,7 +265,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
 
-    case (CardPlayWithEnemyFaceTarget(card: Int)) =>
+    case (Constants.ActionVoteCodes.CardPlayWithEnemyFaceTarget(card: Int)) =>
       val gameStatus = GetGameStatus()
       val cardsInHand = gameStatus(0).hand.size
       val cardIndex = gameStatus(0).hand.indexWhere(_.handPosition == card)
@@ -248,32 +280,33 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
       if (cardsInHand > 10)
         log.error("More than 10 cards in hand. Size = " + cardsInHand)
 
-    case (EndTurn()) =>
+    case (Constants.ActionVoteCodes.EndTurn()) =>
 
-    case (HeroPower()) =>
+    case (Constants.ActionVoteCodes.HeroPower()) =>
 
-    case (HeroPowerWithEnemyFace()) =>
+    case (Constants.ActionVoteCodes.HeroPowerWithEnemyFace()) =>
 
-    case (HeroPowerWithEnemyTarget(target: Int)) =>
+    case (Constants.ActionVoteCodes.HeroPowerWithEnemyTarget(target: Int)) =>
 
-    case (HeroPowerWithFriendlyFace()) =>
+    case (Constants.ActionVoteCodes.HeroPowerWithFriendlyFace()) =>
 
-    case (HeroPowerWithFriendlyTarget(target: Int)) =>
+    case (Constants.ActionVoteCodes.HeroPowerWithFriendlyTarget(target: Int)) =>
 
     //Attack Type
-    case (NormalAttack(friendlyPosition: Int, enemyPosition: Int)) =>
+    case (Constants.ActionVoteCodes.NormalAttack(friendlyPosition: Int, enemyPosition: Int)) =>
       RemoveMinionOnBoard(1, friendlyPosition)
       RemoveMinionOnBoard(2, enemyPosition)
 
-    case (FaceAttack(position: Int)) =>
+    case (Constants.ActionVoteCodes.FaceAttack(position: Int)) =>
 
 
-    case (NormalAttackToFace(position: Int)) =>
+    case (Constants.ActionVoteCodes.NormalAttackToFace(position: Int)) =>
 
 
-    case (FaceAttackToFace()) =>
+    case (Constants.ActionVoteCodes.FaceAttackToFace()) =>
 
-    case (MulliganVote(vote), mulliganOptions: Int) =>
+    case (Constants.ActionVoteCodes.MulliganVote(first: Boolean, second: Boolean, third: Boolean, fourth: Boolean)) =>
+
 
 
     case x =>
@@ -304,7 +337,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
   def initialize(): Unit = {
     logFileReader ! "LogFileReader.start"
 
-    controller ! ChangeMenu("mainMenu", "inGame")
+    controller ! Constants.ActionVoteCodes.ChangeMenu("mainMenu", "inGame")
 
     ircLogic ! "Start Tests"
     ircLogic ! "Start Game"
@@ -378,7 +411,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
       writer.println(command + "\n")
       writer.flush()
 
-      logFileReader ! ChangeReaderFile(fileName)
+      logFileReader ! Constants.ActionVoteCodes.ChangeReaderFile(fileName)
     }
     else {
       writer.println(command + "\n")
@@ -484,7 +517,9 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
     logFileReader ! "CLEAR_STATUS"
     readyForTest = false
     currentFile = "testsituations/normalsetup"
-    logFileReader ! ChangeReaderFile(currentFile + ".txt")
+
+    //Need to remake this case class into a method. This is not a VoteCode.
+    logFileReader ! tph.Constants.ActionVoteCodes.ChangeReaderFile(currentFile + ".txt")
 
 
     TimeUnit.SECONDS.sleep(1)
@@ -549,7 +584,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
     logFileReader ! "CLEAR_STATUS"
     readyForTest = false
     currentFile = "testsituations/fullboard"
-    logFileReader ! ChangeReaderFile(currentFile + ".txt")
+    logFileReader ! Constants.ActionVoteCodes.ChangeReaderFile(currentFile + ".txt")
 
     TimeUnit.SECONDS.sleep(1)
     for (a <- 0 until 5) {
@@ -604,7 +639,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
     logFileReader ! "CLEAR_STATUS"
     readyForTest = false
     currentFile = "testsituations/normalsetup"
-    logFileReader ! ChangeReaderFile(currentFile + ".txt")
+    logFileReader ! Constants.ActionVoteCodes.ChangeReaderFile(currentFile + ".txt")
     TimeUnit.SECONDS.sleep(1)
 
     for (a <- 0 until 5) {
@@ -673,7 +708,7 @@ class ircLogicTests(system: ActorSystem, controller: ActorRef, ircLogic: ActorRe
     logFileReader ! "CLEAR_STATUS"
     readyForTest = false
     currentFile = "testsituations/normalsetup"
-    logFileReader ! ChangeReaderFile(currentFile + ".txt")
+    logFileReader ! Constants.ActionVoteCodes.ChangeReaderFile(currentFile + ".txt")
 
     TimeUnit.SECONDS.sleep(1)
     //Play 1 spot 1

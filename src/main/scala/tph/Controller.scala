@@ -35,17 +35,6 @@ class Controller(system: ActorSystem, hearthstone: ActorRef, logFileReader: Acto
       logFileReader ! "LogFileReader.start"
       ircLogic ! "Start"
 
-    case ChangeMenu(pastMenu, changeToMenu) =>
-      if (pastMenu == currentMenu) {
-        currentMenu = changeToMenu
-        previousMenu = pastMenu
-      }
-
-      else throw new IllegalArgumentException
-
-      ircLogic ! ChangeMenu(pastMenu, changeToMenu)
-      IrcBot.previousMenu = pastMenu
-      IrcBot.currentMenu = changeToMenu
 
     case "CurrentMenu" =>
       sender ! currentMenu

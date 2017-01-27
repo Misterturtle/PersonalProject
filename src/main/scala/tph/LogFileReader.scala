@@ -1,12 +1,13 @@
 package tph
 
 import java.io._
+import java.util.concurrent.{TimeUnit, ScheduledThreadPoolExecutor}
 
 import akka.actor.{Actor, ActorRef, ActorSystem}
 import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
-import tph.IrcMessages.ChangeReaderFile
+import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,8 +26,9 @@ object LogFileReader {
   // messages in
   val START = "LogFileReader.start"
   val POLL = "LogFileReader.poll"
+  val scheduler = new ScheduledThreadPoolExecutor(1)
 
-  // messages to listener
+  // messages to gameStatus
 
 
   //Friendly Strings
@@ -84,11 +86,10 @@ object LogFileReader {
   val END_OF_DOCUMENT = "ENDOFDOCUMENT"
   val EMPTY_LINE = """^\s*$""".r
   val FILE_NAME = """\(Filename: .*""".r
-  val CLEAR_STATUS = "CLEAR_STATUS"
 }
 
 
-class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, controller: ActorRef) extends Actor with akka.actor.ActorLogging {
+class LogFileReader(file: File, gameStatus: GameStatus, theBrain: TheBrain) extends LazyLogging {
 
   import LogFileEvents._
   import LogFileReader._
@@ -100,10 +101,11 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
   val writer = new PrintWriter(new FileWriter("debug.log"))
   val config = ConfigFactory.load()
 
-  def receive = {
-    case START => poll("")
-    case POLL => poll("")
-    case ChangeReaderFile(fileName) =>
+  def Init(): Unit = {
+    poll("")
+  }
+
+  def ChangeReaderFile(fileName: String): Unit = {
       val regex = """testsituations/(.+)""".r
       fileName match {
         case regex(extractedFileName) =>
@@ -112,41 +114,16 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
             val newReader = new BufferedReader(new FileReader(new File(fileName)))
             reader = newReader
             readerFileName = trueFileName
-            log.debug("Reader file changed to "+fileName)
+            logger.debug("Reader file changed to " + fileName)
           }
         case _ =>
 
       }
+  }
 
 
-
-
-
-    case CLEAR_STATUS =>
-      listener ! GameOver()
-      log.debug("Game Status Cleared")
-
-    case "IsComplete" => sender ! complete
-
-
-
-    case "GetGameStatus" =>
-
-      if (!reader.ready()) {
-        if (readerIdle) {
-          implicit val timeout = Timeout(5 seconds)
-          val future = listener ? "GetGameStatus"
-          val result = Await.result(future, timeout.duration)
-          sender ! result
-          readerIdle = false
-        }
-        if (!readerIdle) {
-          readerIdle = true
-          sender ! None
-        }
-      }
-      if (reader.ready())
-        sender ! None
+  def IsComplete(): Boolean = {
+    complete
   }
 
 
@@ -165,102 +142,102 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
         // Friendly Events
 
         case FRIENDLY_MINION_CONTROLLED(name, id) =>
-          log.info("Minion Controlled: " + line)
-          listener ! FriendlyMinionControlled(name, id.toInt)
+          logger.info("Minion Controlled: " + line)
+          gameStatus.FriendlyMinionControlled(name, id.toInt)
 
         //Enemy Events
         case ENEMY_CARD_DRAWN(id, position, player) =>
-          log.info("Enemy Card Drawn: " + line)
-          listener ! EnemyCardDrawnEvent(id.toInt, position.toInt, player.toInt)
+          logger.info("Enemy Card Drawn: " + line)
+          gameStatus.EnemyCardDrawnEvent(id.toInt, position.toInt, player.toInt)
 
 
         //Neutral Events
 
         case DISCOVER_OPTION(option) =>
-          log.info("Discover Option: " + option)
-          controller ! DiscoverOption(option.toInt)
+          logger.info("Discover Option: " + option)
+          theBrain.SetDiscoverOptions(option.toInt)
 
         case FACE_ATTACK_VALUE(player, value) =>
-          log.info("Face Value Changed: " + line)
-          listener ! FaceAttackValueEvent(player.toInt, value.toInt)
+          logger.info("Face Value Changed: " + line)
+          gameStatus.FaceAttackValueEvent(player.toInt, value.toInt)
 
         case WEAPON(id, player) =>
-          log.info("Weapon Played: " + line)
-          listener ! WeaponPlayedEvent(id.toInt, player.toInt)
+          logger.info("Weapon Played: " + line)
+          gameStatus.WeaponPlayedEvent(id.toInt, player.toInt)
 
         case SECRET_PLAYED(id, player) =>
-          log.info("Secret Played: " + line)
-          listener ! SecretPlayedEvent(id.toInt, player.toInt)
+          logger.info("Secret Played: " + line)
+          gameStatus.SecretPlayedEvent(id.toInt, player.toInt)
 
         case OLD_ZONE_CHANGE(id, zone, player, dstZone) if dstZone != "GRAVEYARD" =>
-          log.info("Old Zone Change: " + line)
-          listener ! OldZoneChangeEvent(id.toInt, zone, player.toInt, dstZone)
+          logger.info("Old Zone Change: " + line)
+          gameStatus.OldZoneChangeEvent(id.toInt, zone, player.toInt, dstZone)
 
         case ZONE_CHANGE(id, player, zone, dstZone) =>
-          log.info("Zone Change: " + line)
-          listener ! ZoneChangeEvent(id.toInt, player.toInt, zone, dstZone)
+          logger.info("Zone Change: " + line)
+          gameStatus.ZoneChangeEvent(id.toInt, player.toInt, zone, dstZone)
 
 
         case KNOWN_CARD_DRAWN(name, id, position, player) =>
-          log.info("Known Card Drawn: " + line)
-          listener ! KnownCardDrawn(name, id.toInt, position.toInt, player.toInt)
+          logger.info("Known Card Drawn: " + line)
+          gameStatus.KnownCardDrawn(name, id.toInt, position.toInt, player.toInt)
 
         case SAP(name, id, player) =>
-          log.info("Sap: " + line)
-          listener ! Sap(name, id.toInt, player.toInt)
+          logger.info("Sap: " + line)
+          gameStatus.Sap(name, id.toInt, player.toInt)
 
         case DEFINE_PLAYERS(friendlyPlayerID) =>
           if (friendlyPlayerID.toInt == 1) {
-            log.info("Friendly Player: 1, Enemy Player: 2")
+            logger.info("Friendly Player: 1, Enemy Player: 2")
           }
           if (friendlyPlayerID.toInt == 2) {
-            log.info("Friendly Player: 2, Enemy Player: 1")
+            logger.info("Friendly Player: 2, Enemy Player: 1")
           }
-          listener ! DefinePlayers(friendlyPlayerID.toInt)
+          gameStatus.DefinePlayers(friendlyPlayerID.toInt)
 
         case CARD_PLAYED(name, id, dstPos, player) =>
-          log.info("Card Played: " + line)
-          listener ! CardPlayed(name, id.toInt, dstPos.toInt, player.toInt)
+          logger.info("Card Played: " + line)
+          gameStatus.CardPlayed(name, id.toInt, dstPos.toInt, player.toInt)
 
 
         case HAND_POSITION_CHANGE(id, pos, player, dstPos) =>
-          log.info("Hand_Position_Change: " + line)
-          listener ! HandPositionChange(id.toInt, pos.toInt, player.toInt, dstPos.toInt)
+          logger.info("Hand_Position_Change: " + line)
+          gameStatus.HandPositionChange(id.toInt, pos.toInt, player.toInt, dstPos.toInt)
 
         case BOARD_POSITION_CHANGE(id, player, dstPos) =>
-          log.info("Board Position Change: " + line)
-          listener ! BoardPositionChange(id.toInt, player.toInt, dstPos.toInt)
+          logger.info("Board Position Change: " + line)
+          gameStatus.BoardPositionChange(id.toInt, player.toInt, dstPos.toInt)
 
         case CARD_DEATH(name, id, zone, zonePos, player) =>
-          log.info("Card Death: " + line)
-          listener ! CardDeath(name, id.toInt, zonePos.toInt, player.toInt)
+          logger.info("Card Death: " + line)
+          gameStatus.CardDeath(name, id.toInt, zonePos.toInt, player.toInt)
 
         case MINION_SUMMONED(name, id, zonePos, player) =>
-          log.info("Minion Summoned: " + line)
-          listener ! MinionSummoned(name, id.toInt, zonePos.toInt, player.toInt)
+          logger.info("Minion Summoned: " + line)
+          gameStatus.MinionSummoned(name, id.toInt, zonePos.toInt, player.toInt)
 
         case TRANSFORM(oldId, newId) if newId != 0 =>
-          log.info("Transform: " + line)
-          listener ! Transform(oldId.toInt, newId.toInt)
+          logger.info("Transform: " + line)
+          gameStatus.Transform(oldId.toInt, newId.toInt)
 
         case HEX(name, id, player, zonePos) =>
-          log.info("HEX: " + line)
-          listener ! Hex(name, id.toInt, player.toInt, zonePos.toInt)
+          logger.info("HEX: " + line)
+          gameStatus.Hex(name, id.toInt, player.toInt, zonePos.toInt)
 
 
 
         //Irc Logic Events
         case MULLIGAN_START =>
-          controller ! "Mulligan"
+          theBrain.StartMulligan()
 
         case MULLIGAN_OPTION() =>
-          controller ! "NewMulliganOption"
+          theBrain.AddMulliganOption()
 
         case TURN_START(entity) if entity == config.getString("tph.hearthstone.player") =>
-          controller ! "Turn Start"
+          theBrain.StartTurn()
 
         case TURN_END(entity) if entity == config.getString("tph.hearthstone.player") =>
-          controller ! "Turn End"
+          theBrain.EndTurn()
 
 
         //Debug Events
@@ -271,24 +248,23 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
           text match {
 
             case TAG_CHANGE(entity, tag, value) if source == "GameState" && entity == "GameEntity" && tag == "TURN" =>
-              listener ! TurnStartEvent(value.toInt)
+              gameStatus.TurnStartEvent(value.toInt)
 
             case TAG_CHANGE(entity, tag, value) if entity == "GameEntity" && value == "FINAL_GAMEOVER" && tag == "STEP" =>
-              listener ! GameOver()
-              controller ! "Game Over"
+              theBrain.GameOver()
 
             case TAG_CHANGE(entity, tag, value) if tag == "NUM_OPTIONS" =>
-              log.debug(NumOptions(source, entity, value).toString())
+              logger.debug(NumOptions(source, entity, value).toString())
 
             case TAG_CHANGE(entity, tag, value) =>
-              log.debug(TagChange(entity, tag, value).toString())
+              logger.debug(TagChange(entity, tag, value).toString())
 
-            case _ => log.debug(DebugPrintPower(source, pad, text).toString())
+            case _ => logger.debug(DebugPrintPower(source, pad, text).toString())
           }
 
 
         case PRINT_STATE =>
-          listener ! PrintState(file.getName())
+          gameStatus.PrintState(file.getName())
 
 
         case "ENDOFDOCUMENT" =>
@@ -300,6 +276,11 @@ class LogFileReader(system: ActorSystem, file: File, listener: ActorRef, control
         case x =>
       }
     }
-  system.scheduler.scheduleOnce(100.millis, this.self, POLL)}
+    val decide = new Runnable {
+      def run() = poll("")
+    }
+    scheduler.schedule(decide, 100, TimeUnit.MILLISECONDS)
+
+  }
 
 }

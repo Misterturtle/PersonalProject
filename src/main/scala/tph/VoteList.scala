@@ -6,51 +6,29 @@ import scala.collection.mutable
 class VoteList {
 
   val voteLog = new ListBuffer[Vote]
-  val voteList = scala.collection.mutable.Map[(_), Vote]()
+  val voteList = new ListBuffer[ActionVote]
+  val flagsystem = new FlagSystem
 
-  def AddVoteList(v1: VoteList): Unit ={
 
-    v1.voteList foreach {
-      case (voteCode, vote) =>
-      AddVote(vote)
+  def Reset(): Unit = {
+    voteList.clear()
+  }
 
+
+  def AddVote(vote: ActionVote): Unit = {
+
+    voteList.append(vote)
+  }
+
+  def RemoveVote(vote: ActionVote): Unit = {
+
+    if (voteList.contains(vote)) {
+      val index = voteList.indexWhere(_ == vote)
+      voteList.remove(index)
     }
   }
 
-  def CombineTallyMaps(tm1: mutable.Map[(_), Int], tm2: mutable.Map[(_), Int]): mutable.Map[(_), Int] =
-  {
-    val tm3 = scala.collection.mutable.Map[(_), Int]()
 
-    tm1 foreach {
-
-      case (vote, value) =>
-        if(!tm3.contains(vote)){
-          tm3(vote) = value
-        }
-        else{
-          tm3(vote) += value
-        }
-    }
-
-    tm2 foreach {
-
-      case (vote, value) =>
-        if(!tm3.contains(vote)){
-          tm3(vote) = value
-        }
-        else{
-          tm3(vote) += value
-        }
-    }
-
-    return tm3
-  }
-
-  def AddVote(vote:Vote):Unit = {
-
-      voteList(vote.GetVoteCode()) = vote
-
-  }
 
 
 }

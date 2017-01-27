@@ -1,5 +1,9 @@
 package tph
 
+import tph.Constants.ActionVoteCodes.ActionVoteCode
+import tph.Constants.EmojiVoteCodes.EmojiVoteCode
+import tph.Constants.MenuVoteCodes.MenuVoteCode
+
 import scala.collection.mutable._
 
 
@@ -11,59 +15,82 @@ import scala.collection.mutable._
 
 class Voter(sender: String) {
 
-  val flagSystem = new FlagSystem
-  val bindFlag = new Flag()
-  val futureFlag = new Flag()
-  flagSystem.AddFlag(bindFlag)
-  flagSystem.AddFlag(futureFlag)
-
-
   val actionVoteList = new ActionVoteList()
-  var emojiVote = new Vote("sender", "voteCode")
-  var menuVote = new Vote("sender", "voteCode")
+  var emojiVote = new EmojiVote(sender, Constants.EmojiVoteCodes.EmojiUninit())
+  var menuVote = new MenuVote(sender, Constants.MenuVoteCodes.MenuUninit())
+  var mulliganVote = new Tuple4(false, false, false, false)
 
   val voteLog = new VoteList
+  val finished = false
 
+  def AdjustVotes(previousGameStatus: FrozenGameStatus, currentGameStatus: FrozenGameStatus): Unit = {
+    //ActionList is the only list that needs to be adjusted.
 
-
-      def AdjustVotes(previousDecision: Vote): Unit ={
-
-        actionVoteList.AdjustVotes(previousDecision)
+    actionVoteList.AdjustVotes(previousGameStatus, currentGameStatus)
       }
 
 
-      def VoteEntry(vote:Vote): Unit = {
+  def VoteEntry(vote: Vote): Unit = {
+    vote match {
 
-          val voteType = vote.getClass
-          if(voteType == Class[ActionVote])
-            {
-              actionVoteList.AddVote(vote)
-            }
+      case actVote: ActionVote =>
+        actionVoteList.AddVote(actVote)
 
-          if(voteType == Class[EmojiVote])
-            {
-              emojiVote = vote
-            }
-        if(voteType == Class[MenuVote])
-          {
-            menuVote = vote
-          }
+      case emoVote: EmojiVote =>
+        emojiVote = emoVote
+
+      case mVote: MenuVote =>
+        menuVote = mVote
+    }
       }
 
 
-      def GetActionVotes(): scala.collection.mutable.Map[(_), Int] = {
+  def TallyActionVotes(): scala.collection.mutable.Map[ActionVoteCode, Int] = {
 
         return actionVoteList.TallyVotes()
 
       }
 
-      def GetEmojiVote(): (_) = {
-          return emojiVote
+  def GetEmojiVoteCode(): EmojiVoteCode = {
+    return emojiVote.emojiVoteCode
 
       }
 
-      def GetMenuVote(): (_) = {
-          return menuVote
+  def GetMenuVoteCode(): MenuVoteCode = {
+    return menuVote.menuVoteCode
 
       }
+
+  def RemovePreviousDecision(vote: ActionVote): Unit = {
+    actionVoteList.RemovePreviousDecision(vote)
+  }
+
+  def GetMulliganVote(): (Boolean, Boolean, Boolean, Boolean) = {
+
+    return mulliganVote
+
+  }
+
+  def GetNumberOfTurns(): Int = {
+
+    actionVoteList.GetNumberOfTurns()
+  }
+
+  def Reset(): Unit = {
+
+    emojiVote = new EmojiVote(sender, Constants.EmojiVoteCodes.EmojiUninit())
+    menuVote = new MenuVote(sender, Constants.MenuVoteCodes.MenuUninit())
+    actionVoteList.Reset()
+
+  }
+
+  def Kill(): Unit = {
+
+    //Reserved for tasks right before death.
+
+    // EX: Reporting how many of his votes were used.
+  }
+
+
+
 }

@@ -5,9 +5,9 @@ package tph
   */
 
 import akka.actor.ActorRef
+import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import org.jibble.pircbot.PircBot
-import tph.Constants.IrcMessages._
 
 
 object IrcBot {
@@ -80,212 +80,141 @@ object IrcBot {
 
 import tph.IrcBot._
 
-class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: String = IrcBot.NICKNAME) extends PircBot with LazyLogging {
+class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with LazyLogging {
+
+  val config = ConfigFactory.load()
 
 
-  //  setName(nickname)
-  //  logger.debug(s"nickname = $nickname")
-  //  setVerbose(false)
-  //  connect(hostName)
-  //  logger.debug(s"connected to $hostName")
-  //  joinChannel(channel)
-  //  logger.debug(s"joined $channel")
+  val hostName = config.getString("tph.irc.host")
+  val channel = config.getString("tph.irc.channel")
+  val nickname = IrcBot.NICKNAME
+
+  setName(nickname)
+  logger.debug(s"nickname = $nickname")
+  setVerbose(false)
+  connect(hostName)
+  logger.debug(s"connected to $hostName")
+  joinChannel(channel)
+  logger.debug(s"joined $channel")
 
 
   override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
     logger.debug(s"IRC message: sender=$sender, login=$login message=$message")
     message.toLowerCase match {
 
-      case x =>
-
-
-        //Main Menu Type
-        if (currentMenu == "mainMenu") {
-          x match {
             case PLAY =>
-              watcher !(Play("mainMenu"), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Play("Unknown")))
             case SHOP =>
-              watcher !(Shop(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Shop("Unknown")))
             case OPEN_PACKS =>
-              watcher !(OpenPacks(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.OpenPacks("Unknown")))
             case COLLECTION =>
-              watcher !(Collection("mainMenu"), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Collection("Unknown")))
             case QUEST_LOG =>
-              watcher !(QuestLog(), sender)
-            case _ =>
-
-
-          }
-        }
-
-
-        //Play Menu Type
-        if (currentMenu == "playMenu") {
-          x match {
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.QuestLog("Unknown")))
             case CASUAL =>
-              watcher !(Casual(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Casual("Unknown")))
             case RANKED =>
-              watcher !(Ranked(), sender)
-            case PLAY =>
-              watcher !(Play("playMenu"), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Ranked("Unknown")))
             case BACK =>
-              watcher !(Back("playMenu"), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Back("Unknown")))
             case DECK(deckNumber) =>
-              watcher !(Deck(deckNumber.toInt), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Deck(deckNumber.toInt, "Unknown")))
             case FIRST_PAGE =>
-              watcher !(FirstPage(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.FirstPage("Unknown")))
             case SECOND_PAGE =>
-              watcher !(SecondPage(), sender)
-            case COLLECTION =>
-              watcher !(Collection("playmenu"), sender)
-            case _ =>
-          }
-        }
-
-
-        //Quest Menu
-        if (currentMenu == "questMenu") {
-          x match {
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.SecondPage("Unknown")))
             case QUEST(number) =>
-              watcher !(Quest(number.toInt), sender)
-            case BACK =>
-              watcher !(Back("questMenu"), sender)
-            case _ =>
-          }
-        }
-
-
-
-        //Emote Type
-        if (currentMenu == "inGame") {
-          x match {
+              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Quest(number.toInt, "Unknown")))
             case GREETINGS =>
-              watcher !(Greetings(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Greetings()))
             case THANKS =>
-              watcher !(Thanks(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Thanks()))
             case WELL_PLAYED =>
-              watcher !(WellPlayed(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.WellPlayed()))
             case WOW =>
-              watcher !(Wow(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Wow()))
             case OOPS =>
-              watcher !(Oops(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Oops()))
             case THREATEN =>
-              watcher !(Threaten(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Threaten()))
 
             //Misc Type
             case WAIT =>
-              watcher !(Wait(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Wait()))
             case HURRY =>
-              watcher !(Hurry(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Hurry()))
             case CONCEDE =>
-              watcher !(Concede(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Concede()))
             case END_TURN =>
-              watcher !(EndTurn(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.EndTurn()))
             case BIND =>
-              watcher !(Bind(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Bind()))
             case FUTURE =>
-              watcher !(Future(), sender)
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Future()))
 
-            case MULLIGAN(vote: String) =>
-              watcher !(MulliganVote(ParseMulligan(vote)), sender)
+            case MULLIGAN(stringCommand: String) =>
+
+              // returns a Constants.voteCodes.MulliganVote()
+              val mulliganVote = ParseMulligan(stringCommand)
+
+              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.MulliganVote(mulliganVote.first, mulliganVote.second, mulliganVote.third, mulliganVote.fourth)))
 
             case _ =>
-              val vote = CreateVote(message, sender)
-              if (vote.name != "")
-                watcher ! CommandVote(command)
-          }
-        }
+              val actionVote = CreateVote(message, sender)
+              AssignVoteCode(actionVote)
+
+
+              if (actionVote.voteCode != Constants.ActionVoteCodes.ActionUninit())
+                theBrain.VoteEntry(actionVote)
     }
   }
 
 
-  def ParseMulligan(vote: String): Array[Int] = {
-    val ONE = """(\d+)""".r
-    val TWO = """(\d+), (\d+)""".r
-    val THREE = """(\d+), (\d+), (\d+)""".r
-    val FOUR = """(\d+), (\d+), (\d+), (\d+)""".r
-
-    vote match {
-      case FOUR(first, second, third, fourth) =>
-        val list = new Array[Int](4)
-        list(0) = first.toInt
-        list(1) = second.toInt
-        list(2) = third.toInt
-        list(3) = fourth.toInt
-        java.util.Arrays.sort(list)
-        return list
-
-      case THREE(first, second, third) =>
-        val list = new Array[Int](3)
-        list(0) = first.toInt
-        list(1) = second.toInt
-        list(2) = third.toInt
-        java.util.Arrays.sort(list)
-        return list
-
-
-      case TWO(first, second) =>
-        val list = new Array[Int](2)
-        list(0) = first.toInt
-        list(1) = second.toInt
-        java.util.Arrays.sort(list)
-        return list
-
-      case ONE(first) =>
-        val list = new Array[Int](1)
-        list(0) = first.toInt
-        java.util.Arrays.sort(list)
-        return list
-    }
-
-  }
-
-
-  def CreateVote(message: String, sender: String): Vote = {
-    var builtCommand = new Vote()
-    builtCommand.sender = sender
+  def CreateVote(message: String, sender: String): ActionVote = {
+    var newVote = new ActionVote(sender, Constants.ActionVoteCodes.ActionUninit())
 
     message match {
       case THREE_PART_COMMAND(firstCommand, secondCommand, thirdCommand) =>
 
         firstCommand match {
           case PLAY_COMMAND(cardNumber) =>
-            builtCommand.firstName = "CardPlay"
-            builtCommand.card = cardNumber.toInt
+            newVote.firstCommand = "CardPlay"
+            newVote.card = cardNumber.toInt
           case _ =>
         }
 
 
         secondCommand match {
           case SPOT_COMMAND(position) =>
-            builtCommand.secondName = "WithPosition"
-            builtCommand.spot = position.toInt
+            newVote.secondCommand = "WithPosition"
+            newVote.spot = position.toInt
           case TARGET_COMMAND(target) =>
             target match {
               case "my face" =>
-                builtCommand.secondName = "WithFriendlyFaceTarget"
+                newVote.secondCommand = "WithFriendlyFaceTarget"
               case "his face" =>
-                builtCommand.secondName = "WithEnemyFaceTarget"
+                newVote.secondCommand = "WithEnemyFaceTarget"
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithFriendlyTarget"
-                builtCommand.target = targetPos.toInt
+                newVote.secondCommand = "WithFriendlyTarget"
+                newVote.target = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithEnemyTarget"
-                builtCommand.target = targetPos.toInt
+                newVote.secondCommand = "WithEnemyTarget"
+                newVote.target = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
             target match {
               case "my face" =>
-                builtCommand.secondName = "WithFriendlyFaceOption"
+                newVote.secondCommand = "WithFriendlyFaceOption"
               case "his face" =>
-                builtCommand.secondName = "WithEnemyFaceOption"
+                newVote.secondCommand = "WithEnemyFaceOption"
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithFriendlyOption"
-                builtCommand.battlecry = targetPos.toInt
+                newVote.secondCommand = "WithFriendlyOption"
+                newVote.battlecry = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithEnemyOption"
-                builtCommand.battlecry = targetPos.toInt
+                newVote.secondCommand = "WithEnemyOption"
+                newVote.battlecry = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -294,34 +223,34 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
 
         thirdCommand match {
           case SPOT_COMMAND(position) =>
-            builtCommand.thirdName = "WithPosition"
-            builtCommand.spot = position.toInt
+            newVote.thirdCommand = "WithPosition"
+            newVote.spot = position.toInt
           case TARGET_COMMAND(target) =>
             target match {
               case "my face" =>
-                builtCommand.thirdName = "WithFriendlyFaceTarget"
+                newVote.thirdCommand = "WithFriendlyFaceTarget"
               case "his face" =>
-                builtCommand.thirdName = "WithEnemyFaceTarget"
+                newVote.thirdCommand = "WithEnemyFaceTarget"
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.thirdName = "WithFriendlyTarget"
-                builtCommand.target = targetPos.toInt
+                newVote.thirdCommand = "WithFriendlyTarget"
+                newVote.target = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.thirdName = "WithEnemyTarget"
-                builtCommand.target = targetPos.toInt
+                newVote.thirdCommand = "WithEnemyTarget"
+                newVote.target = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
             target match {
               case "my face" =>
-                builtCommand.thirdName = "WithFriendlyFaceOption"
+                newVote.thirdCommand = "WithFriendlyFaceOption"
               case "his face" =>
-                builtCommand.thirdName = "WithEnemyFaceOption"
+                newVote.thirdCommand = "WithEnemyFaceOption"
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.thirdName = "WithFriendlyOption"
-                builtCommand.battlecry = targetPos.toInt
+                newVote.thirdCommand = "WithFriendlyOption"
+                newVote.battlecry = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.thirdName = "WithEnemyOption"
-                builtCommand.battlecry = targetPos.toInt
+                newVote.thirdCommand = "WithEnemyOption"
+                newVote.battlecry = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -332,15 +261,15 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
 
         firstCommand match {
           case PLAY_COMMAND(cardNumber) =>
-            builtCommand.firstName = "CardPlay"
-            builtCommand.card = cardNumber.toInt
+            newVote.firstCommand = "CardPlay"
+            newVote.card = cardNumber.toInt
           case ATTACK_COMMAND(attacker) =>
             attacker match {
               case MY_REGEX_NUMBER(attackerPos) =>
-                builtCommand.firstName = "NormalAttack"
-                builtCommand.card = attackerPos.toInt
+                newVote.firstCommand = "NormalAttack"
+                newVote.card = attackerPos.toInt
               case "my face" =>
-                builtCommand.firstName = "FaceAttack"
+                newVote.firstCommand = "FaceAttack"
               case _ =>
             }
           case _ =>
@@ -349,34 +278,34 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
 
         secondCommand match {
           case SPOT_COMMAND(position) =>
-            builtCommand.secondName = "WithPosition"
-            builtCommand.spot = position.toInt
+            newVote.secondCommand = "WithPosition"
+            newVote.spot = position.toInt
           case TARGET_COMMAND(target) =>
             target match {
               case "my face" =>
-                builtCommand.secondName = "WithFriendlyFaceTarget"
+                newVote.secondCommand = "WithFriendlyFaceTarget"
               case "his face" =>
-                builtCommand.secondName = "WithEnemyFaceTarget"
+                newVote.secondCommand = "WithEnemyFaceTarget"
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithFriendlyTarget"
-                builtCommand.target = targetPos.toInt
+                newVote.secondCommand = "WithFriendlyTarget"
+                newVote.target = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithEnemyTarget"
-                builtCommand.target = targetPos.toInt
+                newVote.secondCommand = "WithEnemyTarget"
+                newVote.target = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
             target match {
               case "my face" =>
-                builtCommand.secondName = "WithFriendlyFaceOption"
+                newVote.secondCommand = "WithFriendlyFaceOption"
               case "his face" =>
-                builtCommand.secondName = "WithEnemyFaceOption"
+                newVote.secondCommand = "WithEnemyFaceOption"
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithFriendlyOption"
-                builtCommand.battlecry = targetPos.toInt
+                newVote.secondCommand = "WithFriendlyOption"
+                newVote.battlecry = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.secondName = "WithEnemyOption"
-                builtCommand.battlecry = targetPos.toInt
+                newVote.secondCommand = "WithEnemyOption"
+                newVote.battlecry = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -386,29 +315,29 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
       case ONE_PART_COMMAND(command) =>
         command match {
           case DISCOVER_COMMAND(option) =>
-            builtCommand.name = "Discover"
-            builtCommand.target = option.toInt
+            newVote.fullCommand = "Discover"
+            newVote.target = option.toInt
           case "hero power" =>
-            builtCommand.name = "HeroPower"
+            newVote.fullCommand = "HeroPower"
           case HERO_POWER_COMMAND(target) =>
-            builtCommand.firstName = "HeroPower"
+            newVote.firstCommand = "HeroPower"
             target match {
               case MY_REGEX_NUMBER(targetPos) =>
-                builtCommand.target = targetPos.toInt
-                builtCommand.secondName = "WithFriendlyTarget"
+                newVote.target = targetPos.toInt
+                newVote.secondCommand = "WithFriendlyTarget"
               case HIS_REGEX_NUMBER(targetPos) =>
-                builtCommand.target = targetPos.toInt
-                builtCommand.secondName = "WithEnemyTarget"
+                newVote.target = targetPos.toInt
+                newVote.secondCommand = "WithEnemyTarget"
               case "my face" =>
-                builtCommand.secondName = "WithFriendlyFace"
+                newVote.secondCommand = "WithFriendlyFace"
               case "his face" =>
-                builtCommand.secondName = "WithEnemyFace"
+                newVote.secondCommand = "WithEnemyFace"
               case _ =>
 
             }
           case PLAY_COMMAND(cardNumber) =>
-            builtCommand.name = "CardPlay"
-            builtCommand.card = cardNumber.toInt
+            newVote.fullCommand = "CardPlay"
+            newVote.card = cardNumber.toInt
 
 
           case _ =>
@@ -416,30 +345,236 @@ class IrcBot(hostName: String, channel: String, watcher: ActorRef, nickname: Str
       case _ =>
     }
 
-    builtCommand = OrganizeBuiltCommand(builtCommand)
-    return builtCommand
+    newVote = OrganizeVote(newVote)
+    return newVote
   }
 
 
-  def OrganizeBuiltCommand(builtCommand: Vote): Vote = {
-    if (builtCommand.secondName == "WithPosition") {
-      val oldSecondName = builtCommand.secondName
-      val oldThirdName = builtCommand.thirdName
-      builtCommand.thirdName = oldSecondName
-      builtCommand.secondName = oldThirdName
+  def OrganizeVote(newVote: ActionVote): ActionVote = {
+    if (newVote.secondCommand == "WithPosition") {
+      val oldSecondCommand = newVote.secondCommand
+      val oldThirdCommand = newVote.thirdCommand
+      newVote.thirdCommand = oldSecondCommand
+      newVote.secondCommand = oldThirdCommand
     }
 
-    if (builtCommand.thirdName != "") {
-      builtCommand.name = builtCommand.firstName + builtCommand.secondName + builtCommand.thirdName
-      return builtCommand
+    if (newVote.thirdCommand != "") {
+      newVote.fullCommand = newVote.firstCommand + newVote.secondCommand + newVote.thirdCommand
+      return newVote
     }
 
-    if (builtCommand.secondName != "") {
-      builtCommand.name = builtCommand.firstName + builtCommand.secondName
-      return builtCommand
+    if (newVote.secondCommand != "") {
+      newVote.fullCommand = newVote.firstCommand + newVote.secondCommand
+      return newVote
     }
 
-    return builtCommand
+    return newVote
 
+  }
+
+  def AssignVoteCode(vote: ActionVote): Unit = {
+
+
+    val voteCodeMap = Map[String, Constants.ActionVoteCodes.ActionVoteCode](
+
+      "Discover" -> Constants.ActionVoteCodes.Discover(vote.card),
+      "CardPlayWithFriendlyOption" -> Constants.ActionVoteCodes.CardPlayWithFriendlyOption(vote.card, vote.battlecry),
+      "CardPlayWithFriendlyFaceOption" -> Constants.ActionVoteCodes.CardPlayWithFriendlyFaceOption(vote.card),
+      "CardPlayWithEnemyOption" -> Constants.ActionVoteCodes.CardPlayWithEnemyFaceOption(vote.card),
+      "CardPlayWithEnemyFaceOption" -> Constants.ActionVoteCodes.CardPlayWithEnemyFaceOption(vote.card),
+      "CardPlayWithFriendlyOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithFriendlyOptionWithPosition(vote.card, vote.target, vote.spot),
+      "CardPlayWithFriendlyFaceOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithFriendlyFaceOptionWithPosition(vote.card, vote.spot),
+      "CardPlayWithEnemyOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithEnemyOptionWithPosition(vote.card, vote.target, vote.spot),
+      "CardPlayWithEnemyFaceOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithEnemyFaceOptionWithPosition(vote.card, vote.spot),
+      "CardPlayWithPosition" -> Constants.ActionVoteCodes.CardPlayWithPosition(vote.card, vote.spot),
+      "CardPlayWithFriendlyTarget" -> Constants.ActionVoteCodes.CardPlayWithFriendlyBoardTarget(vote.card, vote.target),
+      "CardPlayWithEnemyTarget" -> Constants.ActionVoteCodes.CardPlayWithEnemyBoardTarget(vote.card, vote.target),
+      "CardPlayWithFriendlyFaceTarget" -> Constants.ActionVoteCodes.CardPlayWithFriendlyFaceTarget(vote.card),
+      "HeroPower" -> Constants.ActionVoteCodes.HeroPower(),
+      "HeroPowerWithEnemyFace" -> Constants.ActionVoteCodes.HeroPowerWithEnemyFace(),
+      "HeroPowerWithEnemyTarget" -> Constants.ActionVoteCodes.HeroPowerWithEnemyTarget(vote.target),
+      "HeroPowerWithFriendlyFace" -> Constants.ActionVoteCodes.HeroPowerWithFriendlyFace(),
+      "HeroPowerWithFriendlyTarget" -> Constants.ActionVoteCodes.HeroPowerWithFriendlyTarget(vote.target),
+      "NormalAttackWithEnemyTarget" -> Constants.ActionVoteCodes.NormalAttack(vote.spot, vote.target),
+      "NormalAttackWithEnemyFaceTarget" -> Constants.ActionVoteCodes.NormalAttackToFace(vote.spot),
+      "FaceAttackWithEnemyTarget" -> Constants.ActionVoteCodes.FaceAttack(vote.spot),
+      "FaceAttackWithEnemyFaceTarget" -> Constants.ActionVoteCodes.FaceAttackToFace()
+    )
+
+    if (vote.fullCommand != "") {
+      vote.voteCode = voteCodeMap(vote.fullCommand)
+    }
+    else {
+      logger.debug("Attempting to assign voteCode to a vote with an uninit fullCommand")
+    }
+
+  }
+
+  def ParseMulligan(vote: String): Constants.ActionVoteCodes.MulliganVote = {
+    val ONE = """(\d+)""".r
+    val TWO = """(\d+), (\d+)""".r
+    val THREE = """(\d+), (\d+), (\d+)""".r
+    val FOUR = """(\d+), (\d+), (\d+), (\d+)""".r
+
+    vote match {
+      case FOUR(first, second, third, fourth) =>
+        var firstCard = false
+        var secondCard = false
+        var thirdCard = false
+        var fourthCard = false
+
+
+        first match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        second match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        third match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        fourth match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        return Constants.ActionVoteCodes.MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+
+      case THREE(first, second, third) =>
+        var firstCard = false
+        var secondCard = false
+        var thirdCard = false
+        var fourthCard = false
+
+
+        first match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        second match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        third match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        return Constants.ActionVoteCodes.MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+
+      case TWO(first, second) =>
+        var firstCard = false
+        var secondCard = false
+        var thirdCard = false
+        var fourthCard = false
+
+
+        first match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        second match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+        return Constants.ActionVoteCodes.MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+      case ONE(first) =>
+        var firstCard = false
+        var secondCard = false
+        var thirdCard = false
+        var fourthCard = false
+
+
+        first match {
+
+          case "1" =>
+            firstCard = true
+          case "2" =>
+            secondCard = true
+          case "3" =>
+            thirdCard = true
+          case "4" =>
+            fourthCard = true
+        }
+
+
+        return Constants.ActionVoteCodes.MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+    }
   }
 }
