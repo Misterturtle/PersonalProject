@@ -22,7 +22,7 @@ class InMulligan(theBrain: TheBrain) extends State with LazyLogging {
           voteManager.MulliganVoteEntry(first, second, third, false)
         if (mulliganOptions == 4)
           voteManager.MulliganVoteEntry(first, second, third, fourth)
-        if (mulliganOptions != 3 || mulliganOptions != 4)
+        if (mulliganOptions != 3 && mulliganOptions != 4)
           logger.debug("Invalid mulligan vote entry. Mulligan options: " + mulliganOptions)
 
       case _ =>
@@ -32,8 +32,11 @@ class InMulligan(theBrain: TheBrain) extends State with LazyLogging {
   }
 
   def Activate(): Unit = {
-    mulliganOptions = 0
-    theBrain.ircLogic.StartMulligan()
+    if (theBrain.logFileReader.readerReady) {
+      logger.debug("Activating In Mulligan Status")
+
+      theBrain.ircLogic.StartMulligan()
+    }
   }
 
 

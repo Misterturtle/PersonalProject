@@ -83,6 +83,7 @@ class NormalVoteList extends VoteList {
             vote.enemyTarget = hisBoardChangeMap(vote.enemyTarget)
           }
         }
+        vote.UpdateVoteCode()
     }
   }
 

@@ -12,22 +12,25 @@ import scala.collection.mutable._
   */
 
 
-
-class Voter(sender: String) {
+class Voter(name: String) {
 
   val actionVoteList = new ActionVoteList()
+  val sender = name
   var emojiVote = new EmojiVote(sender, Constants.EmojiVoteCodes.EmojiUninit())
   var menuVote = new MenuVote(sender, Constants.MenuVoteCodes.MenuUninit())
-  var mulliganVote = new Tuple4(false, false, false, false)
+  var mulliganVote = new Vote(sender, Constants.UninitVoteCode())
 
+  var concedeVote = false
+  var hurryVote = false
   val voteLog = new VoteList
-  val finished = false
+  var finished = false
+
 
   def AdjustVotes(previousGameStatus: FrozenGameStatus, currentGameStatus: FrozenGameStatus): Unit = {
     //ActionList is the only list that needs to be adjusted.
 
     actionVoteList.AdjustVotes(previousGameStatus, currentGameStatus)
-      }
+  }
 
 
   def VoteEntry(vote: Vote): Unit = {
@@ -35,44 +38,62 @@ class Voter(sender: String) {
 
       case actVote: ActionVote =>
         actionVoteList.AddVote(actVote)
+        finished = false
 
       case emoVote: EmojiVote =>
         emojiVote = emoVote
 
       case mVote: MenuVote =>
         menuVote = mVote
+
+
+      case _ =>
+
+        vote.voteCode match {
+          //Probably removing concede
+          //          case Constants.MiscVoteCodes.Concede(decision) =>
+          //            concedeVote = decision
+
+          case Constants.MiscVoteCodes.Hurry() =>
+            hurryVote = true
+
+          case Constants.MiscVoteCodes.EndTurn() =>
+            finished = true
+            actionVoteList.activeVoter = true
+
+        }
     }
-      }
+  }
 
 
   def TallyActionVotes(): scala.collection.mutable.Map[ActionVoteCode, Int] = {
 
-        return actionVoteList.TallyVotes()
+    return actionVoteList.TallyVotes()
 
-      }
+  }
 
   def GetEmojiVoteCode(): EmojiVoteCode = {
     return emojiVote.emojiVoteCode
 
-      }
+  }
 
   def GetMenuVoteCode(): MenuVoteCode = {
     return menuVote.menuVoteCode
 
-      }
+  }
 
   def RemovePreviousDecision(vote: ActionVote): Unit = {
     actionVoteList.RemovePreviousDecision(vote)
   }
 
-  def GetMulliganVote(): (Boolean, Boolean, Boolean, Boolean) = {
+  def GetMulliganVote(): Vote = {
+
 
     return mulliganVote
 
   }
 
   def GetNumberOfTurns(): Int = {
-
     actionVoteList.GetNumberOfTurns()
   }
 
@@ -81,7 +102,8 @@ class Voter(sender: String) {
     emojiVote = new EmojiVote(sender, Constants.EmojiVoteCodes.EmojiUninit())
     menuVote = new MenuVote(sender, Constants.MenuVoteCodes.MenuUninit())
     actionVoteList.Reset()
-
+    concedeVote = false
+    hurryVote = false
   }
 
   def Kill(): Unit = {
@@ -89,8 +111,9 @@ class Voter(sender: String) {
     //Reserved for tasks right before death.
 
     // EX: Reporting how many of his votes were used.
-  }
 
+
+  }
 
 
 }

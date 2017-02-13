@@ -1,6 +1,7 @@
 package tph
 
 import com.typesafe.scalalogging.LazyLogging
+import tph.Constants.ActionVoteCodes
 import tph.Constants.ActionVoteCodes.ActionVoteCode
 
 import scala.collection.mutable
@@ -11,9 +12,40 @@ import scala.collection.mutable.ListBuffer
   */
 class BindVoteList extends VoteList with LazyLogging {
 
+  var active = false
   val blocks = new ListBuffer[Block]
-  val bindVoteWorth = 20
-  override val voteList = Constants.UNINIT
+  var activeBlock = new Block(new ActionVote("bindVoteList", Constants.ActionVoteCodes.ActionUninit()))
+
+
+  override def AddVote(vote: ActionVote): Unit = {
+
+    var voteAdded = false
+
+    if (blocks.isEmpty) {
+      CreateBlock()
+    }
+    if (activeBlock.voteList(0).actionVoteCode == Constants.ActionVoteCodes.ActionUninit() && !voteAdded) {
+      blocks.last.voteList(0) = vote
+      voteAdded = true
+      activeBlock = blocks.last
+      activeBlock.nextVote = vote
+    }
+
+    val duplicateVote = blocks.find(_.voteList.head.actionVoteCode == vote.actionVoteCode)
+    if (duplicateVote == None && !voteAdded) {
+      activeBlock.voteList.append(vote)
+      voteAdded = true
+    }
+  }
+
+  def Activate(): Unit = {
+    active = true
+  }
+
+  def Deactivate(): Unit = {
+    active = false
+    activeBlock.active = false
+  }
 
   def AdjustVotes(myHandChangeMap: mutable.Map[Int, Int], myBoardChangeMap: mutable.Map[Int, Int], hisHandChangeMap: mutable.Map[Int, Int], hisBoardChangeMap: mutable.Map[Int, Int]): Unit = {
 
@@ -90,6 +122,7 @@ class BindVoteList extends VoteList with LazyLogging {
                 vote.enemyTarget = hisBoardChangeMap(vote.enemyTarget)
               }
             }
+            vote.UpdateVoteCode()
         }
 
 
@@ -129,8 +162,8 @@ class BindVoteList extends VoteList with LazyLogging {
         block.voteList foreach {
           case vote =>
             //If any vote == the previous vote
-            if (vote.voteCode == previousVote.actionVoteCode) {
-              val index = block.voteList.indexWhere(_.voteCode == vote.actionVoteCode)
+            if (vote.actionVoteCode == previousVote.actionVoteCode) {
+              val index = block.voteList.indexWhere(_.actionVoteCode == vote.actionVoteCode)
               //Safety
               if (index == -1) {
                 logger.debug("Something is wrong in RemovePreviousDecision in BindVoteList")
@@ -176,17 +209,19 @@ class BindVoteList extends VoteList with LazyLogging {
 
             //If vote is the next in the block, give extra value to the vote
             //Active blocks and non active blocks give the same amount
-            if (vote == block.nextVote)
-              tallyMap(vote.actionVoteCode) += ircLogic.ACTIVE_BIND_VOTE_VALUE
+            if (vote == block.nextVote) {
+              if (!tallyMap.isDefinedAt(vote.actionVoteCode))
+                tallyMap(vote.actionVoteCode) = 0
 
+              tallyMap(vote.actionVoteCode) += ircLogic.ACTIVE_BIND_VOTE_VALUE
+            }
             else {
               //If block is active(but not the next vote)
-              if (block.active) {
-                tallyMap(vote.actionVoteCode) += ircLogic.NORMAL_BIND_VOTE_VALUE
-              }
-              else {
+
+              if (!tallyMap.isDefinedAt(vote.actionVoteCode))
+                tallyMap(vote.actionVoteCode) = 0
+
                 tallyMap(vote.actionVoteCode) += ircLogic.NONACTIVE_BIND_VOTE_VALUE
-              }
             }
         }
     }
@@ -194,9 +229,11 @@ class BindVoteList extends VoteList with LazyLogging {
   }
 
 
-  def CreateBlock(firstVote: ActionVote): Unit = {
-    val block = new Block(firstVote)
+  def CreateBlock(): Unit = {
+    val block = new Block(new ActionVote("bindVoteList", Constants.ActionVoteCodes.ActionUninit()))
     blocks.append(block)
+    activeBlock.active = false
+    activeBlock = blocks.last
   }
 
 
@@ -216,6 +253,8 @@ class Block(firstVote: ActionVote) extends VoteList {
   var active = false
   var nextVote = firstVote
 
+  voteList.append(firstVote)
+
   def ContainsVote(vote: Vote): Boolean = {
     if (this.voteList.contains(vote))
       true
@@ -233,7 +272,7 @@ class Block(firstVote: ActionVote) extends VoteList {
     val index = this.voteList.indexWhere(_.voteCode == vote.actionVoteCode)
 
     if (index != -1) {
-      for (a <- index until this.voteList.size) {
+      for (a <- index to this.voteList.size) {
         this.voteList.remove(a)
       }
     }

@@ -7,7 +7,6 @@ class VoteList {
 
   val voteLog = new ListBuffer[Vote]
   val voteList = new ListBuffer[ActionVote]
-  val flagsystem = new FlagSystem
 
 
   def Reset(): Unit = {

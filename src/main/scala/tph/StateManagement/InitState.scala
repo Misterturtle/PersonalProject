@@ -9,8 +9,16 @@ import tph.TheBrain
 class InitState(theBrain: TheBrain) extends State {
   var signature = StateSignatures.initSignature
 
+
+  val startingState: State = theBrain.inMenu
+
+
   def Activate(): Unit = {
-    theBrain.ChangeMenu(MenuNames.MAIN_MENU)
-    theBrain.ChangeState(theBrain.inMenu)
+    logger.debug("Activating InitState Status")
+    theBrain.logFileReader.Init()
+    theBrain.hearthstone.Start()
+    theBrain.gameStatus.Reset()
+    theBrain.ChangeState(startingState)
+
   }
 }

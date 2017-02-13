@@ -11,9 +11,30 @@ import scala.collection.mutable.ListBuffer
   */
 class LockedVoteList extends VoteList with LazyLogging {
 
+  var active = false
   val blocks = new ListBuffer[Block]
-  val futureVoteWorth = 20
-  override val voteList = Constants.UNINIT
+  var activeBlock = new Block(new ActionVote("bindVoteList", Constants.ActionVoteCodes.ActionUninit()))
+
+  override def AddVote(vote: ActionVote): Unit = {
+
+    var voteAdded = false
+
+    if (blocks.isEmpty) {
+      CreateBlock()
+    }
+    if (activeBlock.voteList(0).actionVoteCode == Constants.ActionVoteCodes.ActionUninit() && !voteAdded) {
+      blocks.last.voteList(0) = vote
+      voteAdded = true
+      activeBlock = blocks.last
+      activeBlock.nextVote = vote
+    }
+
+    val duplicateVote = blocks.find(_.voteList.head.actionVoteCode == vote.actionVoteCode)
+    if (duplicateVote == None && !voteAdded) {
+      activeBlock.voteList.append(vote)
+      voteAdded = true
+    }
+  }
 
   def AdjustVotes(myHandChangeMap: mutable.Map[Int, Int], myBoardChangeMap: mutable.Map[Int, Int], hisHandChangeMap: mutable.Map[Int, Int], hisBoardChangeMap: mutable.Map[Int, Int]): Unit = {
 
@@ -26,6 +47,7 @@ class LockedVoteList extends VoteList with LazyLogging {
         block.voteList foreach {
 
           case vote =>
+
             //If the block is active (meaning the first vote has been executed), do no adjust.
             if (!block.active) {
 
@@ -93,8 +115,18 @@ class LockedVoteList extends VoteList with LazyLogging {
                 }
               }
             }
+            vote.UpdateVoteCode()
         }
     }
+  }
+
+  def Activate(): Unit = {
+    active = true
+  }
+
+  def Deactivate(): Unit = {
+    active = false
+    activeBlock.active = false
   }
 
   def RemovePreviousDecision(previousVote: ActionVote): Unit = {
@@ -107,8 +139,8 @@ class LockedVoteList extends VoteList with LazyLogging {
         block.voteList foreach {
           case vote =>
             //If any vote == the previous vote
-            if (vote.voteCode == previousVote.actionVoteCode) {
-              val index = block.voteList.indexWhere(_.voteCode == vote.actionVoteCode)
+            if (vote.actionVoteCode == previousVote.actionVoteCode) {
+              val index = block.voteList.indexWhere(_.actionVoteCode == vote.actionVoteCode)
               //Safety
               if (index == -1) {
                 logger.debug("Something is wrong in RemovePreviousDecision in BindVoteList")
@@ -120,7 +152,7 @@ class LockedVoteList extends VoteList with LazyLogging {
                   //Activate block
                   block.active = true
                   //If the vote(also the previous vote) is last in the block
-                  if (block.voteList(index) == block.voteList.last) {
+                  if (block.voteList(index) == block.voteList.last && block.active) {
                     //Remove the block
                     val blockIndex = blocks.indexWhere(_ == block)
                     blocks.remove(blockIndex)
@@ -171,12 +203,20 @@ class LockedVoteList extends VoteList with LazyLogging {
 
         block.voteList foreach {
           case (vote: ActionVote) =>
-            if (vote == block.nextVote)
+            if (vote == block.nextVote) {
+              if (!tallyMap.isDefinedAt(vote.actionVoteCode))
+                tallyMap(vote.actionVoteCode) = 0
+
+
               tallyMap(vote.actionVoteCode) += ircLogic.ACTIVE_FUTURE_VOTE_VALUE
+            }
 
             else {
               if (block.active) {
-                tallyMap(vote.actionVoteCode) += ircLogic.NORMAL_FUTURE_VOTE_VALUE
+                if (!tallyMap.isDefinedAt(vote.actionVoteCode))
+                  tallyMap(vote.actionVoteCode) = 0
+
+                tallyMap(vote.actionVoteCode) += ircLogic.NONACTIVE_FUTURE_VOTE_VALUE
               }
             }
         }
@@ -184,8 +224,10 @@ class LockedVoteList extends VoteList with LazyLogging {
     return tallyMap
   }
 
-  def CreateBlock(firstVote: ActionVote): Unit = {
-    val block = new Block(firstVote)
+  def CreateBlock(): Unit = {
+    val block = new Block(new ActionVote("lockedVoteList", Constants.ActionVoteCodes.ActionUninit()))
     blocks.append(block)
+    activeBlock.active = false
+    activeBlock = blocks.last
   }
 }

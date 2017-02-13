@@ -29,7 +29,8 @@ object Constants {
     val PLAY_MENU = "Play Menu"
     val ARENA_MENU = "Arena Menu"
     val DECK_CREATION = "Deck Creation"
-
+    val SHOP_MENU = "Shop Menu"
+    val OPEN_PACKS_MENU = "Open Packs Menu"
   }
 
 
@@ -61,8 +62,8 @@ object Constants {
 
       var positionVote = Constants.UNINIT
       var cardVote = Constants.UNINIT
-      var battleCryVote = Constants.UNINIT
-      var targetVote = Constants.UNINIT
+      var friendlyTargetVote = Constants.UNINIT
+      var enemyTargetVote = Constants.UNINIT
     }
 
 
@@ -74,18 +75,18 @@ object Constants {
     }
 
     // Battlecry Option Type
-    case class CardPlayWithFriendlyOption(card: Int, boardTarget: Int) extends ActionVoteCode {
+    case class CardPlayWithFriendlyOption(card: Int, friendlyTarget: Int) extends ActionVoteCode {
       cardVote = card
-      targetVote = boardTarget
+      friendlyTargetVote = friendlyTarget
     }
 
     case class CardPlayWithFriendlyFaceOption(card: Int) extends ActionVoteCode {
       cardVote = card
     }
 
-    case class CardPlayWithEnemyOption(card: Int, boardTarget: Int) extends ActionVoteCode {
+    case class CardPlayWithEnemyOption(card: Int, enemyTarget: Int) extends ActionVoteCode {
       cardVote = card
-      targetVote = boardTarget
+      enemyTargetVote = enemyTarget
     }
 
     case class CardPlayWithEnemyFaceOption(card: Int) extends ActionVoteCode {
@@ -93,9 +94,9 @@ object Constants {
     }
 
     //Battlecry Option with Position Type
-    case class CardPlayWithFriendlyOptionWithPosition(card: Int, target: Int, position: Int) extends ActionVoteCode {
+    case class CardPlayWithFriendlyOptionWithPosition(card: Int, friendlyTarget: Int, position: Int) extends ActionVoteCode {
       cardVote = card
-      targetVote = target
+      friendlyTargetVote = friendlyTarget
       positionVote = position
     }
 
@@ -104,9 +105,9 @@ object Constants {
       positionVote = position
     }
 
-    case class CardPlayWithEnemyOptionWithPosition(card: Int, target: Int, position: Int) extends ActionVoteCode {
+    case class CardPlayWithEnemyOptionWithPosition(card: Int, enemyTarget: Int, position: Int) extends ActionVoteCode {
       cardVote = card
-      targetVote = target
+      enemyTargetVote = enemyTarget
       positionVote = position
     }
 
@@ -117,8 +118,8 @@ object Constants {
 
 
     //Normal Turn Play Type
-    case class CardPlay(card: Int) extends ActionVoteCode {
-      cardVote = card
+    case class CardPlay(cardFoo: Int) extends ActionVoteCode {
+      cardVote = cardFoo
     }
 
     case class CardPlayWithPosition(card: Int, position: Int) extends ActionVoteCode {
@@ -126,14 +127,14 @@ object Constants {
       positionVote = position
     }
 
-    case class CardPlayWithFriendlyBoardTarget(card: Int, target: Int) extends ActionVoteCode {
+    case class CardPlayWithFriendlyBoardTarget(card: Int, friendlyTarget: Int) extends ActionVoteCode {
       cardVote = card
-      targetVote = target
+      friendlyTargetVote = friendlyTarget
     }
 
-    case class CardPlayWithEnemyBoardTarget(card: Int, target: Int) extends ActionVoteCode {
+    case class CardPlayWithEnemyBoardTarget(card: Int, enemyTarget: Int) extends ActionVoteCode {
       cardVote = card
-      targetVote = target
+      enemyTargetVote = enemyTarget
     }
 
     case class CardPlayWithFriendlyFaceTarget(card: Int) extends ActionVoteCode {
@@ -146,12 +147,12 @@ object Constants {
 
     case class HeroPower() extends ActionVoteCode
 
-    case class HeroPowerWithFriendlyTarget(target: Int) extends ActionVoteCode {
-      targetVote = target
+    case class HeroPowerWithFriendlyTarget(friendlyTarget: Int) extends ActionVoteCode {
+      friendlyTargetVote = friendlyTarget
     }
 
-    case class HeroPowerWithEnemyTarget(target: Int) extends ActionVoteCode {
-      targetVote = target
+    case class HeroPowerWithEnemyTarget(enemyTarget: Int) extends ActionVoteCode {
+      enemyTargetVote = enemyTarget
     }
 
     case class HeroPowerWithFriendlyFace() extends ActionVoteCode
@@ -160,9 +161,9 @@ object Constants {
 
 
     //Attack Type
-    case class NormalAttack(friendlyPosition: Int, enemyPosition: Int) extends ActionVoteCode {
-      positionVote = friendlyPosition
-      targetVote = enemyPosition
+    case class NormalAttack(friendlyTarget: Int, enemyTarget: Int) extends ActionVoteCode {
+      positionVote = friendlyTarget
+      enemyTargetVote = enemyTarget
     }
 
     case class FaceAttack(position: Int) extends ActionVoteCode {
@@ -177,23 +178,24 @@ object Constants {
 
     case class ActionUninit() extends ActionVoteCode
 
+    case class Bind() extends ActionVoteCode
 
-    //Misc Type
-    case class Wait() extends VoteCode
-
-    case class Hurry() extends VoteCode
-
-    case class Concede() extends VoteCode
-
-    case class EndTurn() extends VoteCode
-
-    case class Bind() extends VoteCode
-
-    case class Future() extends VoteCode
+    case class Future() extends ActionVoteCode
 
     case class MulliganVote(first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends VoteCode
 
-    case class PreviousDecision() extends VoteCode
+
+  }
+
+  object MiscVoteCodes {
+
+
+    case class Hurry() extends VoteCode
+
+    // Probably removing Concede
+    // case class Concede(decision: Boolean) extends VoteCode
+
+    case class EndTurn() extends VoteCode
 
     case class Uninit() extends VoteCode
 
@@ -301,6 +303,68 @@ object Constants {
       val menu = currentMenu
     }
 
+  }
+
+  object LogFileEvents {
+
+    sealed trait LogFileEvent {}
+
+    case class TurnStartEvent(turn: Int) extends LogFileEvent
+
+    //Friendly Events
+    //case class FriendlyCardReturnEvent(name: String, id: Int, player:Int)
+    case class FriendlyMinionControlled(name: String, id: Int, zonePos: Int) extends LogFileEvent
+
+
+    //Enemy Events
+    case class EnemyCardDrawnEvent(id: Int, position: Int, player: Int) extends LogFileEvent
+
+    case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends LogFileEvent
+
+
+    //Neutral Events
+    case class DiscoverOption(option: Int) extends LogFileEvent
+
+    case class FaceAttackValueEvent(player: Int, value: Int) extends LogFileEvent
+
+    case class WeaponPlayedEvent(id: Int, player: Int) extends LogFileEvent
+
+    case class SecretPlayedEvent(id: Int, player: Int) extends LogFileEvent
+
+    case class OldZoneChangeEvent(id: Int, zone: String, player: Int, dstZone: String) extends LogFileEvent
+
+    case class ZoneChangeEvent(id: Int, player: Int, zone: String, dstZone: String) extends LogFileEvent
+
+    case class KnownCardDrawn(name: String, id: Int, position: Int, player: Int) extends LogFileEvent
+
+    case class Sap(name: String, id: Int, player: Int) extends LogFileEvent
+
+    case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends LogFileEvent
+
+    case class DefinePlayers(friendlyPlayerID: Int) extends LogFileEvent
+
+    case class CardDeath(name: String, id: Int, zonePos: Int, player: Int) extends LogFileEvent
+
+    case class MinionSummoned(name: String, id: Int, zonePos: Int, player: Int) extends LogFileEvent
+
+    case class BoardPositionChange(id: Int, player: Int, dstPos: Int) extends LogFileEvent
+
+    case class HandPositionChange(id: Int, pos: Int, player: Int, dstPos: Int) extends LogFileEvent
+
+    //case class Polymorph(newId:Int,oldId:Int ,player:Int)
+    case class Transform(oldId: Int, newId: Int) extends LogFileEvent
+
+    case class Hex(name: String, id: Int, player: Int, zonePos: Int) extends LogFileEvent
+
+
+    //Logging Events
+    case class TagChange(entity: String, tag: String, value: String) extends LogFileEvent
+
+    case class NumOptions(source: String, entity: String, value: String) extends LogFileEvent
+
+    case class DebugPrintPower(source: String, pad: String, text: String) extends LogFileEvent
+
+    case class PrintState(fileName: String) extends LogFileEvent
   }
 
 

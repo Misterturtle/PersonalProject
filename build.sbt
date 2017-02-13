@@ -32,6 +32,11 @@ libraryDependencies += "pircbot" % "pircbot" % "1.5.0"
 
 libraryDependencies += "commons-io" % "commons-io" % "2.5"
 
-libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
+libraryDependencies += "org.scalafx" %% "scalafx" % "8.0.92-R10"
+
+addCompilerPlugin("org.scalamacros" % "paradise_2.11.8" % "2.1.0")
+
+libraryDependencies += "org.scalafx" %% "scalafxml-core-sfx8" % "0.3"
+
 
 fork in run := true

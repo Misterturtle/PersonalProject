@@ -1,9 +1,11 @@
 package tph.StateManagement
 
+import com.typesafe.scalalogging.LazyLogging
+
 /**
   * Created by Harambe on 1/22/2017.
   */
-trait State {
+trait State extends LazyLogging {
 
   var active = false
 

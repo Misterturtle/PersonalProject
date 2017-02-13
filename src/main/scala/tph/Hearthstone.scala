@@ -11,7 +11,11 @@ import akka.util.Timeout
 import autoitx4java.AutoItX
 import com.jacob.com.LibraryLoader
 import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.scalalogging.LazyLogging
 import org.apache.commons.io.{FileUtils, IOUtils}
+import tph.Constants.MenuVoteCodes
+import tph.tests.TestBrain
+
 //import tph.Controller.ChangeMenu
 import tph.research.PixelDataBase._
 
@@ -23,7 +27,7 @@ import tph.Constants.EmojiVoteCodes._
 import tph.Constants.MenuVoteCodes._
 
 
-class Hearthstone(theBrain: TheBrain) {
+class Hearthstone(theBrain: TheBrain) extends LazyLogging {
   val TITLE = "Hearthstone"
   val transformMap = Map[Int, String](1 -> "One", 2 -> "Two", 3 -> "Three", 4 -> "Four", 5 -> "Five", 6 -> "Six", 7 -> "Seven", 8 -> "Eight", 9 -> "Nine", 10 -> "Ten")
 
@@ -42,8 +46,12 @@ class Hearthstone(theBrain: TheBrain) {
   val config = ConfigFactory.load()
 
 
+
   def Start(): Unit = {
-    initialize()
+    if (!ax.winExists(TITLE))
+      throw new RuntimeException("Hearthstone is not running")
+
+    ax.winMove(TITLE, "", 0, 0, 1366, 768)
   }
 
   def GameOver() = {
@@ -60,160 +68,166 @@ class Hearthstone(theBrain: TheBrain) {
 
 
   def ExecuteActionVote(vote: ActionVote): Unit = {
+    logger.debug("Executing Action Vote with vote code: " + vote.actionVoteCode)
 
-    case Discover(option: Int) =>
-      clicker.Click(inGame.clickLocations("discoverCard" + transformMap(option)).position)
+    vote.actionVoteCode match {
 
-    case CardPlayWithFriendlyOption(card: Int, boardTarget: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      val cardsOnBoard = currentGameStatus(0).board.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myBoardFarRight").position)
-      TimeUnit.SECONDS.sleep(1)
-      clicker.Click(inGame.clickLocations("myBoard" + transformMap(boardTarget) + "Of" + transformMap(cardsOnBoard + 1)).position)
+      case Discover(option: Int) =>
+        clicker.Click(inGame.clickLocations("discoverCard" + transformMap(option)).position)
 
-    case CardPlayWithFriendlyFaceOption(card: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myBoardFarRight").position)
-      TimeUnit.SECONDS.sleep(1)
-      clicker.Click(inGame.clickLocations("myFace").position)
+      case CardPlayWithFriendlyOption(card: Int, boardTarget: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        val cardsOnBoard = currentGameStatus(0).board.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myBoardFarRight").position)
+        TimeUnit.SECONDS.sleep(1)
+        clicker.Click(inGame.clickLocations("myBoard" + transformMap(boardTarget) + "Of" + transformMap(cardsOnBoard + 1)).position)
 
-    case CardPlayWithEnemyOption(card: Int, boardTarget: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      val cardsOnBoard = currentGameStatus(1).board.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myBoardFarRight").position)
-      TimeUnit.SECONDS.sleep(1)
-      clicker.Click(inGame.clickLocations("hisBoard" + transformMap(boardTarget) + "Of" + transformMap(cardsOnBoard + 1)).position)
+      case CardPlayWithFriendlyFaceOption(card: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myBoardFarRight").position)
+        TimeUnit.SECONDS.sleep(1)
+        clicker.Click(inGame.clickLocations("myFace").position)
 
-
-    case CardPlayWithEnemyFaceOption(card: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myBoardFarRight").position)
-      TimeUnit.SECONDS.sleep(1)
-      clicker.Click(inGame.clickLocations("hisFace").position)
-
-    //Normal Turn Play Type
-    case CardPlay(card: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myBoardFarRight").position)
-
-    case CardPlayWithPosition(card: Int, position: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      val cardsOnBoard = currentGameStatus(0).board.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(100)
-      clicker.Click(inGame.clickLocations("myBoard" + transformMap(position) + "Of" + transformMap(cardsOnBoard + 1)).position)
-
-    case CardPlayWithFriendlyBoardTarget(card: Int, target: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      val cardsOnBoard = currentGameStatus(0).board.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(100)
-      clicker.Click(inGame.clickLocations("myBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
-
-    case CardPlayWithEnemyBoardTarget(card: Int, target: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      val cardsOnBoard = currentGameStatus(1).board.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
-
-    case CardPlayWithFriendlyFaceTarget(card: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(100)
-      clicker.Click(inGame.clickLocations("myFace").position)
+      case CardPlayWithEnemyOption(card: Int, boardTarget: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        val cardsOnBoard = currentGameStatus(1).board.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myBoardFarRight").position)
+        TimeUnit.SECONDS.sleep(1)
+        clicker.Click(inGame.clickLocations("hisBoard" + transformMap(boardTarget) + "Of" + transformMap(cardsOnBoard + 1)).position)
 
 
-    case CardPlayWithEnemyFaceTarget(card: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsInHand = currentGameStatus(0).hand.length
-      clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
-      TimeUnit.MILLISECONDS.sleep(100)
-      clicker.Click(inGame.clickLocations("hisFace").position)
+      case CardPlayWithEnemyFaceOption(card: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myBoardFarRight").position)
+        TimeUnit.SECONDS.sleep(1)
+        clicker.Click(inGame.clickLocations("hisFace").position)
+
+      //Normal Turn Play Type
+      case CardPlay(card: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myBoardFarRight").position)
+
+      case CardPlayWithPosition(card: Int, position: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        val cardsOnBoard = currentGameStatus(0).board.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(100)
+        clicker.Click(inGame.clickLocations("myBoard" + transformMap(position) + "Of" + transformMap(cardsOnBoard + 1)).position)
+
+      case CardPlayWithFriendlyBoardTarget(card: Int, target: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        val cardsOnBoard = currentGameStatus(0).board.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(100)
+        clicker.Click(inGame.clickLocations("myBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
+
+      case CardPlayWithEnemyBoardTarget(card: Int, target: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        val cardsOnBoard = currentGameStatus(1).board.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
+
+      case CardPlayWithFriendlyFaceTarget(card: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(100)
+        clicker.Click(inGame.clickLocations("myFace").position)
 
 
-    case HeroPower() =>
-      clicker.Click(inGame.clickLocations("heroPower").position)
-
-    case HeroPowerWithEnemyFace() =>
-      clicker.Click(inGame.clickLocations("heroPower").position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisFace").position)
-
-    case HeroPowerWithEnemyTarget(target: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsOnBoard = currentGameStatus(1).board.length
-      clicker.Click(inGame.clickLocations("heroPower").position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
-
-    case HeroPowerWithFriendlyFace() =>
-      clicker.Click(inGame.clickLocations("heroPower").position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myFace").position)
+      case CardPlayWithEnemyFaceTarget(card: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsInHand = currentGameStatus(0).hand.length
+        clicker.Click(inGame.clickLocations("card" + transformMap(card) + "Of" + transformMap(cardsInHand)).position)
+        TimeUnit.MILLISECONDS.sleep(100)
+        clicker.Click(inGame.clickLocations("hisFace").position)
 
 
-    case HeroPowerWithFriendlyTarget(target: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val cardsOnBoard = currentGameStatus(0).board.length
-      clicker.Click(inGame.clickLocations("heroPower").position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("myBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
+      case HeroPower() =>
+        clicker.Click(inGame.clickLocations("heroPower").position)
 
-    //Attack Type
-    case NormalAttack(friendlyPosition: Int, enemyPosition: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val friendlyCardsOnBoard = currentGameStatus(0).board.length
-      val enemyCardsOnBoard = currentGameStatus(1).board.length
-      clicker.Click(inGame.clickLocations("myBoard" + transformMap(friendlyPosition) + "Of" + transformMap(friendlyCardsOnBoard)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisBoard" + transformMap(enemyPosition) + "Of" + transformMap(enemyCardsOnBoard)).position)
+      case HeroPowerWithEnemyFace() =>
+        clicker.Click(inGame.clickLocations("heroPower").position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisFace").position)
 
-    case FaceAttack(position: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val enemyCardsOnBoard = currentGameStatus(1).board.length
-      clicker.Click(inGame.clickLocations("myFace").position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisBoard" + transformMap(position) + "Of" + transformMap(enemyCardsOnBoard)).position)
+      case HeroPowerWithEnemyTarget(target: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsOnBoard = currentGameStatus(1).board.length
+        clicker.Click(inGame.clickLocations("heroPower").position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
+
+      case HeroPowerWithFriendlyFace() =>
+        clicker.Click(inGame.clickLocations("heroPower").position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myFace").position)
 
 
-    case NormalAttackToFace(position: Int) =>
-      val currentGameStatus = GetGameStatus()
-      val friendlyCardsOnBoard = currentGameStatus(0).board.length
-      clicker.Click(inGame.clickLocations("myBoard" + transformMap(position) + "Of" + transformMap(friendlyCardsOnBoard)).position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisFace").position)
+      case HeroPowerWithFriendlyTarget(target: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val cardsOnBoard = currentGameStatus(0).board.length
+        clicker.Click(inGame.clickLocations("heroPower").position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("myBoard" + transformMap(target) + "Of" + transformMap(cardsOnBoard)).position)
+
+      //Attack Type
+      case NormalAttack(friendlyPosition: Int, enemyPosition: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val friendlyCardsOnBoard = currentGameStatus(0).board.length
+        val enemyCardsOnBoard = currentGameStatus(1).board.length
+        clicker.Click(inGame.clickLocations("myBoard" + transformMap(friendlyPosition) + "Of" + transformMap(friendlyCardsOnBoard)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisBoard" + transformMap(enemyPosition) + "Of" + transformMap(enemyCardsOnBoard)).position)
+
+      case FaceAttack(position: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val enemyCardsOnBoard = currentGameStatus(1).board.length
+        clicker.Click(inGame.clickLocations("myFace").position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisBoard" + transformMap(position) + "Of" + transformMap(enemyCardsOnBoard)).position)
 
 
-    case FaceAttackToFace() =>
-      clicker.Click(inGame.clickLocations("myFace").position)
-      TimeUnit.MILLISECONDS.sleep(50)
-      clicker.Click(inGame.clickLocations("hisFace").position)
+      case NormalAttackToFace(position: Int) =>
+        val currentGameStatus = GetGameStatus()
+        val friendlyCardsOnBoard = currentGameStatus(0).board.length
+        clicker.Click(inGame.clickLocations("myBoard" + transformMap(position) + "Of" + transformMap(friendlyCardsOnBoard)).position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisFace").position)
 
+
+      case FaceAttackToFace() =>
+        clicker.Click(inGame.clickLocations("myFace").position)
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("hisFace").position)
+
+      case _ =>
+        logger.debug("Hearthstone has received an unknown action vote. VoteCode = " + vote.voteCode)
+
+    }
   }
 
   def EndTurn(): Unit = {
     clicker.Click(inGame.clickLocations("endTurn").position)
-    theBrain.EndTurn()
   }
 
 
@@ -256,6 +270,10 @@ class Hearthstone(theBrain: TheBrain) {
         TimeUnit.MILLISECONDS.sleep(50)
         clicker.Click(emoteMenu.clickLocations("threaten").position)
 
+      case _ =>
+        logger.debug("Hearthstone has received an unknown emoji vote. VoteCode = " + vote.voteCode)
+
+
     }
   }
 
@@ -266,148 +284,168 @@ class Hearthstone(theBrain: TheBrain) {
   }
 
 
-  def MulliganVote(first: Boolean, second: Boolean, third: Boolean, fourth: Boolean): Unit = {
+  def ExecuteMulliganVote(mulliganVote: Vote): Unit = {
+    logger.debug("Executing Mulligan Vote")
 
-    if (first) {
-      clicker.Click(inGame.clickLocations("mulligan" + transformMap(1) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
-    }
-    TimeUnit.MILLISECONDS.sleep(50)
-    if (second) {
-      clicker.Click(inGame.clickLocations("mulligan" + transformMap(2) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
-    }
-    TimeUnit.MILLISECONDS.sleep(50)
-    if (third) {
-      clicker.Click(inGame.clickLocations("mulligan" + transformMap(3) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
-    }
-    TimeUnit.MILLISECONDS.sleep(50)
+    mulliganVote.voteCode match {
+
+      case Constants.ActionVoteCodes.MulliganVote(first, second, third, fourth) =>
 
 
-    if (theBrain.inMulligan.mulliganOptions >= 3 && fourth) {
-      clicker.Click(inGame.clickLocations("mulligan" + transformMap(4) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
+        if (first) {
+          clicker.Click(inGame.clickLocations("mulligan" + transformMap(1) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
+        }
+        TimeUnit.MILLISECONDS.sleep(50)
+        if (second) {
+          clicker.Click(inGame.clickLocations("mulligan" + transformMap(2) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
+        }
+        TimeUnit.MILLISECONDS.sleep(50)
+        if (third) {
+          clicker.Click(inGame.clickLocations("mulligan" + transformMap(3) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
+        }
+        TimeUnit.MILLISECONDS.sleep(50)
+
+
+        if (theBrain.inMulligan.mulliganOptions >= 3 && fourth) {
+          clicker.Click(inGame.clickLocations("mulligan" + transformMap(4) + "Of" + transformMap(theBrain.inMulligan.mulliganOptions)).position)
+        }
+
+        TimeUnit.MILLISECONDS.sleep(50)
+        clicker.Click(inGame.clickLocations("mulliganConfirm").position)
+
+
+      case _ =>
+        logger.debug("Unexpected Mulligan VoteCode: " + mulliganVote.voteCode)
     }
 
-    TimeUnit.MILLISECONDS.sleep(50)
-    clicker.Click(inGame.clickLocations("mulliganConfirm").position)
   }
 
     //-------------MENU CASES----------------
     //Multi Menu
-    def Back(menu: String): Unit = {
 
-      if (menu == "playMenu") {
-        clicker.Click(playMenu.clickLocations("backButton").position)
-        theBrain.ChangeMenu("mainMenu")
-      }
+  def ExecuteMenuVote(vote: MenuVote): Unit = {
 
-      //Most likely removing due to only subscribers accessing collections
-      //      if(menu == "collectionMenu"){
-      //        clicker.Click(playMenu.clickLocations("backButton").position)
-      //        ChangeMenu("collectionMenu", previousMenu)
-      //      }
-      if (menu == "questMenu") {
-        clicker.Click(questMenu.clickLocations("backButton").position)
-        theBrain.ChangeMenu("mainMenu")
-      }
-    }
+    logger.debug("Executing Menu Vote: " + vote)
 
-  def Play(menu: String): Unit = {
-    if (menu == "mainMenu") {
-        clicker.Click(mainMenu.clickLocations("play").position)
-      theBrain.ChangeMenu("playMenu")
-      }
+    vote.menuVoteCode match {
 
-    if (menu == "playMenu") {
-        clicker.Click(playMenu.clickLocations("play").position)
-      theBrain.ChangeMenu("inGame")
-      theBrain.StartGame()
-      }
-  }
+      case Back(menu: String) =>
+
+        if (menu == Constants.MenuNames.PLAY_MENU) {
+          clicker.Click(playMenu.clickLocations("backButton").position)
+          theBrain.ChangeMenu(Constants.MenuNames.MAIN_MENU)
+          logger.debug("Changing menu from Play Menu to Main menu")
+        }
+
+        //Most likely removing due to only subscribers accessing collections
+        //      if(menu == "collectionMenu"){
+        //        clicker.Click(playMenu.clickLocations("backButton").position)
+        //        ChangeMenu("collectionMenu", previousMenu)
+        //      }
+        if (menu == Constants.MenuNames.QUEST_MENU) {
+          clicker.Click(questMenu.clickLocations("backButton").position)
+          theBrain.ChangeMenu(Constants.MenuNames.MAIN_MENU)
+          logger.debug("Changing menu from Quest Menu to Main menu")
+        }
+
+
+      case Play(menu: String) =>
+        if (menu == Constants.MenuNames.MAIN_MENU) {
+          clicker.Click(mainMenu.clickLocations("play").position)
+          theBrain.ChangeMenu(Constants.MenuNames.PLAY_MENU)
+          logger.debug("Changing menu from Main Menu to Play menu")
+        }
+
+        if (menu == Constants.MenuNames.PLAY_MENU) {
+          clicker.Click(playMenu.clickLocations("play").position)
+          theBrain.ChangeMenu(Constants.MenuNames.IN_GAME)
+          theBrain.StartGame()
+          logger.debug("Changing menu from Play Menu to In Game")
+        }
+
 
 
       // Most likely removing due to only subscribers accessing colletions
-//
-  //    def  Collection(menu:String) :Unit ={
-//      if(menu == "mainMenu"){
-//        clicker.Click(mainMenu.clickLocations("myCollection").position)
-//        ChangeMenu("mainMenu", "playMenu")
-//      }
-//
-//      if(menu == "playMenu") {
-//        clicker.Click(playMenu.clickLocations("myCollection").position)
-//        ChangeMenu("playMenu", "inGame")
-//      }
+      //
+      //    def  Collection(menu:String) :Unit ={
+      //      if(menu == "mainMenu"){
+      //        clicker.Click(mainMenu.clickLocations("myCollection").position)
+      //        ChangeMenu("mainMenu", "playMenu")
+      //      }
+      //
+      //      if(menu == "playMenu") {
+      //        clicker.Click(playMenu.clickLocations("myCollection").position)
+      //        ChangeMenu("playMenu", "inGame")
+      //      }
 
 
+      //Main Menu
 
 
-    //Main Menu
+      case Shop(currentMenu) =>
+        clicker.Click(mainMenu.clickLocations("shop").position)
+        theBrain.ChangeMenu(Constants.MenuNames.SHOP_MENU)
+        logger.debug("Changing menu from Main Menu to Shop Menu")
 
 
-  def Shop(): Unit = {
-      clicker.Click(mainMenu.clickLocations("shop").position)
-    theBrain.ChangeMenu("shopMenu")
-  }
+      case OpenPacks(currentMenu) =>
+        clicker.Click(mainMenu.clickLocations(OPEN_PACKS).position)
+        theBrain.ChangeMenu(Constants.MenuNames.OPEN_PACKS_MENU)
+        logger.debug("Changing menu from Main Menu to Open Packs Menu")
 
-  def OpenPacks(): Unit = {
-      clicker.Click(mainMenu.clickLocations(OPEN_PACKS).position)
-    theBrain.ChangeMenu("openPackMenu")
-  }
 
-  def QuestLog(): Unit = {
-      clicker.Click(mainMenu.clickLocations(QUEST_LOG).position)
-    theBrain.ChangeMenu("questMenu")
-  }
+      case QuestLog(currentMenu) =>
+        clicker.Click(mainMenu.clickLocations(QUEST_LOG).position)
+        theBrain.ChangeMenu(Constants.MenuNames.QUEST_MENU)
+        logger.debug("Changing menu from Main Menu to Quest Logs")
+
 
 
 
       //Play Menu
-      def Casual(): Unit = {
+      case Casual(currentMenu) =>
         clicker.Click(playMenu.clickLocations(CASUAL).position)
-      }
-
-  def Ranked(): Unit = {
-    clicker.Click(playMenu.clickLocations(RANKED).position)
-  }
-
-  def Deck(deckNumber: Int): Unit = {
-        val transMap = mutable.Map[Int, String](1->"first", 2->"second",3->"third",4->"fourth",5->"fifth",6->"sixth",7->"seventh",8->"eighth",9->"ninth")
-    clicker.Click(playMenu.clickLocations(transMap(deckNumber) + "Deck").position)
-  }
-
-  def FirstPage(): Unit = {
-    clicker.Click(playMenu.clickLocations(PREVIOUS_PAGE).position)
-  }
-
-  def SecondPage(): Unit = {
-    clicker.Click(playMenu.clickLocations(NEXT_PAGE).position)
-  }
 
 
+      case Ranked(currentMenu) =>
+        clicker.Click(playMenu.clickLocations(RANKED).position)
 
-    //Collection Menu
+
+      case Deck(deckNumber, currentMenu) =>
+        val transMap = mutable.Map[Int, String](1 -> "first", 2 -> "second", 3 -> "third", 4 -> "fourth", 5 -> "fifth", 6 -> "sixth", 7 -> "seventh", 8 -> "eighth", 9 -> "ninth")
+        clicker.Click(playMenu.clickLocations(transMap(deckNumber) + "Deck").position)
 
 
-    //Quest Menu
-    def Quest(number: Int): Unit = {
-      clicker.Click(questMenu.clickLocations("quest" + transformMap(number)).position)
+      case FirstPage(currentMenu) =>
+        clicker.Click(playMenu.clickLocations(PREVIOUS_PAGE).position)
+
+
+      case SecondPage(currentMenu) =>
+        clicker.Click(playMenu.clickLocations(NEXT_PAGE).position)
+
+
+
+
+      //Collection Menu
+
+
+      //Quest Menu
+      case Quest(number: Int, currentMenu) =>
+        clicker.Click(questMenu.clickLocations("quest" + transformMap(number)).position)
+
+      case _ =>
+        logger.debug("Unknown menu vote code in Hearthstone: " + vote.voteCode)
     }
-
-
-
-
-
-  def initialize(): Unit = {
-    if (!ax.winExists(TITLE))
-      throw new RuntimeException("Hearthstone is not running")
-
-    ax.winMove(TITLE, "", 0, 0, 1366, 768)
-
   }
+
+
+
+
 
   def GetGameStatus(): Array[FrozenPlayer] = {
     val frozenGameStatus = theBrain.GetGameStatus()
 
-    return frozenGameStatus.GetFrozenPlayers()
+    return frozenGameStatus.frozenPlayers
 
 
   }

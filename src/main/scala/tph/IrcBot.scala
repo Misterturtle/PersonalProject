@@ -29,6 +29,7 @@ object IrcBot {
   val WAIT = "!wait"
   val HURRY = "!hurry"
   val CONCEDE = "!concede"
+  val NO_CONCEDE = "!noconcede"
   val END_TURN = "!end turn"
   val BIND = "!bind"
   val FUTURE = "!future"
@@ -48,7 +49,7 @@ object IrcBot {
   val BATTLECRY_COMMAND = """battlecry (.+)""".r
   val HERO_POWER_COMMAND = """hero power (.+)""".r
   val DISCOVER_COMMAND = """discover (\d+)""".r
-  val MULLIGAN = """!mulligan (.+)""".r
+  val MULLIGAN = """!mulligan(.*)""".r
 
   //Main Menu
   val PLAY = "!play"
@@ -103,69 +104,73 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
     message.toLowerCase match {
 
             case PLAY =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Play("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Play(theBrain.currentMenu)))
             case SHOP =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Shop("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Shop(theBrain.currentMenu)))
             case OPEN_PACKS =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.OpenPacks("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.OpenPacks(theBrain.currentMenu)))
             case COLLECTION =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Collection("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Collection(theBrain.currentMenu)))
             case QUEST_LOG =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.QuestLog("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.QuestLog(theBrain.currentMenu)))
             case CASUAL =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Casual("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Casual(theBrain.currentMenu)))
             case RANKED =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Ranked("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Ranked(theBrain.currentMenu)))
             case BACK =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Back("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Back(theBrain.currentMenu)))
             case DECK(deckNumber) =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Deck(deckNumber.toInt, "Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Deck(deckNumber.toInt, theBrain.currentMenu)))
             case FIRST_PAGE =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.FirstPage("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.FirstPage(theBrain.currentMenu)))
             case SECOND_PAGE =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.SecondPage("Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.SecondPage(theBrain.currentMenu)))
             case QUEST(number) =>
-              theBrain.VoteEntry(new Vote(sender, Constants.MenuVoteCodes.Quest(number.toInt, "Unknown")))
+              theBrain.VoteEntry(new MenuVote(sender, Constants.MenuVoteCodes.Quest(number.toInt, theBrain.currentMenu)))
             case GREETINGS =>
-              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Greetings()))
+              theBrain.VoteEntry(new EmojiVote(sender, Constants.EmojiVoteCodes.Greetings()))
             case THANKS =>
-              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Thanks()))
+              theBrain.VoteEntry(new EmojiVote(sender, Constants.EmojiVoteCodes.Thanks()))
             case WELL_PLAYED =>
-              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.WellPlayed()))
+              theBrain.VoteEntry(new EmojiVote(sender, Constants.EmojiVoteCodes.WellPlayed()))
             case WOW =>
-              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Wow()))
+              theBrain.VoteEntry(new EmojiVote(sender, Constants.EmojiVoteCodes.Wow()))
             case OOPS =>
-              theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Oops()))
+              theBrain.VoteEntry(new EmojiVote(sender, Constants.EmojiVoteCodes.Oops()))
             case THREATEN =>
               theBrain.VoteEntry(new Vote(sender, Constants.EmojiVoteCodes.Threaten()))
 
             //Misc Type
-            case WAIT =>
-              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Wait()))
             case HURRY =>
-              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Hurry()))
-            case CONCEDE =>
-              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Concede()))
+              theBrain.VoteEntry(new Vote(sender, Constants.MiscVoteCodes.Hurry()))
+            //Probably removing concede
+            //            case CONCEDE =>
+            //              theBrain.VoteEntry(new Vote(sender, Constants.MiscVoteCodes.Concede(true)))
+            //            case NO_CONCEDE =>
+            //              theBrain.VoteEntry(new Vote(sender, Constants.MiscVoteCodes.Concede(false)))
             case END_TURN =>
-              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.EndTurn()))
+              theBrain.VoteEntry(new Vote(sender, Constants.MiscVoteCodes.EndTurn()))
             case BIND =>
-              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Bind()))
+              theBrain.VoteEntry(new ActionVote(sender, Constants.ActionVoteCodes.Bind()))
             case FUTURE =>
-              theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.Future()))
+              theBrain.VoteEntry(new ActionVote(sender, Constants.ActionVoteCodes.Future()))
 
             case MULLIGAN(stringCommand: String) =>
 
               // returns a Constants.voteCodes.MulliganVote()
-              val mulliganVote = ParseMulligan(stringCommand)
+              val mulliganVote = ParseMulligan(sender, stringCommand)
 
               theBrain.VoteEntry(new Vote(sender, Constants.ActionVoteCodes.MulliganVote(mulliganVote.first, mulliganVote.second, mulliganVote.third, mulliganVote.fourth)))
 
+
             case _ =>
               val actionVote = CreateVote(message, sender)
+              logger.debug("IrcBot has created a new vote: " + actionVote)
               AssignVoteCode(actionVote)
+              logger.debug("The assigned votecode is " + actionVote.actionVoteCode)
 
 
-              if (actionVote.voteCode != Constants.ActionVoteCodes.ActionUninit())
+              if (actionVote.actionVoteCode != Constants.ActionVoteCodes.ActionUninit())
                 theBrain.VoteEntry(actionVote)
     }
   }
@@ -197,10 +202,10 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
                 newVote.secondCommand = "WithEnemyFaceTarget"
               case MY_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithFriendlyTarget"
-                newVote.target = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithEnemyTarget"
-                newVote.target = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
@@ -211,10 +216,10 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
                 newVote.secondCommand = "WithEnemyFaceOption"
               case MY_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithFriendlyOption"
-                newVote.battlecry = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithEnemyOption"
-                newVote.battlecry = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -233,10 +238,10 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
                 newVote.thirdCommand = "WithEnemyFaceTarget"
               case MY_REGEX_NUMBER(targetPos) =>
                 newVote.thirdCommand = "WithFriendlyTarget"
-                newVote.target = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
                 newVote.thirdCommand = "WithEnemyTarget"
-                newVote.target = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
@@ -247,10 +252,10 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
                 newVote.thirdCommand = "WithEnemyFaceOption"
               case MY_REGEX_NUMBER(targetPos) =>
                 newVote.thirdCommand = "WithFriendlyOption"
-                newVote.battlecry = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
                 newVote.thirdCommand = "WithEnemyOption"
-                newVote.battlecry = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -267,7 +272,7 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
             attacker match {
               case MY_REGEX_NUMBER(attackerPos) =>
                 newVote.firstCommand = "NormalAttack"
-                newVote.card = attackerPos.toInt
+                newVote.friendlyTarget = attackerPos.toInt
               case "my face" =>
                 newVote.firstCommand = "FaceAttack"
               case _ =>
@@ -288,10 +293,10 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
                 newVote.secondCommand = "WithEnemyFaceTarget"
               case MY_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithFriendlyTarget"
-                newVote.target = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithEnemyTarget"
-                newVote.target = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
               case _ =>
             }
           case BATTLECRY_COMMAND(target) =>
@@ -302,10 +307,10 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
                 newVote.secondCommand = "WithEnemyFaceOption"
               case MY_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithFriendlyOption"
-                newVote.battlecry = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
               case HIS_REGEX_NUMBER(targetPos) =>
                 newVote.secondCommand = "WithEnemyOption"
-                newVote.battlecry = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
               case _ =>
             }
           case _ =>
@@ -316,17 +321,17 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
         command match {
           case DISCOVER_COMMAND(option) =>
             newVote.fullCommand = "Discover"
-            newVote.target = option.toInt
+            newVote.card = option.toInt
           case "hero power" =>
             newVote.fullCommand = "HeroPower"
           case HERO_POWER_COMMAND(target) =>
             newVote.firstCommand = "HeroPower"
             target match {
               case MY_REGEX_NUMBER(targetPos) =>
-                newVote.target = targetPos.toInt
+                newVote.friendlyTarget = targetPos.toInt
                 newVote.secondCommand = "WithFriendlyTarget"
               case HIS_REGEX_NUMBER(targetPos) =>
-                newVote.target = targetPos.toInt
+                newVote.enemyTarget = targetPos.toInt
                 newVote.secondCommand = "WithEnemyTarget"
               case "my face" =>
                 newVote.secondCommand = "WithFriendlyFace"
@@ -378,43 +383,49 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
     val voteCodeMap = Map[String, Constants.ActionVoteCodes.ActionVoteCode](
 
       "Discover" -> Constants.ActionVoteCodes.Discover(vote.card),
-      "CardPlayWithFriendlyOption" -> Constants.ActionVoteCodes.CardPlayWithFriendlyOption(vote.card, vote.battlecry),
+      "CardPlay" -> Constants.ActionVoteCodes.CardPlay(vote.card),
+      "CardPlayWithFriendlyOption" -> Constants.ActionVoteCodes.CardPlayWithFriendlyOption(vote.card, vote.friendlyTarget),
       "CardPlayWithFriendlyFaceOption" -> Constants.ActionVoteCodes.CardPlayWithFriendlyFaceOption(vote.card),
-      "CardPlayWithEnemyOption" -> Constants.ActionVoteCodes.CardPlayWithEnemyFaceOption(vote.card),
+      "CardPlayWithEnemyOption" -> Constants.ActionVoteCodes.CardPlayWithEnemyOption(vote.card, vote.enemyTarget),
       "CardPlayWithEnemyFaceOption" -> Constants.ActionVoteCodes.CardPlayWithEnemyFaceOption(vote.card),
-      "CardPlayWithFriendlyOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithFriendlyOptionWithPosition(vote.card, vote.target, vote.spot),
+      "CardPlayWithFriendlyOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithFriendlyOptionWithPosition(vote.card, vote.friendlyTarget, vote.spot),
       "CardPlayWithFriendlyFaceOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithFriendlyFaceOptionWithPosition(vote.card, vote.spot),
-      "CardPlayWithEnemyOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithEnemyOptionWithPosition(vote.card, vote.target, vote.spot),
+      "CardPlayWithEnemyOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithEnemyOptionWithPosition(vote.card, vote.enemyTarget, vote.spot),
       "CardPlayWithEnemyFaceOptionWithPosition" -> Constants.ActionVoteCodes.CardPlayWithEnemyFaceOptionWithPosition(vote.card, vote.spot),
       "CardPlayWithPosition" -> Constants.ActionVoteCodes.CardPlayWithPosition(vote.card, vote.spot),
-      "CardPlayWithFriendlyTarget" -> Constants.ActionVoteCodes.CardPlayWithFriendlyBoardTarget(vote.card, vote.target),
-      "CardPlayWithEnemyTarget" -> Constants.ActionVoteCodes.CardPlayWithEnemyBoardTarget(vote.card, vote.target),
+      "CardPlayWithFriendlyTarget" -> Constants.ActionVoteCodes.CardPlayWithFriendlyBoardTarget(vote.card, vote.friendlyTarget),
+      "CardPlayWithEnemyTarget" -> Constants.ActionVoteCodes.CardPlayWithEnemyBoardTarget(vote.card, vote.enemyTarget),
       "CardPlayWithFriendlyFaceTarget" -> Constants.ActionVoteCodes.CardPlayWithFriendlyFaceTarget(vote.card),
       "HeroPower" -> Constants.ActionVoteCodes.HeroPower(),
       "HeroPowerWithEnemyFace" -> Constants.ActionVoteCodes.HeroPowerWithEnemyFace(),
-      "HeroPowerWithEnemyTarget" -> Constants.ActionVoteCodes.HeroPowerWithEnemyTarget(vote.target),
+      "HeroPowerWithEnemyTarget" -> Constants.ActionVoteCodes.HeroPowerWithEnemyTarget(vote.enemyTarget),
       "HeroPowerWithFriendlyFace" -> Constants.ActionVoteCodes.HeroPowerWithFriendlyFace(),
-      "HeroPowerWithFriendlyTarget" -> Constants.ActionVoteCodes.HeroPowerWithFriendlyTarget(vote.target),
-      "NormalAttackWithEnemyTarget" -> Constants.ActionVoteCodes.NormalAttack(vote.spot, vote.target),
-      "NormalAttackWithEnemyFaceTarget" -> Constants.ActionVoteCodes.NormalAttackToFace(vote.spot),
-      "FaceAttackWithEnemyTarget" -> Constants.ActionVoteCodes.FaceAttack(vote.spot),
+      "HeroPowerWithFriendlyTarget" -> Constants.ActionVoteCodes.HeroPowerWithFriendlyTarget(vote.friendlyTarget),
+      "NormalAttackWithEnemyTarget" -> Constants.ActionVoteCodes.NormalAttack(vote.friendlyTarget, vote.enemyTarget),
+      "NormalAttackWithEnemyFaceTarget" -> Constants.ActionVoteCodes.NormalAttackToFace(vote.friendlyTarget),
+      "FaceAttackWithEnemyTarget" -> Constants.ActionVoteCodes.FaceAttack(vote.enemyTarget),
       "FaceAttackWithEnemyFaceTarget" -> Constants.ActionVoteCodes.FaceAttackToFace()
     )
 
     if (vote.fullCommand != "") {
+      vote.actionVoteCode = voteCodeMap(vote.fullCommand)
       vote.voteCode = voteCodeMap(vote.fullCommand)
     }
     else {
       logger.debug("Attempting to assign voteCode to a vote with an uninit fullCommand")
     }
 
+
+
+    //  1   ,  3
+
   }
 
-  def ParseMulligan(vote: String): Constants.ActionVoteCodes.MulliganVote = {
-    val ONE = """(\d+)""".r
-    val TWO = """(\d+), (\d+)""".r
-    val THREE = """(\d+), (\d+), (\d+)""".r
-    val FOUR = """(\d+), (\d+), (\d+), (\d+)""".r
+  def ParseMulligan(sender: String, vote: String): Constants.ActionVoteCodes.MulliganVote = {
+    val ONE = """.*(\d).*""".r
+    val TWO = """.*(\d).*,.*(\d).*""".r
+    val THREE = """.*(\d).*,.*(\d).*,.*(\d).*""".r
+    val FOUR = """.*(\d).*,.*(\d).*,.*(\d).*,.*(\d).*""".r
 
     vote match {
       case FOUR(first, second, third, fourth) =>
@@ -575,6 +586,12 @@ class IrcBot(voteManager: VoteManager, theBrain: TheBrain) extends PircBot with 
 
 
         return Constants.ActionVoteCodes.MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+      case _ =>
+        logger.debug("Unexpected mulligan string " + vote)
+        logger.debug("Creating empty vote to match return type")
+
+        return Constants.ActionVoteCodes.MulliganVote(false, false, false, false)
     }
   }
 }

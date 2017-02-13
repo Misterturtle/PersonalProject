@@ -5,11 +5,21 @@ import java.io._
 import akka.actor.{Actor, ActorSystem}
 import akka.event.LoggingReceive
 import com.typesafe.scalalogging.LazyLogging
-import tph.LogFileEvents._
 
 import scala.collection.mutable._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+
+
+object GameStatus {
+
+  def GetGameStatus(): Array[Player] = {
+    GetGameStatus()
+  }
+
+
+}
+
 
 
 class GameStatus(theBrain: TheBrain) extends LazyLogging {
@@ -218,8 +228,8 @@ class GameStatus(theBrain: TheBrain) extends LazyLogging {
     }
   }
 
-  def CardDeath(name: String, id: Int, zonePos: Int, player: Int): Unit = {
-    //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
+  def CardDeath(name: String, id: Int, player: Int): Unit = {
+    //"""^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=\d+ .+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
     var index = -2
     if (player == me.player) {
       index = me.board.indexWhere(_.id == id)
@@ -247,12 +257,12 @@ class GameStatus(theBrain: TheBrain) extends LazyLogging {
     }
   }
 
-  def FriendlyMinionControlled(name: String, id: Int): Unit = {
+  def FriendlyMinionControlled(name: String, id: Int, zonePos: Int): Unit = {
     var index = -2
-    index = him.board.indexWhere(_.id == id)
+    index = me.board.indexWhere(_.id == id)
     if (index >= 0) {
-      me.board.append(him.board(index))
-      him.board.remove(index)
+      him.board.append(me.board(index))
+      me.board.remove(index)
     }
   }
 
@@ -272,6 +282,15 @@ class GameStatus(theBrain: TheBrain) extends LazyLogging {
     }
   }
 
+  def EnemyMinionControlled(name: String, id: Int, zonePos: Int): Unit = {
+    var index = -2
+    index = him.board.indexWhere(_.id == id)
+    if (index >= 0) {
+      me.board.append(him.board(index))
+      him.board.remove(index)
+    }
+  }
+
 
   //Neutral Events
 
@@ -279,6 +298,7 @@ class GameStatus(theBrain: TheBrain) extends LazyLogging {
 
     if (player == me.player &&
       me.hand.indexWhere(_.id == id) == -1) {
+      //Makes sure it isn't already in your hand.
       // Prevents bug of drawing a returned card
       var drawnCard: Card = new Card()
       drawnCard.name = name
@@ -289,8 +309,9 @@ class GameStatus(theBrain: TheBrain) extends LazyLogging {
     }
 
     if (player == him.player
-      && him.hand.indexWhere(_.id == id) == -1 // Prevents bug where a returned enemy card is "drawn" again
-    ) {
+      && him.hand.indexWhere(_.id == id) == -1) {
+      // Prevents bug where a returned enemy card is "drawn" again
+      //Makes sure it isn't already in his hand.
       var drawnCard: Card = new Card()
       drawnCard.id = id
       drawnCard.zone = "HAND"
@@ -632,43 +653,37 @@ class Player() {
   var player:Int = -1
   var faceValue = 0
 
-  def deepCopy(): Tuple4[_,_,_,_] ={
+  def deepCopy(): Tuple4[Array[Card], Array[Card], Int, Int] = {
 
     val copiedHand = new Array[Card](hand.length)
     val copiedBoard = new Array[Card](board.length)
-    val copiedPlayerValue = this.player
-    val copiedPlayerFaceValue = this.faceValue
+    var copiedPlayerValue = 0
+    var copiedPlayerFaceValue = 0
+    copiedPlayerValue = this.player
+    copiedPlayerFaceValue = this.faceValue
+
+
 
 
     for (a <- 0 until hand.length)
       {
-        val copiedCardName = hand(a).name
-        val copiedCardID = hand(a).id
-        val copiedCardZone = hand(a).zone
-        val copiedCardHandPostion = hand(a).handPosition
-        val copiedCardBoardPosition = hand(a).boardPosition
         val copiedCard = new Card()
-        copiedCard.name = copiedCardName
-        copiedCard.id = copiedCardID
-        copiedCard.zone = copiedCardZone
-        copiedCard.handPosition = copiedCardHandPostion
-        copiedCard.boardPosition = copiedCardBoardPosition
+        copiedCard.name = hand(a).name
+        copiedCard.id = hand(a).id
+        copiedCard.zone = hand(a).zone
+        copiedCard.handPosition = hand(a).handPosition
+        copiedCard.boardPosition = hand(a).boardPosition
         copiedHand(a) = copiedCard
       }
 
     for (a <- 0 until board.length)
     {
-      val copiedCardName = board(a).name
-      val copiedCardID = board(a).id
-      val copiedCardZone = board(a).zone
-      val copiedCardHandPostion = board(a).handPosition
-      val copiedCardBoardPosition = board(a).boardPosition
       val copiedCard = new Card()
-      copiedCard.name = copiedCardName
-      copiedCard.id = copiedCardID
-      copiedCard.zone = copiedCardZone
-      copiedCard.handPosition = copiedCardHandPostion
-      copiedCard.boardPosition = copiedCardBoardPosition
+      copiedCard.name = board(a).name
+      copiedCard.id = board(a).id
+      copiedCard.zone = board(a).zone
+      copiedCard.handPosition = board(a).handPosition
+      copiedCard.boardPosition = board(a).boardPosition
       copiedBoard(a) = copiedCard
     }
 

@@ -1,5 +1,6 @@
 package tph
 
+import tph.Constants.ActionVoteCodes
 import tph.Constants.ActionVoteCodes.ActionVoteCode
 
 import scala.collection.mutable
@@ -15,8 +16,7 @@ class ActionVoteList extends VoteList {
   val lockedVoteList = new LockedVoteList()
   val tallyMap = scala.collection.mutable.Map[String, Vote]()
 
-  var bindActive = false
-  var lockedActive = false
+  var activeVoter = false
 
 
   override def AddVote(vote: ActionVote): Unit = {
@@ -25,56 +25,88 @@ class ActionVoteList extends VoteList {
     vote.Init()
 
 
-    if (!bindActive && !lockedActive && !voteAdded) {
+    if (!bindVoteList.active && !lockedVoteList.active && !voteAdded) {
       vote.voteCode match {
         case Constants.ActionVoteCodes.Bind() =>
-          bindActive = true
+          bindVoteList.Activate()
+          lockedVoteList.Deactivate()
           voteAdded = true
 
         case Constants.ActionVoteCodes.Future() =>
-          lockedActive = true
+          lockedVoteList.Activate()
+          bindVoteList.Deactivate()
           voteAdded = true
 
         case _ =>
-          normalVoteList.AddVote(vote)
-          voteAdded = true
+          val normDupVote = normalVoteList.voteList.find(_.voteCode == vote.voteCode)
+          var bindDupVote = false
+
+          bindVoteList.blocks foreach {
+            case block =>
+              block.voteList foreach {
+                case vote2 =>
+                  if (vote2.actionVoteCode == vote.actionVoteCode)
+                    bindDupVote = true
+              }
+          }
+
+
+          if (normDupVote == None && !bindDupVote) {
+            normalVoteList.AddVote(vote)
+            voteAdded = true
+            activeVoter = true
+            bindVoteList.Deactivate()
+            lockedVoteList.Deactivate()
+
+          }
       }
     }
 
-    if (bindActive && !voteAdded) {
+    if (bindVoteList.active && !voteAdded) {
       vote.voteCode match {
         case Constants.ActionVoteCodes.Bind() =>
-          bindActive = true
           voteAdded = true
+          lockedVoteList.Deactivate()
 
         case Constants.ActionVoteCodes.Future() =>
-          lockedActive = true
+          bindVoteList.Deactivate()
+          lockedVoteList.Activate()
           voteAdded = true
 
         case _ =>
-          bindActive = false
+
+
           voteAdded = true
           bindVoteList.AddVote(vote)
+          activeVoter = true
+          bindVoteList.Deactivate()
+          lockedVoteList.Deactivate()
       }
     }
-    if (lockedActive && !voteAdded) {
+
+    if (lockedVoteList.active && !voteAdded) {
 
       vote.voteCode match {
         case Constants.ActionVoteCodes.Bind() =>
-          bindActive = true
+          bindVoteList.Activate()
+          lockedVoteList.Deactivate()
           voteAdded = true
 
         case Constants.ActionVoteCodes.Future() =>
-          lockedActive = true
+          lockedVoteList.Activate()
+          bindVoteList.Deactivate()
           voteAdded = true
 
         case _ =>
-          lockedActive = false
+
+
           voteAdded = true
           lockedVoteList.AddVote(vote)
+          activeVoter = true
+          bindVoteList.Deactivate()
+          lockedVoteList.Deactivate()
+
       }
-
-
     }
   }
 
@@ -91,6 +123,8 @@ class ActionVoteList extends VoteList {
     normalVoteList.Reset()
     bindVoteList.Reset()
     lockedVoteList.Reset()
+
+    activeVoter = false
   }
 
   def GetNumberOfTurns(): Int = {
@@ -100,30 +134,45 @@ class ActionVoteList extends VoteList {
     normalVoteList.voteList foreach {
 
       case vote =>
-        vote.voteCode match {
+        vote.actionVoteCode match {
 
           case x: ActionVoteCode =>
+            if (vote.actionVoteCode != Constants.ActionVoteCodes.ActionUninit())
             numberOfTurns += 1
+          case _ =>
         }
     }
 
-    bindVoteList.voteList foreach {
+    bindVoteList.blocks foreach {
+      case block =>
 
-      case vote =>
-        vote.voteCode match {
+        block.voteList foreach {
+          case vote =>
 
-          case x: ActionVoteCode =>
-            numberOfTurns += 1
+            vote.actionVoteCode match {
+
+              case x: ActionVoteCode =>
+
+                if (vote.actionVoteCode != Constants.ActionVoteCodes.ActionUninit())
+                  numberOfTurns += 1
+              case _ =>
+            }
         }
     }
 
-    lockedVoteList.voteList foreach {
+    lockedVoteList.blocks foreach {
+      case block =>
 
-      case vote =>
-        vote.voteCode match {
+        block.voteList foreach {
+          case vote =>
 
-          case x: ActionVoteCode =>
-            numberOfTurns += 1
+            vote.voteCode match {
+
+              case x: ActionVoteCode =>
+                if (vote.actionVoteCode != Constants.ActionVoteCodes.ActionUninit())
+                  numberOfTurns += 1
+              case _ =>
+            }
         }
     }
     numberOfTurns
@@ -134,21 +183,10 @@ class ActionVoteList extends VoteList {
 
 
     //Extract Frozen Players from frozen game status
-    val oldPlayers = previousGameStatus.GetFrozenPlayers()
-    val newPlayers = currentGameStatus.GetFrozenPlayers()
-
-    //Create Change Map from old status to new status
-    //Based on ID's, hand/board positions are mapped to new values
-    val myHandChangeMap = CreateChangeMap(oldPlayers(0), newPlayers(0), true)
-    val myBoardChangeMap = CreateChangeMap(oldPlayers(0), newPlayers(0), false)
-    val hisBoardChangeMap = CreateChangeMap(oldPlayers(1), newPlayers(1), false)
-    val hisHandChangeMap = CreateChangeMap(oldPlayers(1), newPlayers(1), true)
+    val oldPlayers = previousGameStatus.frozenPlayers
+    val newPlayers = currentGameStatus.frozenPlayers
 
 
-    //Each votelist should adjust votes differently, but all use same ChangeMap
-    normalVoteList.AdjustVotes(myHandChangeMap, myBoardChangeMap, hisHandChangeMap, hisBoardChangeMap)
-    bindVoteList.AdjustVotes(myHandChangeMap, myBoardChangeMap, hisHandChangeMap, hisBoardChangeMap)
-    lockedVoteList.AdjustVotes(myHandChangeMap, myBoardChangeMap, hisHandChangeMap, hisBoardChangeMap)
 
 
 
@@ -167,7 +205,6 @@ class ActionVoteList extends VoteList {
           if (oldHandPosition != newHandPosition) {
             changedLocationMap(oldHandPosition) = newHandPosition
           }
-
         }
         return changedLocationMap
       }
@@ -203,11 +240,29 @@ class ActionVoteList extends VoteList {
 
       val index = player.hand.indexWhere(_.id == id)
       if (index >= 0) {
-        val position = player.board(index).boardPosition
+        val position = player.hand(index).handPosition
         position
       }
       else Constants.UNINIT
     }
+
+
+
+    //Create Change Map from old status to new status
+    //Based on ID's, hand/board positions are mapped to new values
+    val myHandChangeMap = CreateChangeMap(oldPlayers(0), newPlayers(0), true)
+    val myBoardChangeMap = CreateChangeMap(oldPlayers(0), newPlayers(0), false)
+    val hisBoardChangeMap = CreateChangeMap(oldPlayers(1), newPlayers(1), false)
+    val hisHandChangeMap = CreateChangeMap(oldPlayers(1), newPlayers(1), true)
+
+
+    //Each votelist should adjust votes differently, but all use same ChangeMap
+    normalVoteList.AdjustVotes(myHandChangeMap, myBoardChangeMap, hisHandChangeMap, hisBoardChangeMap)
+    bindVoteList.AdjustVotes(myHandChangeMap, myBoardChangeMap, hisHandChangeMap, hisBoardChangeMap)
+    lockedVoteList.AdjustVotes(myHandChangeMap, myBoardChangeMap, hisHandChangeMap, hisBoardChangeMap)
+
+
+
   }
 
 
@@ -247,6 +302,17 @@ class ActionVoteList extends VoteList {
         else tallyMap(vote) = value
     }
 
+
+    if (!tallyMap.isEmpty) {
+      val default = (ActionVoteCodes.ActionUninit(), Constants.UNINIT)
+      val highestValue = tallyMap.values.max
+      val chosenVoteCode = tallyMap.find(_._2 == highestValue).getOrElse(default)._1
+
+      if (chosenVoteCode == Constants.ActionVoteCodes.ActionUninit()) {
+        tallyMap.remove(chosenVoteCode)
+        return tallyMap
+      }
+    }
     return tallyMap
 
 

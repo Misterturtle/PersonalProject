@@ -1,12 +1,6 @@
 package tph.research
 
-import java.io.BufferedReader
-import java.util.Scanner
-
-import tph.Constants.ActionVoteCodes.Greetings
-
-import scala.collection.mutable
-import tph.{Constants, Controller}
+import tph.Constants
 
 
 /**

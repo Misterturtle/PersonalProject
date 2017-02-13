@@ -6,7 +6,6 @@ import akka.actor._
 import akka.pattern.ask
 import akka.util.Timeout
 import org.apache.commons.io.FileUtils
-import tph.Main._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -98,13 +97,13 @@ class TDD (system: ActorSystem) extends Actor with akka.actor.ActorLogging {
       log.warning(fileName + " Passed")
       testFileReader ! "CLEAR_STATUS"
       testFileReader ! PoisonPill
-      return true
+      true
     }
     if (!results){
       log.warning(fileName + " Failed")
     testFileReader ! "CLEAR_STATUS"
     testFileReader ! PoisonPill
-    return false
+      false
   }
   }
 

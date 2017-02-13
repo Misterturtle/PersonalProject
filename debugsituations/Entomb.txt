@@ -24342,8 +24342,11 @@ FSM not Preprocessed: ShowEvent : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
+
+**
 [Zone] ZoneChangeList.ProcessChanges() - id=40 local=False [name=Knife Juggler id=19 zone=PLAY zonePos=3 cardId=NEW1_019 player=2] zone from OPPOSING PLAY -> FRIENDLY PLAY
- 
+ **
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=3 change=powerTask=[power=[type=HIDE_ENTITY entity=[id=19 cardId=NEW1_019 name=Knife Juggler] zone=2] complete=False] entity=[name=Knife Juggler id=19 zone=PLAY zonePos=3 cardId=NEW1_019 player=2] srcZoneTag=INVALID srcPos= dstZoneTag=DECK dstPos=

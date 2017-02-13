@@ -1,7 +1,7 @@
 package tph.StateManagement
 
 import tph.Constants._
-import tph.TheBrain
+import tph.{Constants, TheBrain}
 
 /**
   * Created by Harambe on 1/22/2017.
@@ -12,6 +12,10 @@ class InGame(theBrain: TheBrain) extends State {
   var discoverOptions = 0
 
   def Activate(): Unit = {
-    theBrain.StartGame()
+    if (theBrain.logFileReader.readerReady) {
+      logger.debug("Activating In Game Status")
+      theBrain.ircLogic.StartGame()
+      theBrain.ChangeMenu(Constants.MenuNames.IN_GAME)
+    }
   }
 }
