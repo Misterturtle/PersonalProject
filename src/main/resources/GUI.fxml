@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tph.GUI.GUIDebugWindow">
+    <children>
+        <VBox alignment="CENTER" fillWidth="false" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox id="Enemy Hand" VBox.vgrow="ALWAYS">
+                    <children>
+                        <FlowPane fx:id="enemyHand" alignment="TOP_CENTER" hgap="10.0" prefWrapLength="800.0"
+                                  vgap="10.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox>
+                                    <children>
+                                        <MenuButton alignment="TOP_LEFT" mnemonicParsing="false" text="Enemy Hand Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Enemy Hand Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Enemy Hand Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </FlowPane>
+                    </children>
+                </HBox>
+                <HBox VBox.vgrow="ALWAYS">
+                    <children>
+                        <FlowPane fx:id="enemyBoard" alignment="TOP_CENTER" prefWrapLength="800.0" rowValignment="TOP">
+                            <children>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Enemy Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Enemy Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Enemy Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </FlowPane>
+                    </children>
+                </HBox>
+                <HBox VBox.vgrow="ALWAYS">
+                    <children>
+                        <FlowPane fx:id="friendlyBoard" alignment="CENTER" hgap="10.0" prefWrapLength="800.0"
+                                  vgap="10.0">
+                            <children>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Board Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </FlowPane>
+                    </children>
+                </HBox>
+                <HBox VBox.vgrow="NEVER">
+                    <children>
+                        <FlowPane fx:id="friendlyHand" alignment="BOTTOM_CENTER" hgap="10.0" prefWrapLength="800.0"
+                                  vgap="10.0">
+                            <children>
+                                <HBox>
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Friendly Hand Card">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Card Name:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card ID:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Hand Position:"/>
+                                                <MenuItem mnemonicParsing="false" text="Card Board Position:"/>
+                                            </items>
+                                        </MenuButton>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </FlowPane>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
