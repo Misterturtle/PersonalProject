@@ -8,6 +8,9 @@ import scala.collection.mutable.ListBuffer
   */
 object Constants {
 
+  val INT_UNINIT = -5
+  val STRING_UNINIT = "Constant Uninitialized"
+  val booleanToIntMap = Map[Boolean, Int](true -> 1, false -> 0)
 
   object StateSignatures {
 
@@ -17,6 +20,41 @@ object Constants {
     val hisTurnSignature = "His Turn"
     val myTurnSignature = "My Turn"
     val inMulliganSignature = "In Mulligan"
+  }
+
+
+  object FunctionalConstants {
+
+    def RepeatFunction[A](f: A => A, startingParameter: A, startIteration: Int, endIteration: Int): A = {
+      if (startIteration < endIteration) {
+        RepeatFunction(f, f(startingParameter), startIteration + 1, endIteration)
+      }
+      else {
+        println("End function result is: " + f(startingParameter))
+        f(startingParameter)
+      }
+    }
+
+    def UnwrapMultiSome(option: Option[_]): Option[_] = {
+      option match {
+        case Some(x) =>
+          x match {
+            case Some(someOption: Option[_]) =>
+              println("Unwrapping once")
+              UnwrapMultiSome(someOption)
+
+            case trueValue =>
+              println("Returning Some(trueValue)" + trueValue)
+              Some(trueValue)
+
+            case None =>
+              println("This should never happen. Returning None value for UnwrapMultiSome")
+              None
+          }
+        case None => println("This should never happen. Returning None value for UnwrapMultiSome")
+          None
+      }
+    }
   }
 
 
@@ -32,10 +70,6 @@ object Constants {
     val SHOP_MENU = "Shop Menu"
     val OPEN_PACKS_MENU = "Open Packs Menu"
   }
-
-
-
-  val UNINIT = -5
 
   case class UninitVoteCode() extends VoteCode
 
@@ -60,13 +94,11 @@ object Constants {
 
     sealed trait ActionVoteCode extends VoteCode {
 
-      var positionVote = Constants.UNINIT
-      var cardVote = Constants.UNINIT
-      var friendlyTargetVote = Constants.UNINIT
-      var enemyTargetVote = Constants.UNINIT
+      var positionVote = Constants.INT_UNINIT
+      var cardVote = Constants.INT_UNINIT
+      var friendlyTargetVote = Constants.INT_UNINIT
+      var enemyTargetVote = Constants.INT_UNINIT
     }
-
-
 
 
     //Discover Type
@@ -232,7 +264,7 @@ object Constants {
     sealed trait MenuVoteCode extends VoteCode {
       def menu: String
 
-      var numberOption = Constants.UNINIT
+      var numberOption = Constants.INT_UNINIT
     }
 
 
@@ -255,7 +287,6 @@ object Constants {
     case class Collection(currentMenu: String) extends MenuVoteCode {
       val menu = currentMenu
     }
-
 
 
     //Main Menu
@@ -365,10 +396,11 @@ object Constants {
     case class DebugPrintPower(source: String, pad: String, text: String) extends LogFileEvent
 
     case class PrintState(fileName: String) extends LogFileEvent
+
   }
 
 
-  object CommandVotes{
+  object CommandVotes {
 
     val DISCOVER = "Discover"
 
@@ -400,7 +432,6 @@ object Constants {
     val HERO_POWER_WITH_ENEMY_TARGET = "HeroPowerWithEnemyTarget"
     val HERO_POWER_WITH_FRIENDLY_FACE = "HeroPowerWithFriendlyFace"
     val HERO_POWER_WITH_FRIENDLY_TARGET = "HeroPowerWithFriendlyTarget"
-
 
 
     //Attack Type

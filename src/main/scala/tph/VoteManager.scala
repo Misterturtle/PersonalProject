@@ -14,6 +14,11 @@ import scala.collection.mutable.ListBuffer
 
 class VoteManager extends LazyLogging {
 
+
+  def curry[A, B, C](f(a: A, B
+
+  :: => A => B => C)
+
   var tallyActionMap = mutable.Map[ActionVote, Int]()
   val tallyMenuMap = mutable.Map[MenuVote, Int]()
   val tallyMulliganMap = mutable.Map[String, Int]()
@@ -130,7 +135,7 @@ class VoteManager extends LazyLogging {
     //Voters then combine the vote values. (How much they're worth)
     //Voters then report a map of [Vote, Int] to this message
 
-    val default = (ActionVoteCodes.ActionUninit(), Constants.UNINIT)
+    val default = (ActionVoteCodes.ActionUninit(), Constants.INT_UNINIT)
     val tallyMap = TallyActionVotes()
     //
 
@@ -214,7 +219,7 @@ class VoteManager extends LazyLogging {
       uninitDecision
     }
     else {
-      val default = (EmojiVoteCodes.EmojiUninit(), Constants.UNINIT)
+      val default = (EmojiVoteCodes.EmojiUninit(), Constants.INT_UNINIT)
       val highestValue: Int = tallyEmojiMap.values.max
       val chosenVoteCode = tallyEmojiMap.find(_._2 == highestValue).getOrElse(default)._1
 
@@ -268,7 +273,7 @@ class VoteManager extends LazyLogging {
     }
 
 
-    val default = (MenuVoteCodes.MenuUninit(), Constants.UNINIT)
+    val default = (MenuVoteCodes.MenuUninit(), Constants.INT_UNINIT)
     if (tallyMenuMap.nonEmpty) {
       val highestValue = tallyMenuMap.values.max
       val chosenVoteCode = tallyMenuMap.find(_._2 == highestValue).getOrElse(default)._1

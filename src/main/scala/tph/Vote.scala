@@ -13,7 +13,7 @@ class Vote(ircSender: String, origVoteCode: Constants.VoteCode) {
 
   val sender = ircSender
   var voteCode = origVoteCode
-  var voteValue = Constants.UNINIT
+  var voteValue = Constants.INT_UNINIT
 
 
 

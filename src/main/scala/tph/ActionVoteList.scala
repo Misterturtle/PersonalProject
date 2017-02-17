@@ -233,7 +233,7 @@ class ActionVoteList extends VoteList {
         position
       }
 
-      else Constants.UNINIT
+      else Constants.INT_UNINIT
     }
 
     def HandPositionOfID(player: FrozenPlayer, id: Int): Int = {
@@ -243,7 +243,7 @@ class ActionVoteList extends VoteList {
         val position = player.hand(index).handPosition
         position
       }
-      else Constants.UNINIT
+      else Constants.INT_UNINIT
     }
 
 
@@ -304,7 +304,7 @@ class ActionVoteList extends VoteList {
 
 
     if (!tallyMap.isEmpty) {
-      val default = (ActionVoteCodes.ActionUninit(), Constants.UNINIT)
+      val default = (ActionVoteCodes.ActionUninit(), Constants.INT_UNINIT)
       val highestValue = tallyMap.values.max
       val chosenVoteCode = tallyMap.find(_._2 == highestValue).getOrElse(default)._1
 

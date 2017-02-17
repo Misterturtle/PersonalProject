@@ -24,11 +24,11 @@ class GUIDebugWindow(private val enemyBoard: FlowPane,
   CreateEnemyBoard()
 
 
-  def CreateEnemyBoard(): Unit = {
+  def CreateEnemyBoard(theBrain: TheBrain): Unit = {
 
     import tph.GameStatus
 
-    val gameStatus = GameStatus.GetGameStatus()
+    val gameStatus = theBrain.gameStatus.GetGameStatus()
 
     for (a <- 0 until gameStatus(1).board.size) {
 

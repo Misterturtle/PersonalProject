@@ -1,14 +1,19 @@
 package tph
 
 import java.io.File
-import java.util.concurrent.TimeUnit
 
-import akka.actor.{ActorSystem, ActorRef, Props, Actor}
-import akka.event.LoggingReceive
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
+import tph.GUI.GUIDebugInterface
+import tph.Main._
 import tph.StateManagement._
 import tph.tests.MockHearthstone
+
+import scalafx.application.JFXApp
+import scalafx.scene.Scene
+import scalafx.stage.Stage
+import scalafxml.core.{NoDependencyResolver, FXMLLoader}
+import scalafx.Includes._
 
 /**
   * Created by Harambe on 1/24/2017.
@@ -27,6 +32,7 @@ class TheBrain(testModeActive: Boolean) extends LazyLogging {
   val ircLogic = new ircLogic(this, hearthstone)
   val logFileReader = new LogFileReader(new File(config.getString("tph.game-log.file")), gameStatus, this)
   val mockHearthstone = new MockHearthstone(this)
+  val GUI = CreateGUI()
 
   //Create All States
   lazy val initState = new InitState(this)
@@ -42,6 +48,33 @@ class TheBrain(testModeActive: Boolean) extends LazyLogging {
   var previousMenu = "Uninit"
   var currentStatus: State = initState
 
+
+  def CreateGUI(): Stage = {
+
+    println("TPH finished setting up. Starting GUI Debug Window")
+
+    val loader = new FXMLLoader(getClass.getResource("/GUIDebugWindow.fxml"), NoDependencyResolver)
+    loader.load()
+
+    val root = loader.getRoot[javafx.scene.Parent]
+    println(s"root is $root")
+    println("root class is " + root.getClass())
+
+
+    val controller = loader.getController[GUIDebugInterface]
+    println("controller is " + controller)
+
+
+
+    stage = new JFXApp.PrimaryStage() {
+
+      println("Setting stage and scene")
+      title = "Twitch Plays Hearthstone"
+      scene = new Scene(root)
+    }
+
+    stage
+  }
 
 
   def GetGameStatus(): FrozenGameStatus = {

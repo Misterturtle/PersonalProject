@@ -49,7 +49,6 @@ class MyTurn(ircLogic: ircLogic, theBrain: TheBrain) extends State with LazyLogg
     if (theBrain.logFileReader.readerReady) {
       logger.debug("Activating My Turn Status")
       //TestBrain calls Decide() directly.
-      //TurnStart() causes a 2nd Decide() when testing
       theBrain.voteManager.Reset()
       if (!theBrain.testMode)
         ircLogic.TurnStart()

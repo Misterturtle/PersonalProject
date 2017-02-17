@@ -13,10 +13,6 @@ import scala.concurrent.duration._
 
 object GameStatus {
 
-  def GetGameStatus(): Array[Player] = {
-    GetGameStatus()
-  }
-
 
 }
 
@@ -592,7 +588,7 @@ class GameStatus(theBrain: TheBrain) extends LazyLogging {
       player.board.remove(index)
   }
 
-  def GetGameStatus(): Array[Player] = {
+  def ReportGameStatus(): Array[Player] = {
 
     val currentGameStatus = new Array[Player](2)
 

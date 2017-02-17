@@ -58,7 +58,7 @@ class LockedVoteList extends VoteList with LazyLogging {
               //If the card vote is in the ChangeMap
               if (myHandChangeMap.contains(vote.card)) {
                 //If the new mapped value is UNINIT(Meaning the card is no longer in the hand)
-                if (myHandChangeMap(vote.card) == Constants.UNINIT)
+                if (myHandChangeMap(vote.card) == Constants.INT_UNINIT)
                   this.RemoveVote(vote)
                 else {
                   //If there is a new mapped value, change the vote card value
@@ -74,7 +74,7 @@ class LockedVoteList extends VoteList with LazyLogging {
               //Friendly spot(position) adjustment
               if (myBoardChangeMap.contains(vote.spot)) {
                 //If
-                if (myBoardChangeMap(vote.spot) != Constants.UNINIT) {
+                if (myBoardChangeMap(vote.spot) != Constants.INT_UNINIT) {
                   //Remember that "spot" is in between two minions; to the left of whatever spot value is.
                   //*** If the minion associated with vote.spot dies, the spot stays the same(since the minion was technically to the right)
                   //*** If the minion associated with vote.spot changes, the spot adjusts to the same value.
@@ -88,7 +88,7 @@ class LockedVoteList extends VoteList with LazyLogging {
               //Friendly target adjustment
               if (myBoardChangeMap.contains(vote.friendlyTarget)) {
                 //If the friendly minion has died
-                if (myBoardChangeMap(vote.friendlyTarget) == Constants.UNINIT) {
+                if (myBoardChangeMap(vote.friendlyTarget) == Constants.INT_UNINIT) {
                   //Remove the vote
                   this.RemoveVote(vote)
                 }
@@ -105,7 +105,7 @@ class LockedVoteList extends VoteList with LazyLogging {
               //Enemy target adjustment
               if (hisBoardChangeMap.contains(vote.enemyTarget)) {
                 //If the enemy minion has died
-                if (hisBoardChangeMap(vote.enemyTarget) == Constants.UNINIT) {
+                if (hisBoardChangeMap(vote.enemyTarget) == Constants.INT_UNINIT) {
                   //Remove the vote
                   this.RemoveVote(vote)
                 }

@@ -9,10 +9,10 @@ import tph.Constants.ActionVoteCodes.{ActionUninit, ActionVoteCode}
 class ActionVote(sender: String, voteCode: Constants.ActionVoteCodes.ActionVoteCode) extends Vote(sender: String, voteCode: Constants.ActionVoteCodes.ActionVoteCode) with LazyLogging {
 
 
-  var card = Constants.UNINIT
-  var spot = Constants.UNINIT
-  var friendlyTarget = Constants.UNINIT
-  var enemyTarget = Constants.UNINIT
+  var card = Constants.INT_UNINIT
+  var spot = Constants.INT_UNINIT
+  var friendlyTarget = Constants.INT_UNINIT
+  var enemyTarget = Constants.INT_UNINIT
   var firstCommand = ""
   var secondCommand = ""
   var thirdCommand = ""
