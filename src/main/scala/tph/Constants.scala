@@ -81,7 +81,7 @@ object Constants {
 
     case class ChangeReaderFile(fileName: String)
 
-    case class CommandVote(builtCommand: Vote)
+    //case class CommandVote(builtCommand: Vote)
 
     case class ChangeMenu(previousMenu: String, changeToMenu: String)
 
@@ -335,70 +335,6 @@ object Constants {
     }
 
   }
-
-  object LogFileEvents {
-
-    sealed trait LogFileEvent {}
-
-    case class TurnStartEvent(turn: Int) extends LogFileEvent
-
-    //Friendly Events
-    //case class FriendlyCardReturnEvent(name: String, id: Int, player:Int)
-    case class FriendlyMinionControlled(name: String, id: Int, zonePos: Int) extends LogFileEvent
-
-
-    //Enemy Events
-    case class EnemyCardDrawnEvent(id: Int, position: Int, player: Int) extends LogFileEvent
-
-    case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends LogFileEvent
-
-
-    //Neutral Events
-    case class DiscoverOption(option: Int) extends LogFileEvent
-
-    case class FaceAttackValueEvent(player: Int, value: Int) extends LogFileEvent
-
-    case class WeaponPlayedEvent(id: Int, player: Int) extends LogFileEvent
-
-    case class SecretPlayedEvent(id: Int, player: Int) extends LogFileEvent
-
-    case class OldZoneChangeEvent(id: Int, zone: String, player: Int, dstZone: String) extends LogFileEvent
-
-    case class ZoneChangeEvent(id: Int, player: Int, zone: String, dstZone: String) extends LogFileEvent
-
-    case class KnownCardDrawn(name: String, id: Int, position: Int, player: Int) extends LogFileEvent
-
-    case class Sap(name: String, id: Int, player: Int) extends LogFileEvent
-
-    case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends LogFileEvent
-
-    case class DefinePlayers(friendlyPlayerID: Int) extends LogFileEvent
-
-    case class CardDeath(name: String, id: Int, zonePos: Int, player: Int) extends LogFileEvent
-
-    case class MinionSummoned(name: String, id: Int, zonePos: Int, player: Int) extends LogFileEvent
-
-    case class BoardPositionChange(id: Int, player: Int, dstPos: Int) extends LogFileEvent
-
-    case class HandPositionChange(id: Int, pos: Int, player: Int, dstPos: Int) extends LogFileEvent
-
-    //case class Polymorph(newId:Int,oldId:Int ,player:Int)
-    case class Transform(oldId: Int, newId: Int) extends LogFileEvent
-
-    case class Hex(name: String, id: Int, player: Int, zonePos: Int) extends LogFileEvent
-
-
-    //Logging Events
-    case class TagChange(entity: String, tag: String, value: String) extends LogFileEvent
-
-    case class NumOptions(source: String, entity: String, value: String) extends LogFileEvent
-
-    case class DebugPrintPower(source: String, pad: String, text: String) extends LogFileEvent
-
-    case class PrintState(fileName: String) extends LogFileEvent
-
-  }
-
 
   object CommandVotes {
 
