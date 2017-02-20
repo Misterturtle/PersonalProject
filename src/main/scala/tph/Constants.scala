@@ -25,9 +25,9 @@ object Constants {
 
   object FunctionalConstants {
 
-    def RepeatFunction[A](f: A => A, startingParameter: A, startIteration: Int, endIteration: Int): A = {
-      if (startIteration < endIteration) {
-        RepeatFunction(f, f(startingParameter), startIteration + 1, endIteration)
+    def RepeatFunction[A](f: A => A, startingParameter: A, numberOfRepeats: Int, currentIteration:Int = 0): A = {
+      if (currentIteration < numberOfRepeats) {
+        RepeatFunction(f, f(startingParameter), numberOfRepeats, currentIteration +1)
       }
       else {
         println("End function result is: " + f(startingParameter))

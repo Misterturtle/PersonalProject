@@ -18,8 +18,8 @@ import Constants.FunctionalConstants._
 
 class GameState(firstPlayer: Player, secondPlayer: Player) extends LazyLogging {
 
-  val player1 = firstPlayer
-  val player2 = secondPlayer
+  val friendlyPlayer = firstPlayer
+  val enemyPlayer = secondPlayer
 
   def GetFriendlyHand(): List[Card] = {
     new LogParser().ConstructFriendlyHand()
@@ -90,27 +90,9 @@ class GameState(firstPlayer: Player, secondPlayer: Player) extends LazyLogging {
 
 case class Player(playerNumber: Int, hand: List[Card], board: List[Card]) extends LazyLogging {
 
-  def AddCard(card: Card, isHand: Boolean): List[Card] = {
+  def AddCard(card: Card, isHand: Boolean): Player = {
     if (isHand && board.contains(card))
       println("Safety check to make sure the added card is not in both the hand and board")
-
-    if (isHand) {
-      UnwrapMultiSome(RepeatFunction(ShiftCardRight, hand, card.handPosition, hand.size)) match {
-        case Some(newHand: List[Card]) =>
-          newHand
-        case None =>
-          println("Possible bug in AddCard() in Player. Returning empty hand list")
-          List(NoCards())
-      }
-    }
-    else
-      UnwrapMultiSome(RepeatFunction(ShiftCardRight, board, card.boardPosition, board.size)) match {
-        case Some(newBoard: List[Card]) =>
-          newBoard
-        case None =>
-          println("Possible bug in AddCard() in Player. Returning empty hand list")
-          List(NoCards())
-      }
 
 
     def ShiftCardRight(modifiedList: List[Card]): List[Card] = {
@@ -137,10 +119,19 @@ case class Player(playerNumber: Int, hand: List[Card], board: List[Card]) extend
         }
       }
     }
+
+    if (isHand) {
+      val newHand = RepeatFunction(ShiftCardRight, hand, (hand.size - card.handPosition) + 1)
+      new Player(playerNumber, newHand, board)
+    }
+    else {
+      val newBoard = RepeatFunction(ShiftCardRight, board, (board.size - card.boardPosition) + 1)
+      new Player(playerNumber, hand, newBoard)
+    }
   }
 
 
-  def RemoveCard(card: Card): List[Card] = {
+  def RemoveCard(card: Card): Player = {
 
     val isHand = hand.contains(card)
 
@@ -148,22 +139,6 @@ case class Player(playerNumber: Int, hand: List[Card], board: List[Card]) extend
     if (isHand && board.contains(card))
       logger.debug("BUG: Card: " + card + " is found in both the hand and board of Player:" + this)
 
-    if (isHand) {
-      UnwrapMultiSome(RepeatFunction(ShiftCardLeft, hand, card.handPosition, hand.size)) match {
-        case Some(newHand: List[Card]) =>
-          newHand
-        case None =>
-          println("Possible bug in RemoveCard() in Player. Returning empty hand list")
-          List(NoCards())
-      }
-    }
-    else {
-      UnwrapMultiSome(RepeatFunction(ShiftCardLeft, board diff List(card), card.boardPosition, board.size)) match {
-        case Some(newHand: List[Card]) =>
-          newHand
-        case None =>
-      }
-    }
 
     def ShiftCardLeft(modifiedList: List[Card]): List[Card] = {
       val tempCard = GetNextCard()
@@ -189,25 +164,26 @@ case class Player(playerNumber: Int, hand: List[Card], board: List[Card]) extend
         }
       }
     }
+
+    if (isHand) {
+      //1,2,(3),4,5
+      val removedCardHand = hand diff List(card)
+      val newHand = RepeatFunction(ShiftCardLeft, removedCardHand, hand.size - card.handPosition)
+      new Player(playerNumber, newHand, board)
+    }
+    else {
+      val removedCardBoard = board diff List(card)
+      val newBoard = RepeatFunction(ShiftCardLeft, removedCardBoard, board.size - card.boardPosition)
+      new Player(playerNumber, hand, newBoard)
+    }
   }
 }
+
 
 case class Card(name: String, id: Int, handPosition: Int, boardPosition: Int, player: Int)
 
 case class NoCards() extends Card("", -5, -5, -5, -5) {
   println("NoCards case class ran.")
-
 }
-
-val card1 = new Card ("Card1", 1, 1, - 5, 1)
-val card2 = new Card ("Card2", 2, 2, - 5, 1)
-val card3 = new Card ("Card3", 3, 3, - 5, 1)
-val card4 = new Card ("Card4", 4, 4, - 5, 1)
-val card5 = new Card ("Card5", 5, 5, - 5, 1)
-val card6 = new Card ("Card6", 6, 6, - 5, 1)
-val card7 = new Card ("Card7", 7, 7, - 5, 1)
-
-val testPlayer = new Player ()
-
 
 case class CardAddress(playerNumber: Int, isHand: Boolean, list: List[Card], index: Int)

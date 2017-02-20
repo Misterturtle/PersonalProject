@@ -57,12 +57,9 @@ object LogFileReader {
 
 
   //Controller Strings
-
   val PLAY_MENU = "FSM not Preprocessed: Hero_Armor(Clone) : FSM"
   val COLLECTION_MENU = "FSM not Preprocessed: DeckGlowAll : FSM"
   val START_UP = "FSM not Preprocessed: Startup_Hub : FSM"
-
-
 }
 
 
