@@ -16,34 +16,31 @@ import tph.Player
 
     case class KnownCardDrawn(name: String, id: Int, position: Int, player: Int) extends HSAction {
       def ExecuteAction(gameState: GameState): GameState = {
+
         if (player == gameState.friendlyPlayer.playerNumber) {
-          val playerNumber = gameState.friendlyPlayer.playerNumber
-          val friendlyBoard = gameState.friendlyPlayer.board
           val changedFriendlyPlayer: Player = gameState.friendlyPlayer.AddCard(new Card(name, id, position, Constants.INT_UNINIT, player), true)
           new GameState(changedFriendlyPlayer, gameState.enemyPlayer)
         }
         else {
-          val playerNumber = gameState.enemyPlayer.playerNumber
-          val enemyBoard = gameState.enemyPlayer.board
           val changedEnemyPlayer: Player = gameState.enemyPlayer.AddCard(new Card(name, id, position, Constants.INT_UNINIT, player), true)
           new GameState(gameState.friendlyPlayer, changedEnemyPlayer)
         }
       }
     }
-    //
-    //  case class CardDeath(name: String, id: Int, player: Int) extends HSAction {
-    //    def ExecuteAction(gameState: GameState): GameState = {
-    //      if (player == gameState.friendlyPlayer.playerNumber) {
-    //        val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
-    //      }
-    //      else {
-    //        val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-    //      }
-    //    }
-    //  }
-    //
+
+//      case class CardDeath(name: String, id: Int, player: Int) extends HSAction {
+//        def ExecuteAction(gameState: GameState): GameState = {
+//          if (player == gameState.friendlyPlayer.playerNumber) {
+//            val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
+//            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+//          }
+//          else {
+//            val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
+//            new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+//          }
+//        }
+//      }
+
     //  case class FriendlyMinionControlled(name: String, id: Int, position: Int) extends HSAction {
     //    //Friendly minion gets removed from board and added to other board
     //    def ExecuteAction(gameState: GameState): GameState = {

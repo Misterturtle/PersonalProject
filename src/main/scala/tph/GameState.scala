@@ -5,7 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 /**
   * Created by Harambe on 2/20/2017.
   */
-class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HSCard]()), secondPlayer: Player = new Player(2, List[HSCard](), List[HSCard]())) extends LazyLogging {
+case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HSCard]()), secondPlayer: Player = new Player(2, List[HSCard](), List[HSCard]())) extends LazyLogging {
 
   val friendlyPlayer = firstPlayer
   val enemyPlayer = secondPlayer
@@ -35,16 +35,16 @@ class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HSCard]
   //    GetFriendlyHand ++ GetEnemyHand ++ GetFriendlyBoard ++ GetEnemyBoard
   //  }
   //
-  //  def GetCardByID(cardID: Int): Card = {
-  //
-  //    (player1.hand ++ player1.board ++ player2.hand ++ player2.board).find(_ == cardID) match {
-  //      case Some(card) => card
-  //      case None =>
-  //        logger.debug("Not able to find card with id " + cardID)
-  //        NoCards()
-  //    }
-  //  }
-  //
+//    def GetCardByID(cardID: Int): Card = {
+//
+//      (friendlyPlayer.hand ++ friendlyPlayer.board ++ enemyPlayer.hand ++ enemyPlayer.board).find(_ == cardID) match {
+//        case Some(card) => card
+//        case None =>
+//          logger.debug("Not able to find card with id " + cardID)
+//          NoCards()
+//      }
+//    }
+
   //  def GetCardAddress(card: Card): CardAddress = {
   //
   //    CardAddress(card.player, FindList(card)._1, FindList(card)._2, FindIndex(card))
