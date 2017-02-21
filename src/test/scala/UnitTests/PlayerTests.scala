@@ -9,66 +9,96 @@ import tph.HSAction.KnownCardDrawn
   */
 class PlayerTests extends FlatSpec with Matchers {
 
-  "A Player" should "Add card to hand" in {
-    val player = new Player(1)
-    val newCard = new Card("Friendly TesterCard", 10, 5, tph.Constants.INT_UNINIT, 1)
-    player.AddCard(newCard, true) shouldEqual new Player(1, List(newCard))
 
-    val player2 = new Player(2)
-    val newEnemyCard = new Card("Enemy TesterCard", 10, tph.Constants.INT_UNINIT, 5, 1)
-    player2.AddCard(newEnemyCard, true) shouldEqual new Player(2, List(newEnemyCard))
+  import Constants.TestConstants._
+
+
+  "A Player" should "Add card" in {
+    val newFriendlyHandCard = new Card("Friendly Hand 7", 7, 3, tph.Constants.INT_UNINIT, 1)
+    val expectedFriendlyHand = List(
+      new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 3", 3, 4, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 4", 4, 5, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 5", 5, 6, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 6", 6, 7, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 7", 7, 3, Constants.INT_UNINIT, 1))
+    val actualFriendlyHand = defaultGameState.friendlyPlayer.AddCard(newFriendlyHandCard, true).hand
+
+    val newFriendlyBoardCard = new Card("Friendly Board 5", 15, Constants.INT_UNINIT, 2, 1)
+    val expectedFriendlyBoard = List(
+      new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+      new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 3, 1),
+      new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 4, 1),
+      new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 5, 1),
+      new Card("Friendly Board 5", 15, Constants.INT_UNINIT, 2, 1))
+    val actualFriendlyBoard = defaultGameState.friendlyPlayer.AddCard(newFriendlyBoardCard, false).board
+
+    val newEnemyHandCard = new Card("Enemy Hand 7", 27, 3, Constants.INT_UNINIT, 2)
+    val expectedEnemyHandCard = List(
+      new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 3", 23, 4, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 4", 24, 5, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 5", 25, 6, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 6", 26, 7, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 7", 27, 3, Constants.INT_UNINIT, 2))
+    val actualEnemyHand = defaultGameState.enemyPlayer.AddCard(newEnemyHandCard, true).hand
+
+    val newEnemyBoardCard = new Card("Enemy Board 5", 35, Constants.INT_UNINIT, 2, 2)
+    val expectedEnemyBoard = List(
+      new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+      new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 3, 2),
+      new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 4, 2),
+      new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 5, 2),
+      new Card("Enemy Board 5", 35, Constants.INT_UNINIT, 2, 2))
+    val actualEnemyBoard = defaultGameState.enemyPlayer.AddCard(newEnemyBoardCard, false).board
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHandCard
+    actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
-  it should "Add card to board" in {
-    val player = new Player(1)
-    val newCard = new Card("TesterCard", 10, tph.Constants.INT_UNINIT, 5, 1)
-    player.AddCard(newCard, false) shouldEqual new Player(1, List[HSCard](), List(newCard))
+  it should "Remove card" in {
 
 
-    val player2 = new Player(2)
-    val newEnemyCard = new Card("Enemy TesterCard", 10, tph.Constants.INT_UNINIT, 5, 2)
-    player2.AddCard(newEnemyCard, false) shouldEqual new Player(2, List[HSCard](), List(newEnemyCard))
+    val newFriendlyHandCard = new Card("Friendly Hand 3", 3, 3, tph.Constants.INT_UNINIT, 1)
+    val expectedFriendlyHand = List(
+      new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 4", 4, 3, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 5", 5, 4, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 6", 6, 5, Constants.INT_UNINIT, 1))
+    val actualFriendlyHand = defaultGameState.friendlyPlayer.RemoveCard(newFriendlyHandCard).hand
 
-  }
+    val newFriendlyBoardCard = new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1)
+    val expectedFriendlyBoard = List(
+      new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+      new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 2, 1),
+      new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 3, 1))
+    val actualFriendlyBoard = defaultGameState.friendlyPlayer.RemoveCard(newFriendlyBoardCard).board
 
-  it should "Remove card from hand" in {
+    val newEnemyHandCard = new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2)
+    val expectedEnemyHandCard = List(
+      new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 4", 24, 3, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 5", 25, 4, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 6", 26, 5, Constants.INT_UNINIT, 2))
+    val actualEnemyHand = defaultGameState.enemyPlayer.RemoveCard(newEnemyHandCard).hand
 
-    val cardBeingRemoved = new Card("Removed Card", 5, 4, tph.Constants.INT_UNINIT, 1)
-    val constantCard = new Card("Constants Card", 10, 5, tph.Constants.INT_UNINIT, 1)
-    val adjustedCard = new Card("Constants Card", 10, 4, tph.Constants.INT_UNINIT, 1)
-    val player = new Player(1, List(cardBeingRemoved, constantCard))
+    val newEnemyBoardCard = new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2)
+    val expectedEnemyBoard = List(
+      new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+      new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 2, 2),
+      new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 3, 2))
+    val actualEnemyBoard = defaultGameState.enemyPlayer.RemoveCard(newEnemyBoardCard).board
 
-    player.RemoveCard(cardBeingRemoved) shouldEqual new Player(1, List(adjustedCard))
-
-
-    val p2CardBeingRemoved = new Card("Removed Card", 5, 4, tph.Constants.INT_UNINIT, 2)
-    val p2ConstantCard = new Card("Constants Card", 10, 5, tph.Constants.INT_UNINIT, 2)
-    val p2AdjustedCard = new Card("Constants Card", 10, 4, tph.Constants.INT_UNINIT, 2)
-    val player2 = new Player(2, List(p2CardBeingRemoved, p2ConstantCard))
-
-    player2.RemoveCard(p2CardBeingRemoved) shouldEqual new Player(2, List(p2AdjustedCard))
-
-
-  }
-
-  it should "Remove card from board" in {
-    val cardBeingRemoved = new Card("Removed Card", 5, tph.Constants.INT_UNINIT, 4, 1)
-    val constantCard = new Card("Constants Card", 10, tph.Constants.INT_UNINIT, 5, 1)
-    val adjustedCard = new Card("Constants Card", 10, tph.Constants.INT_UNINIT, 4, 1)
-    val player = new Player(1, List[HSCard](), List(cardBeingRemoved, constantCard))
-
-    player.RemoveCard(cardBeingRemoved) shouldEqual new Player(1, List[HSCard](), List(adjustedCard))
-
-
-    val p2CardBeingRemoved = new Card("Removed Card", 5, tph.Constants.INT_UNINIT, 4, 2)
-    val p2ConstantCard = new Card("Constants Card", 10, tph.Constants.INT_UNINIT, 5, 2)
-    val p2AdjustedCard = new Card("Constants Card", 10, tph.Constants.INT_UNINIT, 4, 2)
-    val player2 = new Player(2, List[HSCard]() ,List(p2CardBeingRemoved, p2ConstantCard))
-
-    player2.RemoveCard(p2CardBeingRemoved) shouldEqual new Player(2, List[HSCard](), List(p2AdjustedCard))
-
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHandCard
+    actualEnemyBoard shouldEqual expectedEnemyBoard
 
   }
-
-
 }

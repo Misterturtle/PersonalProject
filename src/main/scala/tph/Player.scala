@@ -37,7 +37,7 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
     {
       val shiftedBoard = board.foldLeft(board) {
         (changingBoard, oldCard) =>
-          val equalTo = oldCard == card
+          val equalTo = oldCard.boardPosition == card.boardPosition
           val greaterThan = oldCard.boardPosition > card.boardPosition
           val lessThan = oldCard.boardPosition < card.boardPosition
 
