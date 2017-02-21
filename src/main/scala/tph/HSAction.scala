@@ -2,6 +2,7 @@ package tph
 
 import tph.Card
 import tph.GameState
+import tph.HSAction.HSAction
 import tph.LogFileAction.LogFileAction
 import tph.Player
 
@@ -124,22 +125,28 @@ import tph.Player
     //  //case class ZoneChange(id: Int, player: Int, zone: String, dstZone: Int) extends HSAction
     //
     //
-    //  case class Sap(name: String, id: Int, player: Int) extends HSAction {
-    //    override def ExecuteAction(gameState: GameState): GameState = {
-    //      if (player == gameState.friendlyPlayer.playerNumber) {
-    //        val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        val newPlayer = playerWithNewHand.AddCard(gameState.GetCardByID(id), true)
-    //        new GameState(newPlayer, gameState.enemyPlayer)
-    //      }
-    //      else {
-    //        val playerWithNewHand = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        val newPlayer = playerWithNewHand.AddCard(gameState.GetCardByID(id), true)
-    //        new GameState(gameState.friendlyPlayer, newPlayer)
-    //      }
-    //    }
-    //  }
-    //}
-    //
+      case class Sap(name: String, id: Int, player: Int) extends HSAction {
+        override def ExecuteAction(gameState: GameState): GameState = {
+          if (player == gameState.friendlyPlayer.playerNumber) {
+            val cardBeingSapped = gameState.GetCardByID(id)
+            val convertedCard = new Card(name, id, gameState.friendlyPlayer.hand.size +1, Constants.INT_UNINIT, 1)
+
+            val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(cardBeingSapped)
+            val newPlayer = playerWithNewHand.AddCard(convertedCard, true)
+            new GameState(newPlayer, gameState.enemyPlayer)
+          }
+          else {
+            val cardBeingSapped = gameState.GetCardByID(id)
+            val convertedCard = new Card(name, id, gameState.enemyPlayer.hand.size +1, Constants.INT_UNINIT, 2)
+
+            val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingSapped)
+            val newPlayer = playerWithNewHand.AddCard(convertedCard, true)
+            new GameState(gameState.friendlyPlayer, newPlayer)
+          }
+        }
+      }
+
+
     //case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends HSAction {
     //  override def ExecuteAction(gameState: GameState): GameState = {
     //    if (player == gameState.friendlyPlayer.playerNumber) {
@@ -182,12 +189,6 @@ import tph.Player
     //}
     //
     //case class Hex(name: String, id: Int, player: Int, zonePos: Int) extends HSAction
-
-
-    case class HSActionError() extends HSAction {
-      override def ExecuteAction(gameState: GameState): GameState = {
-        new GameState(new Player(1), new Player(2))
-      }
     }
-  }
+
 
