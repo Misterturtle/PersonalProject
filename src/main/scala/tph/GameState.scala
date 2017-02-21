@@ -1,12 +1,11 @@
 package tph
 
 import com.typesafe.scalalogging.LazyLogging
-import tph.NoCards
 
 /**
   * Created by Harambe on 2/20/2017.
   */
-class GameState(firstPlayer: Player = new Player(1, List(NoCards()), List(NoCards())), secondPlayer: Player = new Player(2, List(NoCards()), List(NoCards()))) extends LazyLogging {
+class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HSCard]()), secondPlayer: Player = new Player(2, List[HSCard](), List[HSCard]())) extends LazyLogging {
 
   val friendlyPlayer = firstPlayer
   val enemyPlayer = secondPlayer
