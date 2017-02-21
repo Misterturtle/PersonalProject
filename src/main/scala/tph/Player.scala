@@ -51,33 +51,46 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
 
     if (isHand) {
 
-      val shiftedHand = hand.foldLeft(List[HSCard]()){(newHand, oldCard) =>
+      val shiftedHand = hand.foldLeft(hand) {
+        (changingHand, oldCard) =>
+          val equalTo = oldCard == card
+          val greaterThan = oldCard.handPosition > card.handPosition
+          val lessThan = oldCard.handPosition < card.handPosition
 
-        if(oldCard.handPosition == card.handPosition){
-          newHand diff List(oldCard)}
+          true match {
+            case `equalTo` =>
+              changingHand diff List(oldCard)
 
-        if(oldCard.handPosition > card.handPosition) {
-          val removedCardHand = newHand diff List(oldCard)
-          removedCardHand ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition + 1, oldCard.boardPosition, oldCard.player))
-        }
-        hand
+            case `greaterThan` =>
+              (changingHand diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition -1, oldCard.boardPosition, oldCard.player))
+
+            case `lessThan` =>
+              changingHand
+          }
       }
 
         new Player(playerNumber, shiftedHand, board)
       }
     else
       {
-        val shiftedBoard = board.foldLeft(List[HSCard]()){(newBoard, oldCard) =>
+        val shiftedBoard = board.foldLeft(board) {
+          (changingBoard, oldCard) =>
+            val equalTo = oldCard == card
+            val greaterThan = oldCard.boardPosition > card.boardPosition
+            val lessThan = oldCard.boardPosition < card.boardPosition
 
-          if(oldCard.boardPosition == card.boardPosition)
-            newBoard diff List(oldCard)
+            true match {
+              case `equalTo` =>
+                changingBoard diff List(oldCard)
 
-          if(oldCard.boardPosition > card.boardPosition) {
-            val removedCardBoard = newBoard diff List(oldCard)
-            removedCardBoard ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition, oldCard.boardPosition + 1, playerNumber))
-          }
-          board
+              case `greaterThan` =>
+                (changingBoard diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition, oldCard.boardPosition -1, oldCard.player))
+
+              case `lessThan` =>
+                changingBoard
+            }
         }
+
         new Player(playerNumber, hand, shiftedBoard)
       }
   }

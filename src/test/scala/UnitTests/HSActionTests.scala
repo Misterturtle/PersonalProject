@@ -1,5 +1,6 @@
 package UnitTests
 
+import jdk.nashorn.internal.ir.annotations.Ignore
 import org.scalatest.{Matchers, FlatSpec}
 import tph.HSAction.KnownCardDrawn
 import tph._
@@ -8,6 +9,8 @@ import tph._
 /**
   * Created by Harambe on 2/20/2017.
   */
+
+@Ignore
 class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction KnownCardDrawn" should "ExecuteAction" in {
