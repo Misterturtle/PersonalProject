@@ -254,6 +254,11 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 2, 2),
       new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 3, 2))
 
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
 
