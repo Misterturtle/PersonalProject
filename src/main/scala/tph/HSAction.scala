@@ -61,15 +61,17 @@ import tph.Player
         }
       }
 
-    //  case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends HSAction {
-    //    override def ExecuteAction(gameState: GameState): GameState = {
-    //      //
-    //      val enemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //      val friendlyPlayer = gameState.friendlyPlayer.AddCard(gameState.GetCardByID(id), false)
-    //      new GameState(friendlyPlayer, enemyPlayer)
-    //    }
-    //  }
-    //
+      case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends HSAction {
+        override def ExecuteAction(gameState: GameState): GameState = {
+          val cardBeingControlled = gameState.GetCardByID(id)
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, gameState.friendlyPlayer.board.size +1, 1)
+          val friendlyPlayer = gameState.friendlyPlayer.AddCard(convertedCard, false)
+
+          val enemyPlayer = gameState.enemyPlayer.RemoveCard(cardBeingControlled)
+          new GameState(friendlyPlayer, enemyPlayer)
+        }
+      }
+
     //
     //  //Neutral Events
     //

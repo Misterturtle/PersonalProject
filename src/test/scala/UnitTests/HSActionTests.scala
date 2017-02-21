@@ -2,7 +2,7 @@ package UnitTests
 
 import jdk.nashorn.internal.ir.annotations.Ignore
 import org.scalatest.{Matchers, FlatSpec}
-import tph.HSAction.{EnemyCardDrawn, FriendlyMinionControlled, CardDeath, KnownCardDrawn}
+import tph.HSAction._
 import tph._
 
 
@@ -121,6 +121,35 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card(Constants.STRING_UNINIT, 27, 7, Constants.INT_UNINIT, 2))
 
     actualEnemyHand shouldEqual expectedEnemyHand
+  }
+
+  "HSAction EnemyMinionControlled" should "ExecuteAction" in{
+
+    val hsAction = new EnemyMinionControlled("Enemy Board 2", 32, 2)
+
+    val actualFriendlyBoard = hsAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val expectedFriendlyBoard = List(
+      new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+      new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1),
+      new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
+      new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1),
+      new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 5, 1))
+
+
+    val actualEnemyBoard = hsAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val expectedEnemyBoard = List(
+      new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+      new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 2, 2),
+      new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 3, 2))
+
+
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+
+
+
+
+
   }
 
 
