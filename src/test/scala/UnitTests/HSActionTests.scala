@@ -192,6 +192,30 @@ class HSActionTests extends FlatSpec with Matchers {
   }
 
 
+  "HSAction SecretPlayed" should "Execute Action" in {
+    val friendlyHSAction = new SecretPlayed(5, 1)
+    val enemyHSAction = new SecretPlayed(25, 2)
+
+    val actualFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
+    val expectedFriendlyHand = List(
+      new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 3", 3, 3, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 4", 4, 4, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 6", 6, 5, Constants.INT_UNINIT, 1))
+
+    val actualEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+    val expectedEnemyHand = List(
+      new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 6", 26, 5, Constants.INT_UNINIT, 2))
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualEnemyHand shouldEqual expectedEnemyHand
+  }
+
 
 
 

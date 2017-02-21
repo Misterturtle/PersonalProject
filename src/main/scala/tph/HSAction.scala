@@ -99,27 +99,24 @@ import tph.Player
             new GameState(gameState.friendlyPlayer, newEnemyPlayer)
           }
         }
-
-
-
       }
 
 
 
 
-    //  case class SecretPlayed(id: Int, player: Int) extends HSAction {
-    //    override def ExecuteAction(gameState: GameState): GameState = {
-    //      if (player == gameState.friendlyPlayer.playerNumber) {
-    //        val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
-    //      }
-    //      else {
-    //        val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-    //      }
-    //    }
-    //  }
-    //
+      case class SecretPlayed(id: Int, player: Int) extends HSAction {
+        override def ExecuteAction(gameState: GameState): GameState = {
+          if (player == gameState.friendlyPlayer.playerNumber) {
+            val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
+            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+          }
+          else {
+            val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
+            new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+          }
+        }
+      }
+
     //  // I don't think this will ever be used
     //  // case class OldZoneChange(id: Int, zone: String, player: Int, dstZone: Int) extends HSAction
     //
