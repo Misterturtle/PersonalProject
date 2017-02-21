@@ -34,16 +34,16 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
   //  def GetAllCards(): List[Card] = {
   //    GetFriendlyHand ++ GetEnemyHand ++ GetFriendlyBoard ++ GetEnemyBoard
   //  }
-  //
-//    def GetCardByID(cardID: Int): Card = {
-//
-//      (friendlyPlayer.hand ++ friendlyPlayer.board ++ enemyPlayer.hand ++ enemyPlayer.board).find(_ == cardID) match {
-//        case Some(card) => card
-//        case None =>
-//          logger.debug("Not able to find card with id " + cardID)
-//          NoCards()
-//      }
-//    }
+
+    def GetCardByID(cardID: Int): HSCard = {
+
+      (friendlyPlayer.hand ::: friendlyPlayer.board ::: enemyPlayer.hand ::: enemyPlayer.board).find(_.id == cardID) match {
+        case Some(card) => card
+        case None =>
+          logger.debug("Not able to find card with id " + cardID)
+          NoCards()
+      }
+    }
 
   //  def GetCardAddress(card: Card): CardAddress = {
   //
