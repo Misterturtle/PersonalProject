@@ -53,14 +53,14 @@ import tph.Player
         }
       }
 
-    //  //Enemy Events
-    //  case class EnemyCardDrawn(id: Int, position: Int, player: Int) extends HSAction {
-    //    override def ExecuteAction(gameState: GameState): GameState = {
-    //      val newEnemyPlayer = gameState.enemyPlayer.AddCard(new Card(Constants.STRING_UNINIT, id, position, Constants.INT_UNINIT, player), true)
-    //      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-    //    }
-    //  }
-    //
+      //Enemy Events
+      case class EnemyCardDrawn(id: Int, position: Int, player: Int) extends HSAction {
+        override def ExecuteAction(gameState: GameState): GameState = {
+          val newEnemyPlayer = gameState.enemyPlayer.AddCard(new Card(Constants.STRING_UNINIT, id, position, Constants.INT_UNINIT, player), true)
+          new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+        }
+      }
+
     //  case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends HSAction {
     //    override def ExecuteAction(gameState: GameState): GameState = {
     //      //

@@ -2,7 +2,7 @@ package UnitTests
 
 import jdk.nashorn.internal.ir.annotations.Ignore
 import org.scalatest.{Matchers, FlatSpec}
-import tph.HSAction.{FriendlyMinionControlled, CardDeath, KnownCardDrawn}
+import tph.HSAction.{EnemyCardDrawn, FriendlyMinionControlled, CardDeath, KnownCardDrawn}
 import tph._
 
 
@@ -104,6 +104,24 @@ class HSActionTests extends FlatSpec with Matchers {
     actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
+
+
+  "HSAction EnemyCardDrawn" should "ExectueAction" in{
+
+    val hsAction = new EnemyCardDrawn(27, 7, 2)
+
+    val actualEnemyHand = hsAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+    val expectedEnemyHand =  List(
+      new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 5", 25, 5, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 6", 26, 6, Constants.INT_UNINIT, 2),
+      new Card(Constants.STRING_UNINIT, 27, 7, Constants.INT_UNINIT, 2))
+
+    actualEnemyHand shouldEqual expectedEnemyHand
+  }
 
 
 
