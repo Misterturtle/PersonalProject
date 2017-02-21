@@ -88,6 +88,22 @@ import tph.Player
         }
       }
 
+      case class ChangeFaceAttackValue(player: Int, value: Int) extends HSAction{
+        override  def ExecuteAction(gameState: GameState): GameState = {
+          if(player == gameState.friendlyPlayer.playerNumber){
+            val newFriendlyPlayer = new Player(player, gameState.friendlyPlayer.hand, gameState.friendlyPlayer.board, value)
+            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+          }
+          else{
+            val newEnemyPlayer = new Player(player, gameState.enemyPlayer.hand, gameState.enemyPlayer.board, value)
+            new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+          }
+        }
+
+
+
+      }
+
 
 
 

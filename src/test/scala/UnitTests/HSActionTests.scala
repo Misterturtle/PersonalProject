@@ -177,6 +177,21 @@ class HSActionTests extends FlatSpec with Matchers {
   }
 
 
+  "HSAction ChangeFaceAttackValue" should "ExecuteAction" in{
+    val friendlyHSAction = new ChangeFaceAttackValue(1, 5)
+    val enemyHSAction = new ChangeFaceAttackValue(2, 5)
+
+    val actualFriendlyFaceValue = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.weaponValue
+    val expectedFriendlyFaceValue = 5
+
+    val actualyEnemyFaceValue = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.weaponValue
+    val expectedEnemyFaceValue = 5
+
+    actualFriendlyFaceValue shouldEqual expectedFriendlyFaceValue
+    actualyEnemyFaceValue shouldEqual expectedEnemyFaceValue
+  }
+
+
 
 
 
