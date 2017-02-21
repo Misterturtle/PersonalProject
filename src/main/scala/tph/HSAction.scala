@@ -41,15 +41,18 @@ import tph.Player
         }
       }
 
-    //  case class FriendlyMinionControlled(name: String, id: Int, position: Int) extends HSAction {
-    //    //Friendly minion gets removed from board and added to other board
-    //    def ExecuteAction(gameState: GameState): GameState = {
-    //      val friendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //      val enemyPlayer = gameState.enemyPlayer.AddCard(gameState.GetCardByID(id), false)
-    //      new GameState(friendlyPlayer, enemyPlayer)
-    //    }
-    //  }
-    //
+      case class FriendlyMinionControlled(name: String, id: Int, position: Int) extends HSAction {
+        //Friendly minion gets removed from board and added to other board
+        def ExecuteAction(gameState: GameState): GameState = {
+          val cardBeingControlled = gameState.GetCardByID(id)
+          val friendlyPlayer = gameState.friendlyPlayer.RemoveCard(cardBeingControlled)
+
+          val convertedCard = new Card(cardBeingControlled.name, cardBeingControlled.id, Constants.INT_UNINIT, gameState.enemyPlayer.board.size + 1, 2)
+          val enemyPlayer = gameState.enemyPlayer.AddCard(convertedCard, false)
+          new GameState(friendlyPlayer, enemyPlayer)
+        }
+      }
+
     //  //Enemy Events
     //  case class EnemyCardDrawn(id: Int, position: Int, player: Int) extends HSAction {
     //    override def ExecuteAction(gameState: GameState): GameState = {
