@@ -6,7 +6,7 @@ import tph.Constants.FunctionalConstants._
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board: List[HSCard] = List[HSCard]()) extends LazyLogging {
+case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board: List[HSCard] = List[HSCard](), weaponValue: Int = 0) extends LazyLogging {
 
   def AddCard(card: HSCard, isHand: Boolean): Player = {
     if (isHand && board.contains(card))

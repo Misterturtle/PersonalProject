@@ -72,22 +72,25 @@ import tph.Player
         }
       }
 
-    //
-    //  //Neutral Events
-    //
-    //  case class WeaponPlayed(id: Int, player: Int) extends HSAction {
-    //    override def ExecuteAction(gameState: GameState): GameState = {
-    //      if (player == gameState.friendlyPlayer.playerNumber) {
-    //        val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
-    //      }
-    //      else {
-    //        val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-    //      }
-    //    }
-    //  }
-    //
+
+      //Neutral Events
+
+      case class WeaponPlayed(id: Int, player: Int) extends HSAction {
+        override def ExecuteAction(gameState: GameState): GameState = {
+          if (player == gameState.friendlyPlayer.playerNumber) {
+            val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
+            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+          }
+          else {
+            val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
+            new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+          }
+        }
+      }
+
+
+
+
     //  case class SecretPlayed(id: Int, player: Int) extends HSAction {
     //    override def ExecuteAction(gameState: GameState): GameState = {
     //      if (player == gameState.friendlyPlayer.playerNumber) {
