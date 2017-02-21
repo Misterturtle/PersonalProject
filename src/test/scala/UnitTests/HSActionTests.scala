@@ -1,5 +1,6 @@
 package UnitTests
 
+import jdk.internal.org.objectweb.asm.tree.MethodInsnNode
 import jdk.nashorn.internal.ir.annotations.Ignore
 import org.scalatest.{Matchers, FlatSpec}
 import tph.HSAction._
@@ -262,7 +263,74 @@ class HSActionTests extends FlatSpec with Matchers {
   }
 
 
+    "HSAction CardPlayed" should "ExecuteAction" in{
+      val friendlyHSAction = new CardPlayed("Friendly Hand 1", 1, 5, 1)
+      val enemyHSAction = new CardPlayed("Enemy Hand 1", 21, 5, 2)
 
+      val actualFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
+      val expectedFriendlyHand = List(
+        new Card("Friendly Hand 2", 2, 1, Constants.INT_UNINIT, 1),
+        new Card("Friendly Hand 3", 3, 2, Constants.INT_UNINIT, 1),
+        new Card("Friendly Hand 4", 4, 3, Constants.INT_UNINIT, 1),
+        new Card("Friendly Hand 5", 5, 4, Constants.INT_UNINIT, 1),
+        new Card("Friendly Hand 6", 6, 5, Constants.INT_UNINIT, 1))
+
+      val actualFriendlyBoard = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+      val expectedFriendlyBoard = List(
+        new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+        new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1),
+        new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
+        new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1),
+        new Card("Friendly Hand 1", 1, Constants.INT_UNINIT, 5, 1))
+
+      val actualEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+      val expectedEnemyHand = List(
+        new Card("Enemy Hand 2", 22, 1, Constants.INT_UNINIT, 2),
+        new Card("Enemy Hand 3", 23, 2, Constants.INT_UNINIT, 2),
+        new Card("Enemy Hand 4", 24, 3, Constants.INT_UNINIT, 2),
+        new Card("Enemy Hand 5", 25, 4, Constants.INT_UNINIT, 2),
+        new Card("Enemy Hand 6", 26, 5, Constants.INT_UNINIT, 2))
+
+      val actualEnemyBoard = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
+      val expectedEnemyBoard = List(
+        new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+        new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
+        new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 3, 2),
+        new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2),
+        new Card("Enemy Hand 1", 21, Constants.INT_UNINIT, 5, 2))
+
+
+      actualFriendlyHand shouldEqual expectedFriendlyHand
+      actualFriendlyBoard shouldEqual expectedFriendlyBoard
+      actualEnemyHand shouldEqual expectedEnemyHand
+      actualEnemyBoard shouldEqual expectedEnemyBoard
+    }
+
+
+
+  "HSAction MinionSummoned" should "Execute Action" in {
+    val friendlyHSAction = new MinionSummoned("Summoned Friendly Minion", 15, 5, 1)
+    val enemyHSAction = new MinionSummoned("Summoned Enemy Minion", 35, 5, 2)
+
+    val actualFriendlyBoard = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val expectedFriendlyBoard = List(
+      new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+      new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1),
+      new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
+      new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1),
+      new Card("Summoned Friendly Minion", 15, Constants.INT_UNINIT, 5, 1))
+
+    val actualEnemyBoard = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val expectedEnemyBoard = List(
+      new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+      new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
+      new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 3, 2),
+      new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2),
+      new Card("Summoned Enemy Minion", 35, Constants.INT_UNINIT, 5, 2))
+
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+  }
 
 
 

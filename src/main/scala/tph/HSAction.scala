@@ -147,39 +147,48 @@ import tph.Player
       }
 
 
-    //case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends HSAction {
-    //  override def ExecuteAction(gameState: GameState): GameState = {
-    //    if (player == gameState.friendlyPlayer.playerNumber) {
-    //      val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //      val newPlayer = playerWithNewHand.AddCard(gameState.GetCardByID(id), false)
-    //      new GameState(newPlayer, gameState.enemyPlayer)
-    //    }
-    //    else {
-    //      val playerWithNewHand = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-    //      val newPlayer = playerWithNewHand.AddCard(gameState.GetCardByID(id), false)
-    //      new GameState(gameState.friendlyPlayer, newPlayer)
-    //    }
-    //}
-    //
-    //
+    case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends HSAction {
+      override def ExecuteAction(gameState: GameState): GameState = {
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          val cardBeingPlayed = gameState.GetCardByID(id)
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
+
+          val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(cardBeingPlayed)
+          val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
+          new GameState(newPlayer, gameState.enemyPlayer)
+        }
+
+        else {
+          val cardBeingPlayed = gameState.GetCardByID(id)
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
+
+          val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingPlayed)
+          val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
+          new GameState(gameState.friendlyPlayer, newPlayer)
+        }
+      }
+    }
+
+
     //// I don't think I should ever be using these for a HSAction. Add/Remove card should handle position shifts.
     ////  case class HAND_POSITION_CHANGE(id:Int, pos:Int, player:Int, dstPos:Int) extends HSAction
     ////
     ////  case class BOARD_POSITION_CHANGE(id:Int, player:Int, dstPos:Int) extends HSAction
     //
-    //case class MinionSummoned(name: String, id: Int, position: Int, player: Int) extends HSAction {
-    //  override def ExecuteAction(gameState: GameState): GameState = {
-    //    if (player == gameState.friendlyPlayer.playerNumber) {
-    //      val newPlayer = gameState.friendlyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player), false)
-    //      new GameState(newPlayer, gameState.enemyPlayer)
-    //    }
-    //    else {
-    //      val newPlayer = gameState.enemyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player), false)
-    //      new GameState(gameState.friendlyPlayer, newPlayer)
-    //    }
-    //  }
-    //}
-    //
+
+    case class MinionSummoned(name: String, id: Int, position: Int, player: Int) extends HSAction {
+      override def ExecuteAction(gameState: GameState): GameState = {
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          val newPlayer = gameState.friendlyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player), false)
+          new GameState(newPlayer, gameState.enemyPlayer)
+        }
+        else {
+          val newPlayer = gameState.enemyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player), false)
+          new GameState(gameState.friendlyPlayer, newPlayer)
+        }
+      }
+    }
+
     //case class Transform(oldId: Int, newId: Int) extends HSAction {
     //  override def ExecuteAction(gameState: GameState): GameState = {
     //    val card = gameState.GetCardByID(oldId)
