@@ -332,6 +332,51 @@ class HSActionTests extends FlatSpec with Matchers {
     actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
+  "HSAction Transform" should "ExecuteAction" in{
+    val friendlyHandHSAction = new Transform(3, 100)
+    val friendlyBoardHSAction = new Transform(12, 101)
+    val enemyHandHSAction = new Transform(21, 102)
+    val enemyBoardHSAction = new Transform(33, 103)
+
+    val actualFriendlyHand = friendlyHandHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
+    val expectedFriendHand = List(
+      new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 4", 4, 4, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 5", 5, 5, Constants.INT_UNINIT, 1),
+      new Card("Friendly Hand 6", 6, 6, Constants.INT_UNINIT, 1),
+      new Card("Transformed Friendly Card", 100, 3, Constants.INT_UNINIT, 1))
+
+    val actualFriendlyBoard = friendlyBoardHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val expectedFriendlyBoard = List(
+      new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+      new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
+      new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1),
+      new Card("Transformed Friendly Minion", 101, Constants.INT_UNINIT, 2, 1))
+
+    val actualEnemyHand = enemyHandHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+    val expectedEnemyHand = List(
+      new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 5", 25, 5, Constants.INT_UNINIT, 2),
+      new Card("Enemy Hand 6", 26, 6, Constants.INT_UNINIT, 2),
+      new Card("Transformed Enemy Card", 102, 1, Constants.INT_UNINIT, 2))
+
+    val actualEnemyBoard = enemyBoardHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val expectedEnemyBoard = List(
+      new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+      new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
+      new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2),
+      new Card("Transformed Enemy Minion", 103, Constants.INT_UNINIT, 3, 2))
+
+
+    actualFriendlyHand shouldEqual expectedFriendHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+  }
+
 
 
 

@@ -189,14 +189,43 @@ import tph.Player
       }
     }
 
-    //case class Transform(oldId: Int, newId: Int) extends HSAction {
-    //  override def ExecuteAction(gameState: GameState): GameState = {
-    //    val card = gameState.GetCardByID(oldId)
-    //
-    //
-    //  }
-    //}
-    //
+    case class Transform(oldId: Int, newId: Int) extends HSAction {
+      override def ExecuteAction(gameState: GameState): GameState = {
+        val card = gameState.GetCardByID(oldId)
+
+
+        if(card.player == gameState.friendlyPlayer.playerNumber) {
+          if (card.handPosition != Constants.INT_UNINIT) {
+            val newCard = new Card("Transformed Friendly Card", newId, card.handPosition, card.boardPosition, card.player)
+            val removedCardFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(card)
+            val newFriendlyPlayer = removedCardFriendlyPlayer.AddCard(newCard, true)
+            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+          }
+          else{
+            val newCard = new Card("Transformed Friendly Minion", newId, card.handPosition, card.boardPosition, card.player)
+            val removedCardFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(card)
+            val newFriendlyPlayer = removedCardFriendlyPlayer.AddCard(newCard, false)
+            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+          }
+        }
+        else
+          {
+            if (card.handPosition != Constants.INT_UNINIT){
+              val newCard = new Card("Transformed Enemy Card", newId, card.handPosition, card.boardPosition, card.player)
+              val removedCardEnemyPlayer = gameState.enemyPlayer.RemoveCard(card)
+              val newEnemyPlayer = removedCardEnemyPlayer.AddCard(newCard, true)
+              new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+            }
+            else{
+              val newCard = new Card("Transformed Enemy Minion", newId, card.handPosition, card.boardPosition, card.player)
+              val removedCardEnemyPlayer = gameState.enemyPlayer.RemoveCard(card)
+              val newEnemyPlayer = removedCardEnemyPlayer.AddCard(newCard, false)
+              new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+            }
+          }
+      }
+    }
+
     //case class Hex(name: String, id: Int, player: Int, zonePos: Int) extends HSAction
     }
 
