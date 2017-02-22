@@ -378,7 +378,10 @@ class HSActionTests extends FlatSpec with Matchers {
   }
 
 
-  "HSAction "
+  "HSAction Define Players" should "Execute Action" in{
+    val actualGameState = new GameState().SetPlayerNumbers(2)
+    val expectedGameState = new GameState(new Player(2), new Player(1))
+  }
 
 
 

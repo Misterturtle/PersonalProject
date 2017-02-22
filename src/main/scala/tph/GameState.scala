@@ -10,26 +10,6 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
   val friendlyPlayer = firstPlayer
   val enemyPlayer = secondPlayer
 
-  //  def GetFriendlyHand(): List[Card] = {
-  //    new LogParser().ConstructFriendlyHand()
-  //  }
-  //
-  //  def GetEnemyHand(): List[Card] = {
-  //    new LogParser().ParseEnemyHand()
-  //  }
-  //
-  //  def GetFriendlyBoard(): List[Card] = {
-  //    new LogParser().ParseFriendlyBoard
-  //  }
-  //
-  //  def GetEnemyBoard(): List[Card] = {
-  //    new LogParser().ParseEnemyBoard()
-  //  }
-
-  //  def GetAllCards(): List[Card] = {
-  //    GetFriendlyHand ++ GetEnemyHand ++ GetFriendlyBoard ++ GetEnemyBoard
-  //  }
-
     def GetCardByID(cardID: Int): HSCard = {
 
       (friendlyPlayer.hand ::: friendlyPlayer.board ::: enemyPlayer.hand ::: enemyPlayer.board).find(_.id == cardID) match {
@@ -39,6 +19,18 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
           NoCards()
       }
     }
+
+  def SetPlayerNumbers(friendlyPlayerNumber:Int): GameState = {
+    val enemyPlayerNumber =
+      friendlyPlayerNumber match {
+        case 1 => 2
+        case 2 => 1
+        case _ => -5
+      }
+
+    new GameState(new Player(friendlyPlayerNumber, friendlyPlayer.hand, friendlyPlayer.board), new Player(enemyPlayerNumber, enemyPlayer.hand,enemyPlayer.board))
+  }
+
 
   //  def GetCardAddress(card: Card): CardAddress = {
   //
@@ -58,15 +50,6 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
   //        return (false, GetEnemyBoard())
   //
   //      return (false, List(NoCards()))
-  //    }
-  //
-  //
-  //    def FindIndex(card: Card): Int = {
-  //      val index = FindList(card)._2.indexWhere(_.id == card.id)
-  //      if (index != -1)
-  //        return index
-  //      else
-  //        return Constants.INT_UNINIT
   //    }
   //  }
 }

@@ -217,6 +217,12 @@ object HSAction {
     }
   }
 
+  case class DefinePlayers(friendlyPlayerNumber: Int) extends HSAction {
+    override def ExecuteAction(gameState: GameState):GameState = {
+      gameState.SetPlayerNumbers(friendlyPlayerNumber)
+    }
+  }
+
   case class HSActionUninit() extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
       gameState

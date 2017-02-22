@@ -35,6 +35,13 @@ class GameStateTests extends FlatSpec with Matchers {
       actualEnemyBoardCard shouldEqual expectedEnemyBoardCard
     }
 
+  it should "set player numbers" in{
+    val actualGameState = new GameState().SetPlayerNumbers(2)
+    val expectedGameState = new GameState(new Player(2), new Player(1))
+
+    actualGameState shouldEqual expectedGameState
+  }
+
 
 
 }

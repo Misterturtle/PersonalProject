@@ -54,6 +54,9 @@ class LogParser() {
         case WEAPON(id, player) =>
           new WeaponPlayed(id.toInt, player.toInt)
 
+        case DEFINE_PLAYERS(friendlyPlayerNumber) =>
+          new DefinePlayers(friendlyPlayerNumber.toInt)
+
         case _ =>
           new HSActionUninit()
       }
@@ -72,7 +75,7 @@ class LogParser() {
 
 
     def GetPlayerNumbers(file:File = defaultLog): (Int, Int) = {
-      val DEFINE_PLAYERS = Constants.LogFileReaderStrings.GameStateStrings.DEFINE_PLAYERS
+      val DEFINE_PLAYERS = Constants.LogFileReaderStrings.HSActionStrings.DEFINE_PLAYERS
       val reader = new BufferedReader(new FileReader(file))
       val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
       streams.foreach {
