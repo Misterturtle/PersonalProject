@@ -12,7 +12,7 @@ import scala.util.matching.Regex
   */
 class LogParser() {
 
-    val defaultLog = new File("/actionLog.txt")
+    val defaultLog = new File(getClass.getResource("/actionLog.txt").getPath)
 
     def IdentifyHSAction(actionString: String): HSAction = {
       import Constants.LogFileReaderStrings.HSActionStrings._
@@ -59,23 +59,16 @@ class LogParser() {
       }
     }
 
-//    def ConstructFriendlyHand(file: File = defaultLog): List[HSCard] = {
-//
-//      val reader = new BufferedReader(new FileReader(file))
-//      val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
-//      val playerNumber = GetPlayerNumbers()
-//      val gameState = new GameState(new Player(playerNumber._1), new Player(playerNumber._2))
-//
-//
-//      val newFriendlyHand: List[HSCard] = streams.foldLeft(gameState)((r,c) =>
-//
-//        streams foreach{
-//          IdentifyHSAction(c).ExecuteAction(r)
-//        }
-//
-//      ).friendlyPlayer.hand
-//      newFriendlyHand
-//    }
+    def ConstructGameState(file: File = defaultLog): GameState = {
+
+      val reader = new BufferedReader(new FileReader(file))
+      val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
+      val playerNumber = GetPlayerNumbers(file)
+      val gameState:GameState = streams.foldLeft(new GameState(new Player(playerNumber._1), new Player(playerNumber._2))) { (r, c) =>
+          IdentifyHSAction(c).ExecuteAction(r)
+      }
+      gameState
+    }
 
 
     def GetPlayerNumbers(file:File = defaultLog): (Int, Int) = {

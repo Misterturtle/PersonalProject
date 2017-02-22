@@ -219,7 +219,7 @@ object HSAction {
 
   case class HSActionUninit() extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      new GameState(new Player(1), new Player(2))
+      gameState
     }
   }
 
