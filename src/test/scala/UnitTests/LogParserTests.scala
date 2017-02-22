@@ -1,8 +1,9 @@
 package UnitTests
 
-import java.io.{FileWriter, PrintWriter, File}
+import java.io._
 
 import org.scalatest.{FlatSpec, Matchers}
+import tph.HSAction.HSAction
 import tph.LogParser
 
 /**
@@ -18,6 +19,91 @@ class LogParserTests extends FlatSpec with Matchers {
     val expectedPlayerNumbers = (2,1)
     actualPlayerNumbers shouldEqual expectedPlayerNumbers
   }
+
+  it should "Identify HSAction" in{
+    import tph.HSAction._
+    val tempFile = new File(this.getClass.getResource("/tempHSActionLog.txt").getPath)
+    val writer = new PrintWriter(new FileWriter(tempFile))
+    val reader = new BufferedReader(new FileReader(tempFile))
+
+    //Friendly Minion Controlled
+    writer.println("some [name=Friendly Minion 1 id=11 zone=PLAY zonePos=1 some zone from FRIENDLY PLAY -> OPPOSING PLAY")
+    writer.flush()
+    //Enemy Minion Controlled
+    writer.println("some[name=Enemy Minion 1 id=21 zone=PLAY zonePos=1 .+ zone from OPPOSING PLAY -> FRIENDLY PLAY")
+    writer.flush()
+    //Enemy Card Drawn
+    writer.println("someid=55 local=some [id=27 cardId=some type=some zone=HAND zonePos=7 player=2] pos from 55 -> 55")
+    writer.flush()
+    //Face Attack Value
+    writer.println("[Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=some id=55 zone=PLAY zonePos=0 cardId=HEROsome player=1] tag=ATK value=5")
+    writer.flush()
+    //Secret Played
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card someid=2 some zone=SECRET zonePos=55 some player=1] to some SECRET")
+    writer.flush()
+    //Known Card Drawn
+    writer.println("some id=55 local=False [name=Friendly Minion 7 id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 55 -> 55")
+    writer.flush()
+    //Card Played
+    writer.println("[Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Enemy Card 3 id=23 zone=PLAY zonePos=5 cardId=some player=2]")
+    writer.flush()
+    //Card Death
+    writer.println("[Power] PowerTaskListsomeTAG_CHANGE Entity=[name=Friendly Minion 2 id=12 zone=some zonePos=55 player=1 some tag=ZONE value=GRAVEYARD")
+    writer.flush()
+    //Minion Summoned
+    writer.println("some FULL_ENTITY - Updating [name=Friendly Minion 5 id=15 zone=PLAY zonePos=5 some player=1 some")
+    writer.flush()
+    //Transform
+    writer.println("[Power] some.DebugPrintPower() -     TAG_CHANGE Entity=someid=3 zone=PLAY some tag=LINKED_ENTITY value=102")
+    writer.flush()
+    //Sap
+    writer.println("[Power] PowerTaskList.DebugPrintPower() - BLOCK_START BlockType=POWER Entity=[name=Sap id=55 zone=PLAY zonePos=55 cardId=55 player=some] EffectCardId= EffectIndex=some Target=[name=Friendly Minion 2 id=12 zone=PLAY zonePos=some cardId=some player=1]")
+    writer.flush()
+    //Weapon
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=3 zone=PLAY zonePos=0 cardId=some player=1] to some PLAY (Weapon)")
+    writer.flush()
+
+    val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
+    val actualHSActionList = streams.foldLeft(List[HSAction]()) {(r, c) =>
+      val hsAction = new LogParser().IdentifyHSAction(c)
+      if (hsAction != new HSActionUninit())
+        r ::: List(hsAction)
+      else
+        r
+    }
+
+      val expectedHSActionList = List(
+        new FriendlyMinionControlled("Friendly Minion 1", 11, 1),
+        new EnemyMinionControlled("Enemy Minion 1", 21, 1),
+        new EnemyCardDrawn(27, 7, 2),
+        new ChangeFaceAttackValue(1, 5),
+        new SecretPlayed(2, 1),
+        new KnownCardDrawn("Friendly Minion 7", 7, 7, 1),
+        new CardPlayed("Enemy Card 3", 23, 5, 2),
+        new CardDeath("Friendly Minion 2", 12, 1),
+        new MinionSummoned("Friendly Minion 5", 15, 5, 1),
+        new Transform(3, 102),
+        new Sap("Friendly Minion 2", 12, 1),
+        new WeaponPlayed(3, 1))
+
+    new FriendlyMinionControlled("test", 1, 1) shouldEqual new FriendlyMinionControlled("test", 1, 1)
+
+    actualHSActionList(0) shouldEqual expectedHSActionList(0)
+    actualHSActionList(1) shouldEqual expectedHSActionList(1)
+    actualHSActionList(2) shouldEqual expectedHSActionList(2)
+    actualHSActionList(3) shouldEqual expectedHSActionList(3)
+    actualHSActionList(4) shouldEqual expectedHSActionList(4)
+    actualHSActionList(5) shouldEqual expectedHSActionList(5)
+    actualHSActionList(6) shouldEqual expectedHSActionList(6)
+    actualHSActionList(7) shouldEqual expectedHSActionList(7)
+    actualHSActionList(8) shouldEqual expectedHSActionList(8)
+    actualHSActionList(9) shouldEqual expectedHSActionList(9)
+    actualHSActionList(10) shouldEqual expectedHSActionList(10)
+    actualHSActionList(11) shouldEqual expectedHSActionList(11)
+
+    }
+
+
 
 
 

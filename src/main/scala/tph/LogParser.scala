@@ -5,6 +5,8 @@ import java.io._
 import tph.{GameState, Constants}
 import tph.HSAction._
 
+import scala.util.matching.Regex
+
 /**
   * Created by Harambe on 2/15/2017.
   */
@@ -12,77 +14,72 @@ class LogParser() {
 
     val defaultLog = new File("/actionLog.txt")
 
+    def IdentifyHSAction(actionString: String): HSAction = {
+      import Constants.LogFileReaderStrings.HSActionStrings._
 
-//    def CreateActionList(file: File = defaultLog, gameState: GameState): List[HSAction] ={
+      actionString match {
+        case FRIENDLY_MINION_CONTROLLED(name, id, position) =>
+          new FriendlyMinionControlled(name, id.toInt, position.toInt)
+
+        case ENEMY_MINION_CONTROLLED(name, id, position) =>
+          new EnemyMinionControlled(name, id.toInt, position.toInt)
+
+        case ENEMY_CARD_DRAWN(id, position, player) =>
+          new EnemyCardDrawn(id.toInt, position.toInt, player.toInt)
+
+        case FACE_ATTACK_VALUE(player, value) =>
+          new ChangeFaceAttackValue(player.toInt, value.toInt)
+
+        case SECRET_PLAYED(id, player) =>
+          new SecretPlayed(id.toInt, player.toInt)
+
+        case KNOWN_CARD_DRAWN(name, id, position, player) =>
+          new KnownCardDrawn(name, id.toInt, position.toInt, player.toInt)
+
+        case CARD_PLAYED(name, id, position, player) =>
+          new CardPlayed(name, id.toInt, position.toInt, player.toInt)
+
+        case CARD_DEATH(name, id, player) =>
+          new CardDeath(name, id.toInt, player.toInt)
+
+        case MINION_SUMMONED(name, id, position, player) =>
+          new MinionSummoned(name, id.toInt, position.toInt, player.toInt)
+
+        case TRANSFORM(id, newID) =>
+          new Transform(id.toInt, newID.toInt)
+
+        case SAP(name, id, player)=>
+          new Sap(name, id.toInt, player.toInt)
+
+        case WEAPON(id, player) =>
+          new WeaponPlayed(id.toInt, player.toInt)
+
+        case _ =>
+          new HSActionUninit()
+      }
+    }
+
+//    def ConstructFriendlyHand(file: File = defaultLog): List[HSCard] = {
 //
-//      import Constants.LogFileReaderStrings._
 //      val reader = new BufferedReader(new FileReader(file))
 //      val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
-//      val friendlyPlayerNumber = gameState.GetPlayerNumbers()._1
-//
-//      streams.map(line => line match{
-//        case LogFileReader.CARD_DEATH(name, id, player) => new HSAction.CardDeath(name, id.toInt, player.toInt)
-//        case LogFileReader.CARD_PLAYED(name, id, position, player) => new HSAction.CardPlayed()
+//      val playerNumber = GetPlayerNumbers()
+//      val gameState = new GameState(new Player(playerNumber._1), new Player(playerNumber._2))
 //
 //
+//      val newFriendlyHand: List[HSCard] = streams.foldLeft(gameState)((r,c) =>
 //
-//      })
-//
-//
-//
-//      streams.foreach { f: String =>
-//        f match {
-//          case CARD_DEATH(name, id, player) =>
-//
-//            streams.map
-//
-//          case CARD_PLAYED(name, id, position, player) =>
-//            val card = new Card(name, id.toInt, Constants.INT_UNINIT, position.toInt, player.toInt)
-//            val cardAddress = CardAddress(player.toInt, gameState.)
-//            gameManipulator.AddCard(card,)
-//
-//
-//          case HAND_POSITION_CHANGE =>
-//          case KNOWN_CARD_DRAWN =>
-//          case SECRET_PLAYED =>
-//
+//        streams foreach{
+//          IdentifyHSAction(c).ExecuteAction(r)
 //        }
-//      }
+//
+//      ).friendlyPlayer.hand
+//      newFriendlyHand
 //    }
 
-  //  def ConstructFriendlyHand(file: File = defaultLog): List[Card] = {
-  //    import LogFileReader._
-  //    val reader = new BufferedReader(new FileReader(file))
-  //    val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
-  //    val friendlyPlayerNumber = GetPlayerNumbers()._1
-  //
-  //
-  //
-  //    streams.foreach { f: String =>
-  //      f match {
-  //        case CARD_DEATH(name, id, player) =>
-  //          if (player.toInt == friendlyPlayerNumber) {
-  //            GameManipulator.RemoveCard()
-  //          }
-  //          GameManipulator.RemoveCard()
-  //
-  //        case CARD_PLAYED(name, id, position, player) =>
-  //          val card = new Card(name, id.toInt, Constants.INT_UNINIT, position.toInt, player.toInt)
-  //          val cardAddress = CardAddress(player.toInt, gameState.)
-  //          gameManipulator.AddCard(card,)
-  //
-  //
-  //        case HAND_POSITION_CHANGE =>
-  //        case KNOWN_CARD_DRAWN =>
-  //        case SECRET_PLAYED =>
-  //
-  //      }
-  //    }
-  //  }
-  //
-  //
+
     def GetPlayerNumbers(file:File = defaultLog): (Int, Int) = {
-      val DEFINE_PLAYERS = Constants.LogFileReaderStrings.DEFINE_PLAYERS
+      val DEFINE_PLAYERS = Constants.LogFileReaderStrings.GameStateStrings.DEFINE_PLAYERS
       val reader = new BufferedReader(new FileReader(file))
       val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
       streams.foreach {
