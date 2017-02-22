@@ -25,12 +25,7 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
   //  def GetEnemyBoard(): List[Card] = {
   //    new LogParser().ParseEnemyBoard()
   //  }
-  //
-  //
-  //  def GetPlayerNumbers(): (Int, Int) = {
-  //    new LogParser().GetPlayerNumb `` ers()
-  //  }
-  //
+
   //  def GetAllCards(): List[Card] = {
   //    GetFriendlyHand ++ GetEnemyHand ++ GetFriendlyBoard ++ GetEnemyBoard
   //  }

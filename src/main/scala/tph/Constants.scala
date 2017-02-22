@@ -58,36 +58,36 @@ object Constants {
 
   object FunctionalConstants {
 
-    def RepeatFunction[A](f: A => A, startingParameter: A, numberOfRepeats: Int, currentIteration:Int = 0): A = {
-      if (currentIteration < numberOfRepeats) {
-        RepeatFunction(f, f(startingParameter), numberOfRepeats, currentIteration +1)
-      }
-      else {
-        println("End function result is: " + f(startingParameter))
-        f(startingParameter)
-      }
-    }
-
-    def UnwrapMultiSome(option: Option[_]): Option[_] = {
-      option match {
-        case Some(x) =>
-          x match {
-            case Some(someOption: Option[_]) =>
-              println("Unwrapping once")
-              UnwrapMultiSome(someOption)
-
-            case trueValue =>
-              println("Returning Some(trueValue)" + trueValue)
-              Some(trueValue)
-
-            case None =>
-              println("This should never happen. Returning None value for UnwrapMultiSome")
-              None
-          }
-        case None => println("This should never happen. Returning None value for UnwrapMultiSome")
-          None
-      }
-    }
+//    def RepeatFunction[A](f: A => A, startingParameter: A, numberOfRepeats: Int, currentIteration:Int = 0): A = {
+//      if (currentIteration < numberOfRepeats) {
+//        RepeatFunction(f, f(startingParameter), numberOfRepeats, currentIteration +1)
+//      }
+//      else {
+//        println("End function result is: " + f(startingParameter))
+//        f(startingParameter)
+//      }
+//    }
+//
+//    def UnwrapMultiSome(option: Option[_]): Option[_] = {
+//      option match {
+//        case Some(x) =>
+//          x match {
+//            case Some(someOption: Option[_]) =>
+//              println("Unwrapping once")
+//              UnwrapMultiSome(someOption)
+//
+//            case trueValue =>
+//              println("Returning Some(trueValue)" + trueValue)
+//              Some(trueValue)
+//
+//            case None =>
+//              println("This should never happen. Returning None value for UnwrapMultiSome")
+//              None
+//          }
+//        case None => println("This should never happen. Returning None value for UnwrapMultiSome")
+//          None
+//      }
+//    }
   }
 
 
@@ -117,9 +117,6 @@ object Constants {
     //case class CommandVote(builtCommand: Vote)
 
     case class ChangeMenu(previousMenu: String, changeToMenu: String)
-
-    case class GetGameStatus()
-
   }
 
 
@@ -408,6 +405,57 @@ object Constants {
     val NORMAL_ATTACK_WITH_ENEMY_FACE_TARGET = "NormalAttackWithEnemyFaceTarget"
     val FACE_ATTACK_WITH_ENEMY_TARGET = "FaceAttackWithEnemyTarget"
     val FACE_ATTACK_WITH_ENEMY_FACE_TARGET = "FaceAttackWithEnemyFaceTarget"
+
+  }
+
+  object LogFileReaderStrings {
+
+    val FRIENDLY_MINION_CONTROLLED =
+      """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from FRIENDLY PLAY -> OPPOSING PLAY""".r
+
+    //Enemy Strings
+    val ENEMY_MINION_CONTROLLED =
+      """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from OPPOSING PLAY -> FRIENDLY PLAY""".r
+    val ENEMY_CARD_DRAWN = """^.+id=\d+ local=.+ \[id=(\d+) cardId=.+type=.+zone=HAND zonePos=(\d+) player=(\d+)\] pos from \d+ -> \d+""".r
+    val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
+
+    //Neutral Strings
+    val FACE_ATTACK_VALUE =
+      """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=HERO.+ player=(\d+)] tag=ATK value=(\d+)""".r
+    val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
+    val OLD_ZONE_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=.+id=(\d+).+zone=(.+) zonePos=.+ player=(\d+)\] tag=ZONE value=(.+)""".r
+    val ZONE_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False .+id=(\d+) zone=.+ zonePos=\d+ cardId=.+ player=(\d+)\] zone from (.+) -> (.+)$""".r
+    val KNOWN_CARD_DRAWN = """^.+id=\d+ local=False \[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=.+ player=(\d+)\] pos from \d+ -> \d+""".r
+    val CARD_PLAYED = """\[Power\] PowerProcessor.DoTaskListForCard\(\) - unhandled BlockType PLAY for sourceEntity \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\]""".r
+    val BOARD_POSITION_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
+    val HAND_POSITION_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+name=.+tag=ZONE_POSITION value=\d+\] complete=False\] entity=.+id=(\d+).+zone=HAND zonePos=(\d+).+player=(\d+).+dstPos=(\d+)""".r
+    val CARD_DEATH = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=.+ zonePos=.+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
+    val MINION_SUMMONED = """^.+FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+player=(\d+).+""".r
+    val TRANSFORM ="""\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)""".r
+    val HEX = """\[Zone\] ZoneChangeList.+ \[name=(.+) id=(\d+) zone=PLAY zonePos=.+ cardId=hexfrog player=(\d+)\] pos from 0 -> (\d)""".r
+    val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=.+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
+    val SAP = """\[Power\] PowerTaskList.DebugPrintPower\(\) - BLOCK_START BlockType=POWER Entity=\[name=Sap id=.+ zone=PLAY zonePos=.+ cardId=.+ player=.+\] EffectCardId= EffectIndex=.+ Target=\[name=(.+) id=(\d+) zone=PLAY zonePos=.+ cardId=.+ player=(\d+)\]""".r
+    val WEAPON = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)] to .+ PLAY \(Weapon\)""".r
+
+    //IrcLogic Strings
+    val MULLIGAN_OPTION =
+      """\[Power\] PowerTaskList.DebugPrintPower\(\) -     SHOW_ENTITY - Updating Entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=\d+ zone=DECK zonePos=0 cardId= player=1\] CardID=.+""".r
+
+
+    //"""\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=SHOW_ENTITY entity=\[id=\d+ cardId=.+ name=\[id=\d+ cardId= type=INVALID zone=DECK zonePos=0 player=\d+\]\] tags=System.Collections.Generic.List`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[id=\d+ cardId= type=INVALID zone=DECK zonePos=0 player=\d+\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=""".r
+    val MULLIGAN_START = "[Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=STEP value=BEGIN_MULLIGAN"
+    val DISCOVER_OPTION = """\[Power\] GameState.DebugPrintEntityChoices\(\) -   Entities\[(\d+)\]=\[name=.+ id=\d+ zone=SETASIDE zonePos=0 cardId=.+ player=\d+\]""".r
+    val TURN_START = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=(.+) tag=CURRENT_PLAYER value=1""".r
+    val TURN_END = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=(.+) tag=CURRENT_PLAYER value=0""".r
+
+
+    //Controller Strings
+    val PLAY_MENU = "FSM not Preprocessed: Hero_Armor(Clone) : FSM"
+    val COLLECTION_MENU = "FSM not Preprocessed: DeckGlowAll : FSM"
+    val START_UP = "FSM not Preprocessed: Startup_Hub : FSM"
+
+
+
 
   }
 
