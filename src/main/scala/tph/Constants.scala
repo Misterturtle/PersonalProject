@@ -70,13 +70,13 @@ object Constants {
     case class CardPlayWithEnemyOption(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
     case class CardPlayWithEnemyFaceOption(sender:String, card: Int) extends ActionVote(sender)
     //Battlecry Option with Position Type
-    case class CardPlayWithFriendlyOptionWithPosition(sender:String, card: Int, friendlyTarget: Int, position: Int) extends ActionVote(sender)
-    case class CardPlayWithFriendlyFaceOptionWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyOptionWithPosition(sender:String, card: Int, enemyTarget: Int, position: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyFaceOptionWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyTargetWithPosition(sender:String, card: Int, friendlyTarget: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyFaceTargetWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyTargetWithPosition(sender:String, card: Int, enemyTarget: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyFaceTargetWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
     //Normal Turn Play Type
-    case class CardPlay(sender:String, card: Int) extends ActionVote(sender)
     case class CardPlayWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
+    case class CardPlay(sender:String, card: Int) extends ActionVote(sender)
     case class CardPlayWithFriendlyBoardTarget(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
     case class CardPlayWithEnemyBoardTarget(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
     case class CardPlayWithFriendlyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
@@ -86,6 +86,8 @@ object Constants {
     case class HeroPowerWithEnemyTarget(sender:String, enemyTarget: Int) extends ActionVote(sender)
     case class HeroPowerWithFriendlyFace(sender:String) extends ActionVote(sender)
     case class HeroPowerWithEnemyFace(sender:String) extends ActionVote(sender)
+    //3 part commands
+
     //Attack Type
     case class NormalAttack(sender:String, friendlyTarget: Int, enemyTarget: Int) extends ActionVote(sender)
     case class FaceAttack(sender:String, position: Int) extends ActionVote(sender)
@@ -97,7 +99,7 @@ object Constants {
     case class MulliganVote(sender:String, first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends Vote(sender)
   }
 
-  object MiscVoteCodes {
+  object MiscVotes {
 
     case class UninitVote(sender:String) extends Vote(sender)
     case class Hurry(sender:String) extends Vote(sender)
@@ -105,7 +107,7 @@ object Constants {
     case class Uninit(sender:String) extends Vote(sender)
   }
 
-  object EmojiVoteCodes {
+  object EmojiVotes {
 
     case class Greetings(sender:String) extends EmojiVote(sender)
     case class Thanks(sender:String) extends EmojiVote(sender)
@@ -128,10 +130,10 @@ object Constants {
     case class QuestLog(sender:String) extends MenuVote(sender)
     case class Casual(sender:String) extends MenuVote(sender)
     case class Ranked(sender:String) extends MenuVote(sender)
-    case class Deck(deckNumber: Int, sender:String) extends MenuVote(sender)
+    case class Deck(sender:String, deckNumber: Int) extends MenuVote(sender)
     case class FirstPage(sender:String) extends MenuVote(sender)
     case class SecondPage(sender:String) extends MenuVote(sender)
-    case class Quest(number: Int, sender:String) extends MenuVote(sender)
+    case class Quest( sender:String, number: Int) extends MenuVote(sender)
   }
 
   object VoteStringNames {

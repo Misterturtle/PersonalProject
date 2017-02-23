@@ -1,6 +1,6 @@
 package RegressionTests
 
-import java.io.{FileReader, BufferedReader, FileWriter, PrintWriter}
+import java.io._
 
 import com.typesafe.config.ConfigFactory
 import org.jibble.pircbot.PircBot
@@ -45,18 +45,29 @@ class StartToEndTests extends FlatSpec with Matchers {
   }
 
   it should "Initialize ircBot" in {
-
     val ircBot = new IRCBot()
-    val testBot = new PircBot { }
+    val config = ConfigFactory.load()
+    val testBot = new PircBot {
+      val config = ConfigFactory.load()
+      val hostName = config.getString("tph.irc.host")
+      val channel = config.getString("tph.irc.channel")
+      val nickname = "TPHTesterBot1"
 
+      setName(nickname)
+      setVerbose(false)
+      connect(hostName)
+      joinChannel(channel)}
 
+    testBot.sendMessage("#tph", "!greetings")
+    testBot.sendMessage("#tph", "!wow")
 
-
-
-
+    val reader = new BufferedReader(new FileReader(config.getString("tph.voteLog.path")))
+    val actualStringList = Stream.continually(reader.readLine()).takeWhile(_ != null).toList
+    actualStringList.size shouldEqual 2
+    actualStringList(0) shouldEqual "!greetings"
+    actualStringList(1) shouldEqual "!wow"
 
   }
-
 
   "TPH GameState" should "Detect and filter changes in hearthstone's output.log into actionLog.txt" in {
 
