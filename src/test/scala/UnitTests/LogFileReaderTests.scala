@@ -12,8 +12,8 @@ import tph.LogFileReader
 class LogFileReaderTests extends FlatSpec with Matchers {
 
   val config = ConfigFactory.load()
-  val hearthstoneLogFile = new File(config.getString("tph.game-log.file"))
-  val actionLogFile = new File(getClass.getResource("/actionLog.txt").getPath)
+  val hearthstoneLogFile = new File(config.getString("tph.outputLog.path"))
+  val actionLogFile = new File(config.getString("tph.actionLog.path"))
 
 
 
@@ -86,8 +86,4 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
     actualActionLogStrings shouldEqual expectedActionLogStrings
   }
-
-
-
-
 }

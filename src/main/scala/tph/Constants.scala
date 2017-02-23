@@ -1,6 +1,8 @@
 package tph
 
 
+import VoteSystem.{ActionVote, EmojiVote, Vote, MenuVote}
+
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -12,15 +14,6 @@ object Constants {
   val STRING_UNINIT = "Constant Uninitialized"
   val booleanToIntMap = Map[Boolean, Int](true -> 1, false -> 0)
 
-  object StateSignatures {
-
-    val inGameSignature = "In Game"
-    val inMenuSignature = "In Menu"
-    val initSignature = "Initializing"
-    val hisTurnSignature = "His Turn"
-    val myTurnSignature = "My Turn"
-    val inMulliganSignature = "In Mulligan"
-  }
 
   object TestConstants{
     val defaultGameState = new GameState(new Player(1,
@@ -49,47 +42,7 @@ object Constants {
           new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
           new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 3, 2),
           new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2))))
-
-
-
-
   }
-
-
-  object FunctionalConstants {
-
-//    def RepeatFunction[A](f: A => A, startingParameter: A, numberOfRepeats: Int, currentIteration:Int = 0): A = {
-//      if (currentIteration < numberOfRepeats) {
-//        RepeatFunction(f, f(startingParameter), numberOfRepeats, currentIteration +1)
-//      }
-//      else {
-//        println("End function result is: " + f(startingParameter))
-//        f(startingParameter)
-//      }
-//    }
-//
-//    def UnwrapMultiSome(option: Option[_]): Option[_] = {
-//      option match {
-//        case Some(x) =>
-//          x match {
-//            case Some(someOption: Option[_]) =>
-//              println("Unwrapping once")
-//              UnwrapMultiSome(someOption)
-//
-//            case trueValue =>
-//              println("Returning Some(trueValue)" + trueValue)
-//              Some(trueValue)
-//
-//            case None =>
-//              println("This should never happen. Returning None value for UnwrapMultiSome")
-//              None
-//          }
-//        case None => println("This should never happen. Returning None value for UnwrapMultiSome")
-//          None
-//      }
-//    }
-  }
-
 
   object MenuNames {
 
@@ -104,269 +57,84 @@ object Constants {
     val OPEN_PACKS_MENU = "Open Packs Menu"
   }
 
-  case class UninitVoteCode() extends VoteCode
 
 
-  sealed trait VoteCode {}
 
-  object CommandMessages {
-
-
-    case class ChangeReaderFile(fileName: String)
-
-    //case class CommandVote(builtCommand: Vote)
-
-    case class ChangeMenu(previousMenu: String, changeToMenu: String)
-  }
-
-
-  object ActionVoteCodes {
-
-    sealed trait ActionVoteCode extends VoteCode {
-
-      var positionVote = Constants.INT_UNINIT
-      var cardVote = Constants.INT_UNINIT
-      var friendlyTargetVote = Constants.INT_UNINIT
-      var enemyTargetVote = Constants.INT_UNINIT
-    }
-
+  object ActionVotes {
 
     //Discover Type
-    case class Discover(card: Int) extends ActionVoteCode {
-      cardVote = card
-    }
-
+    case class Discover(sender:String, card: Int) extends ActionVote(sender)
     // Battlecry Option Type
-    case class CardPlayWithFriendlyOption(card: Int, friendlyTarget: Int) extends ActionVoteCode {
-      cardVote = card
-      friendlyTargetVote = friendlyTarget
-    }
-
-    case class CardPlayWithFriendlyFaceOption(card: Int) extends ActionVoteCode {
-      cardVote = card
-    }
-
-    case class CardPlayWithEnemyOption(card: Int, enemyTarget: Int) extends ActionVoteCode {
-      cardVote = card
-      enemyTargetVote = enemyTarget
-    }
-
-    case class CardPlayWithEnemyFaceOption(card: Int) extends ActionVoteCode {
-      cardVote = card
-    }
-
+    case class CardPlayWithFriendlyOption(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyFaceOption(sender:String, card: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyOption(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyFaceOption(sender:String, card: Int) extends ActionVote(sender)
     //Battlecry Option with Position Type
-    case class CardPlayWithFriendlyOptionWithPosition(card: Int, friendlyTarget: Int, position: Int) extends ActionVoteCode {
-      cardVote = card
-      friendlyTargetVote = friendlyTarget
-      positionVote = position
-    }
-
-    case class CardPlayWithFriendlyFaceOptionWithPosition(card: Int, position: Int) extends ActionVoteCode {
-      cardVote = card
-      positionVote = position
-    }
-
-    case class CardPlayWithEnemyOptionWithPosition(card: Int, enemyTarget: Int, position: Int) extends ActionVoteCode {
-      cardVote = card
-      enemyTargetVote = enemyTarget
-      positionVote = position
-    }
-
-    case class CardPlayWithEnemyFaceOptionWithPosition(card: Int, position: Int) extends ActionVoteCode {
-      cardVote = card
-      positionVote = position
-    }
-
-
+    case class CardPlayWithFriendlyOptionWithPosition(sender:String, card: Int, friendlyTarget: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyFaceOptionWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyOptionWithPosition(sender:String, card: Int, enemyTarget: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyFaceOptionWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
     //Normal Turn Play Type
-    case class CardPlay(cardFoo: Int) extends ActionVoteCode {
-      cardVote = cardFoo
-    }
-
-    case class CardPlayWithPosition(card: Int, position: Int) extends ActionVoteCode {
-      cardVote = card
-      positionVote = position
-    }
-
-    case class CardPlayWithFriendlyBoardTarget(card: Int, friendlyTarget: Int) extends ActionVoteCode {
-      cardVote = card
-      friendlyTargetVote = friendlyTarget
-    }
-
-    case class CardPlayWithEnemyBoardTarget(card: Int, enemyTarget: Int) extends ActionVoteCode {
-      cardVote = card
-      enemyTargetVote = enemyTarget
-    }
-
-    case class CardPlayWithFriendlyFaceTarget(card: Int) extends ActionVoteCode {
-      cardVote = card
-    }
-
-    case class CardPlayWithEnemyFaceTarget(card: Int) extends ActionVoteCode {
-      cardVote = card
-    }
-
-    case class HeroPower() extends ActionVoteCode
-
-    case class HeroPowerWithFriendlyTarget(friendlyTarget: Int) extends ActionVoteCode {
-      friendlyTargetVote = friendlyTarget
-    }
-
-    case class HeroPowerWithEnemyTarget(enemyTarget: Int) extends ActionVoteCode {
-      enemyTargetVote = enemyTarget
-    }
-
-    case class HeroPowerWithFriendlyFace() extends ActionVoteCode
-
-    case class HeroPowerWithEnemyFace() extends ActionVoteCode
-
-
+    case class CardPlay(sender:String, card: Int) extends ActionVote(sender)
+    case class CardPlayWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyBoardTarget(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyBoardTarget(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
+    case class HeroPower(sender:String) extends ActionVote(sender)
+    case class HeroPowerWithFriendlyTarget(sender:String, friendlyTarget: Int) extends ActionVote(sender)
+    case class HeroPowerWithEnemyTarget(sender:String, enemyTarget: Int) extends ActionVote(sender)
+    case class HeroPowerWithFriendlyFace(sender:String) extends ActionVote(sender)
+    case class HeroPowerWithEnemyFace(sender:String) extends ActionVote(sender)
     //Attack Type
-    case class NormalAttack(friendlyTarget: Int, enemyTarget: Int) extends ActionVoteCode {
-      positionVote = friendlyTarget
-      enemyTargetVote = enemyTarget
-    }
-
-    case class FaceAttack(position: Int) extends ActionVoteCode {
-      positionVote = position
-    }
-
-    case class NormalAttackToFace(position: Int) extends ActionVoteCode {
-      positionVote = position
-    }
-
-    case class FaceAttackToFace() extends ActionVoteCode
-
-    case class ActionUninit() extends ActionVoteCode
-
-    case class Bind() extends ActionVoteCode
-
-    case class Future() extends ActionVoteCode
-
-    case class MulliganVote(first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends VoteCode
-
-
+    case class NormalAttack(sender:String, friendlyTarget: Int, enemyTarget: Int) extends ActionVote(sender)
+    case class FaceAttack(sender:String, position: Int) extends ActionVote(sender)
+    case class NormalAttackToFace(sender:String, position: Int) extends ActionVote (sender)
+    case class FaceAttackToFace(sender:String) extends ActionVote(sender)
+    case class ActionUninit(sender:String) extends ActionVote(sender)
+    case class Bind(sender:String) extends ActionVote(sender)
+    case class Future(sender:String) extends ActionVote(sender)
+    case class MulliganVote(sender:String, first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends Vote(sender)
   }
 
   object MiscVoteCodes {
 
-
-    case class Hurry() extends VoteCode
-
-    // Probably removing Concede
-    // case class Concede(decision: Boolean) extends VoteCode
-
-    case class EndTurn() extends VoteCode
-
-    case class Uninit() extends VoteCode
-
+    case class UninitVote(sender:String) extends Vote(sender)
+    case class Hurry(sender:String) extends Vote(sender)
+    case class EndTurn(sender:String) extends Vote(sender)
+    case class Uninit(sender:String) extends Vote(sender)
   }
 
   object EmojiVoteCodes {
 
-    //Emote Type
-
-    sealed trait EmojiVoteCode extends VoteCode {
-
-    }
-
-    case class Greetings() extends EmojiVoteCode
-
-    case class Thanks() extends EmojiVoteCode
-
-    case class WellPlayed() extends EmojiVoteCode
-
-    case class Wow() extends EmojiVoteCode
-
-    case class Oops() extends EmojiVoteCode
-
-    case class Threaten() extends EmojiVoteCode
-
-    case class EmojiUninit() extends EmojiVoteCode
-
+    case class Greetings(sender:String) extends EmojiVote(sender)
+    case class Thanks(sender:String) extends EmojiVote(sender)
+    case class WellPlayed(sender:String) extends EmojiVote(sender)
+    case class Wow(sender:String) extends EmojiVote(sender)
+    case class Oops(sender:String) extends EmojiVote(sender)
+    case class Threaten(sender:String) extends EmojiVote(sender)
+    case class EmojiUninit(sender:String) extends EmojiVote(sender)
   }
 
 
-  object MenuVoteCodes {
+  object MenuVotes {
 
-
-    sealed trait MenuVoteCode extends VoteCode {
-      def menu: String
-
-      var numberOption = Constants.INT_UNINIT
-    }
-
-
-    //MultiMenu
-
-    case class MenuUninit() extends MenuVoteCode {
-      val menu = "Uninit"
-    }
-
-
-    case class Back(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-
-    case class Play(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    case class Collection(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-
-    //Main Menu
-
-    case class Shop(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    case class OpenPacks(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    case class QuestLog(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    //Play Menu
-
-    case class Casual(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    case class Ranked(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    case class Deck(deckNumber: Int, currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-      numberOption = deckNumber
-
-    }
-
-    case class FirstPage(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    case class SecondPage(currentMenu: String) extends MenuVoteCode {
-      val menu = currentMenu
-    }
-
-    //Quest Menu
-
-    case class Quest(number: Int, currentMenu: String) extends MenuVoteCode {
-      numberOption = number
-      val menu = currentMenu
-    }
-
+    case class MenuUninit(sender:String) extends MenuVote(sender)
+    case class Back(sender:String) extends MenuVote(sender)
+    case class Play(sender:String) extends MenuVote(sender)
+    case class Collection(sender:String) extends MenuVote(sender)
+    case class Shop(sender:String) extends MenuVote(sender)
+    case class OpenPacks(sender:String) extends MenuVote(sender)
+    case class QuestLog(sender:String) extends MenuVote(sender)
+    case class Casual(sender:String) extends MenuVote(sender)
+    case class Ranked(sender:String) extends MenuVote(sender)
+    case class Deck(deckNumber: Int, sender:String) extends MenuVote(sender)
+    case class FirstPage(sender:String) extends MenuVote(sender)
+    case class SecondPage(sender:String) extends MenuVote(sender)
+    case class Quest(number: Int, sender:String) extends MenuVote(sender)
   }
 
-  object CommandVotes {
+  object VoteStringNames {
 
     val DISCOVER = "Discover"
 

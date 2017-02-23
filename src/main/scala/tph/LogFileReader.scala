@@ -12,7 +12,7 @@ import tph.HSAction.HSActionUninit
 class LogFileReader() {
 
   val config = ConfigFactory.load()
-  val defaultFile = new File(config.getString("tph.game-log.file"))
+  val defaultFile = new File(config.getString("tph.outputLog.path"))
   val scheduler = new ScheduledThreadPoolExecutor(1)
   val pollRunnable = new Runnable {
     def run() = poll()
@@ -23,7 +23,7 @@ class LogFileReader() {
 
     val reader = new BufferedReader(new FileReader(defaultFile))
 
-    val actionLogFile = new File(getClass.getResource("/actionLog.txt").getPath)
+    val actionLogFile = new File(config.getString("tph.actionLog.path"))
     val writer = new PrintWriter(new FileWriter(actionLogFile))
 
     while (reader.ready()) {

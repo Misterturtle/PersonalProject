@@ -1,7 +1,9 @@
 package tph
 
+import java.io
 import java.io._
 
+import com.typesafe.config.ConfigFactory
 import tph.{GameState, Constants}
 import tph.HSAction._
 
@@ -12,7 +14,9 @@ import scala.util.matching.Regex
   */
 class LogParser() {
 
-    val defaultLog = new File(getClass.getResource("/actionLog.txt").getPath)
+    val config = ConfigFactory.load()
+    val defaultFileNameString = config.getString("tph.actionLog.path")
+    val defaultLog = new File(defaultFileNameString)
 
     def IdentifyHSAction(actionString: String): HSAction = {
       import Constants.LogFileReaderStrings.HSActionStrings._
@@ -63,9 +67,8 @@ class LogParser() {
     }
 
     def ConstructGameState(file: File = defaultLog): GameState = {
-
-      val reader = new BufferedReader(new FileReader(file))
-      val streams = Stream.continually(reader.readLine()).takeWhile(_ != null)
+      val br = new BufferedReader(new FileReader(file))
+      val streams = Stream.continually(br.readLine()).takeWhile(_ != null)
       val playerNumber = GetPlayerNumbers(file)
       val gameState:GameState = streams.foldLeft(new GameState(new Player(playerNumber._1), new Player(playerNumber._2))) { (r, c) =>
           IdentifyHSAction(c).ExecuteAction(r)
@@ -82,13 +85,17 @@ class LogParser() {
         case DEFINE_PLAYERS(friendlyPlayer) =>
           friendlyPlayer.toInt match {
             case 1 =>
+              reader.close()
               return (1, 2)
             case 2 =>
+              reader.close()
               return (2, 1)
           }
         case _ =>
       }
+      reader.close()
     println("Couldn't find DEFINE_PLAYERS regex string")
+
     (Constants.INT_UNINIT, Constants.INT_UNINIT)
     }
 }
