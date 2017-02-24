@@ -141,25 +141,30 @@ object HSAction {
 
   case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val cardBeingPlayed = gameState.GetCardByID(id)
-        val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          val cardBeingPlayed = gameState.GetCardByID(id)
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
 
-        val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(cardBeingPlayed)
-        val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
-        new GameState(newPlayer, gameState.enemyPlayer)
-      }
+          val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(cardBeingPlayed)
+          if(dstPos == 0)
+            new GameState(playerWithNewHand, gameState.enemyPlayer)
+          else {
+            val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
+            new GameState(newPlayer, gameState.enemyPlayer)
+          }
+        }
 
-      else {
-        val cardBeingPlayed = gameState.GetCardByID(id)
-        val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
+        else {
+          val cardBeingPlayed = gameState.GetCardByID(id)
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
 
-        val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingPlayed)
-        val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
-        new GameState(gameState.friendlyPlayer, newPlayer)
+          val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingPlayed)
+          val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
+          new GameState(gameState.friendlyPlayer, newPlayer)
+        }
       }
     }
-  }
+
 
 
   //// I don't think I should ever be using these for a HSAction. Add/Remove card should handle position shifts.
@@ -223,11 +228,26 @@ object HSAction {
     }
   }
 
+  case class MulliganRedraw(name:String, id:Int, position:Int, playerNumber:Int) extends HSAction{
+    override def ExecuteAction(gameState: GameState):GameState ={
+      val card = gameState.GetCardByID(id)
+      new GameState(gameState.friendlyPlayer.RemoveCard(card), gameState.enemyPlayer)
+    }
+  }
+
+  case class EnemyMulliganRedraw(id:Int, oldPosition: Int, playerNumber:Int) extends HSAction{
+    override def ExecuteAction(gameState: GameState):GameState = {
+      val card = gameState.GetCardByID(id)
+      new GameState(gameState.friendlyPlayer, gameState.enemyPlayer.RemoveCard(card))
+    }
+  }
+
   case class HSActionUninit() extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
       gameState
     }
   }
+
 
 
 

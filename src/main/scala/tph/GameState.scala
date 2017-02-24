@@ -31,7 +31,6 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
     new GameState(new Player(friendlyPlayerNumber, friendlyPlayer.hand, friendlyPlayer.board), new Player(enemyPlayerNumber, enemyPlayer.hand,enemyPlayer.board))
   }
 
-
   //  def GetCardAddress(card: Card): CardAddress = {
   //
   //    CardAddress(card.player, FindList(card)._1, FindList(card)._2, FindIndex(card))

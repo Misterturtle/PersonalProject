@@ -1,7 +1,6 @@
 package tph
 
 import com.typesafe.scalalogging.LazyLogging
-import tph.Constants.FunctionalConstants._
 
 /**
   * Created by Harambe on 2/20/2017.

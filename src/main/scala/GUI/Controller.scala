@@ -28,8 +28,7 @@ class Controller(){
 
   val root = new AnchorPane()
   val config = ConfigFactory.load()
-//  var defaultReaderFile = new File(config.getString("tph.writerFiles.actionLog"))
-  var defaultReaderFile = new File(getClass.getResource("/debugsituations/DefinePlayers.txt").getPath)
+  var defaultReaderFile = new File(config.getString("tph.writerFiles.actionLog"))
   var defaultWriterFile = new File(config.getString("tph.writerFiles.guiPrintFile"))
 
   val vboxContainer = new VBox()
@@ -188,21 +187,21 @@ class Controller(){
     writer.println("----------------Friendly Hand----------------")
     writer.flush()
     for(a<-1 to friendlyHand.size) {
-      writer.println("new Card(\""+friendlyHand(a-1).name+"\", "+ friendlyHand(a - 1).id + ", "+friendlyHand(a - 1).handPosition + ", "+ friendlyHand(a - 1).boardPosition + ", "+friendlyHand(a - 1).player+")")
+      writer.println("new Card(\""+friendlyHand(a-1).name+"\", "+ friendlyHand(a - 1).id + ", "+friendlyHand(a - 1).handPosition + ", "+ friendlyHand(a - 1).boardPosition + ", "+friendlyHand(a - 1).player+"),")
       writer.flush()
     }
     writer.println("----------------Friendly Board----------------")
     writer.flush()
     for(a<-1 to friendlyBoard.size) {
 
-      writer.println("new Card(\""+friendlyBoard(a-1).name+"\", "+ friendlyBoard(a - 1).id + ", "+friendlyBoard(a - 1).handPosition + ", "+ friendlyBoard(a - 1).boardPosition + ", "+friendlyBoard(a - 1).player+")")
+      writer.println("new Card(\""+friendlyBoard(a-1).name+"\", "+ friendlyBoard(a - 1).id + ", "+friendlyBoard(a - 1).handPosition + ", "+ friendlyBoard(a - 1).boardPosition + ", "+friendlyBoard(a - 1).player+"),")
       writer.flush()
     }
     writer.println("----------------Enemy Hand----------------")
     writer.flush()
     for(a<-1 to enemyHand.size) {
 
-      writer.println("new Card(\""+enemyHand(a-1).name+"\", "+ enemyHand(a - 1).id + ", "+enemyHand(a - 1).handPosition + ", "+ enemyHand(a - 1).boardPosition + ", "+enemyHand(a - 1).player+")")
+      writer.println("new Card(\""+enemyHand(a-1).name+"\", "+ enemyHand(a - 1).id + ", "+enemyHand(a - 1).handPosition + ", "+ enemyHand(a - 1).boardPosition + ", "+enemyHand(a - 1).player+"),")
       writer.flush()
     }
 
@@ -210,7 +209,7 @@ class Controller(){
     writer.flush()
     for(a<-1 to enemyBoard.size) {
 
-      writer.println("new Card(\""+enemyBoard(a-1).name+"\", "+ enemyBoard(a - 1).id + ", "+enemyBoard(a - 1).handPosition + ", "+ enemyBoard(a - 1).boardPosition + ", "+enemyBoard(a - 1).player+")")
+      writer.println("new Card(\""+enemyBoard(a-1).name+"\", "+ enemyBoard(a - 1).id + ", "+enemyBoard(a - 1).handPosition + ", "+ enemyBoard(a - 1).boardPosition + ", "+enemyBoard(a - 1).player+"),")
       writer.flush()
     }
   }

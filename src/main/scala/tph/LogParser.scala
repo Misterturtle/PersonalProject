@@ -40,13 +40,13 @@ class LogParser() {
         case KNOWN_CARD_DRAWN(name, id, position, player) =>
           new KnownCardDrawn(name, id.toInt, position.toInt, player.toInt)
 
-        case CARD_PLAYED(name, id, position, player) =>
+        case CARD_PLAYED(name, id, position, player) if position.toInt != 0 =>
           new CardPlayed(name, id.toInt, position.toInt, player.toInt)
 
         case CARD_DEATH(name, id, player) =>
           new CardDeath(name, id.toInt, player.toInt)
 
-        case MINION_SUMMONED(name, id, position, player) =>
+        case MINION_SUMMONED(name, id, position, player) if position.toInt != 0 =>
           new MinionSummoned(name, id.toInt, position.toInt, player.toInt)
 
         case TRANSFORM(id, newID) =>
@@ -60,6 +60,12 @@ class LogParser() {
 
         case DEFINE_PLAYERS(friendlyPlayerNumber) =>
           new DefinePlayers(friendlyPlayerNumber.toInt)
+
+        case MULLIGAN_REDRAW(name, id, position, player) =>
+          new MulliganRedraw(name, id.toInt, position.toInt, player.toInt)
+
+        case ENEMY_MULLIGAN_REDRAW(id, position, player) =>
+          new EnemyMulliganRedraw(id.toInt, position.toInt, player.toInt)
 
         case _ =>
           new HSActionUninit()

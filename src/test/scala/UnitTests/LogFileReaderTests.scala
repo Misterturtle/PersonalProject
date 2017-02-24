@@ -47,16 +47,16 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     writer.println("some FULL_ENTITY - Updating [name=Friendly Board 2 id=12 zone=PLAY zonePos=2 some player=1 some")
     writer.flush()
 
-    writer.println("someid=55 local=some [id=21 cardId=some type=some zone=HAND zonePos=1 player=2] pos from 55 -> 55")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=1 cardId= player=2] pos from .* -> .*")
     writer.flush()
 
     writer.println("Someother text that isnt a heartstone action")
     writer.flush()
 
-    writer.println("someid=55 local=some [id=22 cardId=some type=some zone=HAND zonePos=2 player=2] pos from 55 -> 55")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=2 cardId= player=2] pos from .* -> .*")
     writer.flush()
 
-    writer.println("someid=55 local=some [id=23 cardId=some type=some zone=HAND zonePos=3 player=2] pos from 55 -> 55")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=3 cardId= player=2] pos from .* -> .*")
     writer.flush()
 
     writer.println("some FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 some player=2 some")
@@ -78,9 +78,9 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       "some id=55 local=False [name=Friendly Hand 3 id=3 zone=HAND zonePos=3 cardId=some player=1] pos from 55 -> 55",
       "some FULL_ENTITY - Updating [name=Friendly Board 1 id=11 zone=PLAY zonePos=1 some player=1 some",
       "some FULL_ENTITY - Updating [name=Friendly Board 2 id=12 zone=PLAY zonePos=2 some player=1 some",
-      "someid=55 local=some [id=21 cardId=some type=some zone=HAND zonePos=1 player=2] pos from 55 -> 55",
-      "someid=55 local=some [id=22 cardId=some type=some zone=HAND zonePos=2 player=2] pos from 55 -> 55",
-      "someid=55 local=some [id=23 cardId=some type=some zone=HAND zonePos=3 player=2] pos from 55 -> 55",
+      "[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=1 cardId= player=2] pos from .* -> .*",
+      "[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=2 cardId= player=2] pos from .* -> .*",
+      "[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=3 cardId= player=2] pos from .* -> .*",
       "some FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 some player=2 some",
       "some FULL_ENTITY - Updating [name=Enemy Board 2 id=32 zone=PLAY zonePos=2 some player=2 some")
 
@@ -104,22 +104,20 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     )
 
     val expectedFriendlyBoard = List[HSCard](
-      new Card("The Coin", 86, 500, 0, 2),
-    new Card("Uther Lightbringer", 84, 500, 3, 2),
-    new Card("Reinforce", 85, 500, 2, 2),
-    new Card("Wild Pyromancer", 80, 500, 1, 2)
-
+      new Card("Wild Pyromancer", 80, 500, 1, 2)
     )
 
     val expectedEnemyHand = List[HSCard](
+      new Card("Constant Uninitialized", 4, 1, 500, 1),
+    new Card("Constant Uninitialized", 43, 2, 500, 1),
+    new Card("Constant Uninitialized", 48, 3, 500, 1),
+    new Card("Constant Uninitialized", 48, 5, 500, 1),
+    new Card("Constant Uninitialized", 17, 4, 500, 1)
 
     )
     val expectedEnemyBoard = List[HSCard](
-      new Card("Shapeshift", 83, 500, 1, 1),
-    new Card("Sapling", 87, 500, 2, 1),
-    new Card("Malfurion Stormrage", 82, 500, 4, 1),
-    new Card("Sapling", 88, 500, 3, 1),
-    new Card("Living Roots", 35, 500, 0, 1)
+      new Card("Sapling", 87, 500, 1, 1),
+    new Card("Sapling", 88, 500, 2, 1)
     )
 
     actualFriendlyHand shouldEqual expectedFriendlyHand
@@ -127,6 +125,71 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     actualEnemyHand shouldEqual expectedEnemyHand
     actualEnemyBoard shouldEqual expectedEnemyBoard
 
+  }
+
+
+  it should "Detect MulliganRedraw" in {
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualEnemyHand =actualGameState.enemyPlayer.hand
+
+    val expectedFriendlyHand = List(
+      new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, playerNumbers._1),
+    new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, playerNumbers._1),
+    new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, playerNumbers._1),
+    new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, playerNumbers._1),
+    new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1))
+
+    val expectedEnemyHand = List(
+      new Card(Constants.STRING_UNINIT, 21, 1, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 4, 2, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 10, 3, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 25, 4, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 32, 5, Constants.INT_UNINIT, 1))
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualEnemyHand shouldEqual expectedEnemyHand
+  }
+
+
+  it should "Detect CardPlayed" in {
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand =actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+
+    val expectedFriendlyHand = List(
+      new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1))
+
+    val expectedFriendlyBoard = List(
+      new Card("Acolyte of Pain",48,Constants.INT_UNINIT,1,2))
+
+    val expectedEnemyHand = List(
+      new Card(Constants.STRING_UNINIT, 21, 1, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 4, 2, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 10, 3, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 25, 4, Constants.INT_UNINIT, 1),
+      new Card(Constants.STRING_UNINIT, 32, 5, Constants.INT_UNINIT, 1))
+
+    val expectedEnemyBoard = List[HSCard]()
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
 
