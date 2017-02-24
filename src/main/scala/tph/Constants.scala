@@ -2,6 +2,7 @@ package tph
 
 
 import VoteSystem.{ActionVote, EmojiVote, Vote, MenuVote}
+import tph.Constants.VoteStringNames._
 
 import scala.collection.mutable.ListBuffer
 
@@ -64,11 +65,6 @@ object Constants {
 
     //Discover Type
     case class Discover(sender:String, card: Int) extends ActionVote(sender)
-    // Battlecry Option Type
-    case class CardPlayWithFriendlyOption(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
-    case class CardPlayWithFriendlyFaceOption(sender:String, card: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyOption(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyFaceOption(sender:String, card: Int) extends ActionVote(sender)
     //Battlecry Option with Position Type
     case class CardPlayWithFriendlyTargetWithPosition(sender:String, card: Int, friendlyTarget: Int, position: Int) extends ActionVote(sender)
     case class CardPlayWithFriendlyFaceTargetWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
@@ -77,8 +73,8 @@ object Constants {
     //Normal Turn Play Type
     case class CardPlayWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
     case class CardPlay(sender:String, card: Int) extends ActionVote(sender)
-    case class CardPlayWithFriendlyBoardTarget(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyBoardTarget(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyTarget(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
+    case class CardPlayWithEnemyTarget(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
     case class CardPlayWithFriendlyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
     case class CardPlayWithEnemyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
     case class HeroPower(sender:String) extends ActionVote(sender)
@@ -137,20 +133,15 @@ object Constants {
   }
 
   object VoteStringNames {
+    val totalVoteStringNames = 20
 
     val DISCOVER = "Discover"
 
-    val CARD_PLAY_WITH_FRIENDLY_OPTION = "CardPlayWithFriendlyOption"
-    val CARD_PLAY_WITH_FRIENDLY_FACE_OPTION = "CardPlayWithFriendlyFaceOption"
-    val CARD_PLAY_WITH_ENEMY_OPTION = "CardPlayWithEnemyOption"
-    val CARD_PLAY_WITH_ENEMY_FACE_OPTION = "CardPlayWithEnemyFaceOption"
-
-
     //Battlecry and Position Type
-    val CARD_PLAY_WITH_FRIENDLY_OPTION_WITH_POSITION = "CardPlayWithFriendlyOptionWithPosition"
-    val CARD_PLAY_WITH_FRIENDLY_FACE_OPTION_WITH_POSITION = "CardPlayWithFriendlyFaceOptionWithPosition"
-    val CARD_PLAY_WITH_ENEMY_OPTION_WITH_POSITION = "CardPlayWithEnemyOptionWithPosition"
-    val CARD_PLAY_WITH_ENEMY_FACE_OPTION_WITH_POSITION = "CardPlayWithEnemyFaceOptionWithPosition"
+    val CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION = "CardPlayWithFriendlyTargetWithPosition"
+    val CARD_PLAY_WITH_FRIENDLY_FACE_TARGET_WITH_POSITION = "CardPlayWithFriendlyFaceTargetWithPosition"
+    val CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION = "CardPlayWithEnemyTargetWithPosition"
+    val CARD_PLAY_WITH_ENEMY_FACE_TARGET_WITH_POSITION = "CardPlayWithEnemyFaceTargetWithPosition"
 
 
     //Normal Turn Play Type
@@ -176,7 +167,31 @@ object Constants {
     val FACE_ATTACK_WITH_ENEMY_TARGET = "FaceAttackWithEnemyTarget"
     val FACE_ATTACK_WITH_ENEMY_FACE_TARGET = "FaceAttackWithEnemyFaceTarget"
 
+
+    val listOfVoteStringNames = List[String](
+      DISCOVER,
+      CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION,
+      CARD_PLAY_WITH_FRIENDLY_FACE_TARGET_WITH_POSITION,
+      CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION ,
+      CARD_PLAY_WITH_ENEMY_FACE_TARGET_WITH_POSITION,
+      CARD_PLAY ,
+      CARD_PLAY_WITH_POSITION  ,
+      CARD_PLAY_WITH_FRIENDLY_TARGET  ,
+      CARD_PLAY_WITH_ENEMY_TARGET ,
+      CARD_PLAY_WITH_FRIENDLY_FACE_TARGET,
+      CARD_PLAY_WITH_ENEMY_FACE_TARGET  ,
+      HERO_POWER ,
+      HERO_POWER_WITH_ENEMY_FACE,
+      HERO_POWER_WITH_ENEMY_TARGET,
+      HERO_POWER_WITH_FRIENDLY_FACE ,
+      HERO_POWER_WITH_FRIENDLY_TARGET ,
+      NORMAL_ATTACK_WITH_ENEMY_TARGET,
+      NORMAL_ATTACK_WITH_ENEMY_FACE_TARGET,
+      FACE_ATTACK_WITH_ENEMY_TARGET ,
+      FACE_ATTACK_WITH_ENEMY_FACE_TARGET)
   }
+
+
 
   object LogFileReaderStrings {
 

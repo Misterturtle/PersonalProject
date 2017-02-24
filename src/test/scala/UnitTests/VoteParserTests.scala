@@ -1,7 +1,7 @@
 package UnitTests
 
-import VoteSystem.{Vote, VoteParser}
-import org.scalatest.{FlatSpec, Matchers}
+import VoteSystem.{ActionVote, Vote, VoteParser}
+import org.scalatest.{Ignore, FlatSpec, Matchers}
 import tph.Constants.EmojiVotes._
 import tph.Constants.MenuVotes._
 import tph.Constants.MiscVotes._
@@ -17,8 +17,7 @@ class VoteParserTests extends FlatSpec with Matchers {
   val sender = "voteParser"
 
 
-
-  "A VoteParser" should "Identify raw string input" in {
+  "A VoteParser" should "Identify raw string input" ignore {
     val GREETINGS = "!greetings"
     val THANKS = "!thanks"
     val WELL_PLAYED = "!well played"
@@ -71,7 +70,6 @@ class VoteParserTests extends FlatSpec with Matchers {
       voteParser.ParseVote(GREETINGS, sender),
       voteParser.ParseVote(THANKS, sender),
       voteParser.ParseVote(WELL_PLAYED, sender),
-      voteParser.ParseVote(WELL_PLAYED, sender),
       voteParser.ParseVote(WOW, sender),
       voteParser.ParseVote(OOPS, sender),
       voteParser.ParseVote(THREATEN, sender),
@@ -112,15 +110,15 @@ class VoteParserTests extends FlatSpec with Matchers {
       new EndTurn(sender),
       new Bind(sender),
       new Future(sender),
-      new CardPlayWithEnemyBoardTarget(sender, 1, 2),
+      new CardPlayWithEnemyTarget(sender, 1, 2),
       new CardPlayWithFriendlyTargetWithPosition(sender, 1, 4, 2),
       new CardPlay(sender, 1),
       new NormalAttackToFace(sender, 1),
-      new CardPlayWithFriendlyBoardTarget(sender, 3, 2),
-      new CardPlayWithEnemyBoardTarget(sender, 3, 5),
+      new CardPlayWithFriendlyTarget(sender, 3, 2),
+      new CardPlayWithEnemyTarget(sender, 3, 5),
       new CardPlayWithPosition(sender, 4, 1),
-      new CardPlayWithFriendlyBoardTarget(sender, 2, 2),
-      new CardPlayWithFriendlyBoardTarget(sender, 1, 3),
+      new CardPlayWithFriendlyTarget(sender, 2, 2),
+      new CardPlayWithFriendlyTarget(sender, 1, 3),
       new HeroPowerWithEnemyFace(sender),
       new Discover(sender, 3),
       new MulliganVote(sender, true, true, false, true),
@@ -149,6 +147,18 @@ class VoteParserTests extends FlatSpec with Matchers {
     actualVote shouldEqual expectedVote
   }
 
+
+  it should "Identify Action Vote" in {
+
+    val voteParser = new VoteParser()
+    val actualVoteList = List[ActionVote](
+
+    )
+
+
+
+
+  }
 
 
 

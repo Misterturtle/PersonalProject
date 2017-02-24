@@ -2,6 +2,7 @@ package tph
 
 import java.io.{File, FileWriter, PrintWriter}
 
+import VoteSystem.VoteParser
 import com.typesafe.config.ConfigFactory
 import org.jibble.pircbot.PircBot
 
@@ -21,10 +22,6 @@ object IRCBot {
   val THREATEN = "!threaten"
 
   //In Game Always Type
-  val WAIT = "!wait"
-  val HURRY = "!hurry"
-  val CONCEDE = "!concede"
-  val NO_CONCEDE = "!noconcede"
   val END_TURN = "!end turn"
   val BIND = "!bind"
   val FUTURE = "!future"
@@ -86,7 +83,6 @@ class IRCBot extends PircBot {
   joinChannel(channel)
 
   override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
-
 
 
     }

@@ -61,24 +61,27 @@ class VoteParser extends LazyLogging {
       case FUTURE =>
         new Future(sender)
 
-      case MULLIGAN(stringCommand: String) =>
-        ParseMulligan(sender, stringCommand)
+      case MULLIGAN(stringVote: String) =>
+        ParseMulligan(sender, stringVote)
 
       case _ =>
+        new ActionUninit(sender)
 
-        new Bind(sender)
-//        val actionVote = CreateVote(message, sender)
-//        logger.debug("IrcBot has created a new vote: " + actionVote)
-//        AssignVoteCode(actionVote)
-//        logger.debug("The assigned votecode is " + actionVote.actionVoteCode)
-//
-//
-//        if (actionVote.actionVoteCode != Constants.ActionVoteCodes.ActionUninit())
-//          theBrain.VoteEntry(actionVote)
+
     }
-
-
   }
+
+//  def CreateActionVote(sender: String, stringVote:String): ActionVote ={
+//    //Add Cast command
+//    //!f1 att e2 then play
+//    val friendlyCardRegex = """c(\d)""".r
+//    val friendlyBoardRegex = """f(\d)""".r
+//    val enemyRegex = """.*e(\d).*""".r
+//    val attackRegex = """.*att.*""".r
+//    val castRegex = """.*cast(.*)""".r
+//
+//
+//  }
 
 
   def ParseMulligan(sender: String, stringVote: String): MulliganVote = {

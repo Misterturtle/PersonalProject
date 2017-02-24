@@ -44,7 +44,7 @@ class StartToEndTests extends FlatSpec with Matchers {
     actualStringList(1) shouldEqual "[Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Enemy Card 3 id=23 zone=PLAY zonePos=5 cardId=some player=2]"
   }
 
-  it should "Initialize ircBot" in {
+  it should "Initialize ircBot" ignore {
     val ircBot = new IRCBot()
     val config = ConfigFactory.load()
     val testBot = new PircBot {
