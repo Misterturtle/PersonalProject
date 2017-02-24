@@ -51,8 +51,11 @@ object HSAction {
   //Enemy Events
   case class EnemyCardDrawn(id: Int, position: Int, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
+      if(gameState.GetCardByID(id) == NoCards()){
       val newEnemyPlayer = gameState.enemyPlayer.AddCard(new Card(Constants.STRING_UNINIT, id, position, Constants.INT_UNINIT, player), true)
-      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+      new GameState(gameState.friendlyPlayer, newEnemyPlayer)}
+      else
+        gameState
     }
   }
 
@@ -159,8 +162,12 @@ object HSAction {
           val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
 
           val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingPlayed)
-          val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
-          new GameState(gameState.friendlyPlayer, newPlayer)
+          if(dstPos == 0)
+            new GameState(gameState.friendlyPlayer, playerWithNewHand)
+          else {
+            val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
+            new GameState(gameState.friendlyPlayer, newPlayer)
+          }
         }
       }
     }

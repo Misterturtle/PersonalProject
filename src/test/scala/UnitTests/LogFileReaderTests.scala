@@ -16,7 +16,6 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
 
 
-
   "LogFileReader" should "monitor changes in Hearthstone output log and print to actionLog" in {
 
 
@@ -93,14 +92,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/DefinePlayers.txt").getPath))
     val actualFriendlyHand = actualGameState.friendlyPlayer.hand
     val actualFriendlyBoard = actualGameState.friendlyPlayer.board
-    val actualEnemyHand =actualGameState.enemyPlayer.hand
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
     val actualEnemyBoard = actualGameState.enemyPlayer.board
 
     val expectedFriendlyHand = List[HSCard](
       new Card("Equality", 67, 1, 500, 2),
-    new Card("Leeroy Jenkins", 71, 2, 500, 2),
-    new Card("Don Han'Cho", 79, 3, 500, 2),
-    new Card("Blessed Champion", 53, 4, 500, 2)
+      new Card("Leeroy Jenkins", 71, 2, 500, 2),
+      new Card("Don Han'Cho", 79, 3, 500, 2),
+      new Card("Blessed Champion", 53, 4, 500, 2)
     )
 
     val expectedFriendlyBoard = List[HSCard](
@@ -109,15 +108,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
     val expectedEnemyHand = List[HSCard](
       new Card("Constant Uninitialized", 4, 1, 500, 1),
-    new Card("Constant Uninitialized", 43, 2, 500, 1),
-    new Card("Constant Uninitialized", 48, 3, 500, 1),
-    new Card("Constant Uninitialized", 48, 5, 500, 1),
-    new Card("Constant Uninitialized", 17, 4, 500, 1)
+      new Card("Constant Uninitialized", 43, 2, 500, 1),
+      new Card("Constant Uninitialized", 48, 3, 500, 1),
+      new Card("Constant Uninitialized", 17, 4, 500, 1)
 
     )
     val expectedEnemyBoard = List[HSCard](
       new Card("Sapling", 87, 500, 1, 1),
-    new Card("Sapling", 88, 500, 2, 1)
+      new Card("Sapling", 88, 500, 2, 1)
     )
 
     actualFriendlyHand shouldEqual expectedFriendlyHand
@@ -134,14 +132,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
     val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath))
     val actualFriendlyHand = actualGameState.friendlyPlayer.hand
-    val actualEnemyHand =actualGameState.enemyPlayer.hand
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
 
     val expectedFriendlyHand = List(
       new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, playerNumbers._1),
-    new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, playerNumbers._1),
-    new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, playerNumbers._1),
-    new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, playerNumbers._1),
-    new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1)
+      new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, playerNumbers._1),
+      new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1)
     )
 
     val expectedEnemyHand = List(
@@ -164,7 +162,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath))
     val actualFriendlyHand = actualGameState.friendlyPlayer.hand
     val actualFriendlyBoard = actualGameState.friendlyPlayer.board
-    val actualEnemyHand =actualGameState.enemyPlayer.hand
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
     val actualEnemyBoard = actualGameState.enemyPlayer.board
 
     val expectedFriendlyHand = List(
@@ -175,7 +173,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1))
 
     val expectedFriendlyBoard = List(
-      new Card("Acolyte of Pain",48,Constants.INT_UNINIT,1,2))
+      new Card("Acolyte of Pain", 48, Constants.INT_UNINIT, 1, 2))
 
     val expectedEnemyHand = List(
       new Card(Constants.STRING_UNINIT, 21, 1, Constants.INT_UNINIT, 1),
@@ -201,17 +199,17 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/CardDeath.txt").getPath))
     val actualFriendlyHand = actualGameState.friendlyPlayer.hand
     val actualFriendlyBoard = actualGameState.friendlyPlayer.board
-    val actualEnemyHand =actualGameState.enemyPlayer.hand
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
     val actualEnemyBoard = actualGameState.enemyPlayer.board
 
     val expectedFriendlyHand = List(
-    new Card("Truesilver Champion", 28, 1, 500, 1),
-    new Card("Wild Pyromancer", 15, 3, 500, 1),
-    new Card("The Coin", 68, 4, 500, 1),
-    new Card("Acolyte of Pain", 25, 2, 500, 1),
-    new Card("Solemn Vigil", 12, 5, 500, 1),
-    new Card("Eater of Secrets", 32, 6, 500, 1),
-    new Card("Spellbreaker", 30, 7, 500, 1))
+      new Card("Truesilver Champion", 28, 1, 500, 1),
+      new Card("Wild Pyromancer", 15, 3, 500, 1),
+      new Card("The Coin", 68, 4, 500, 1),
+      new Card("Acolyte of Pain", 25, 2, 500, 1),
+      new Card("Solemn Vigil", 12, 5, 500, 1),
+      new Card("Eater of Secrets", 32, 6, 500, 1),
+      new Card("Spellbreaker", 30, 7, 500, 1))
 
     val expectedFriendlyBoard = List(
 
@@ -221,11 +219,8 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     val expectedEnemyHand = List(
       new Card("Constant Uninitialized", 39, 1, 500, 2),
       new Card("Constant Uninitialized", 59, 2, 500, 2),
-      new Card("Constant Uninitialized", 59, 4, 500, 2),
-      new Card("Constant Uninitialized", 34, 6, 500, 2),
-      new Card("Constant Uninitialized", 37, 7, 500, 2),
-      new Card("Constant Uninitialized", 37, 5, 500, 2),
-      new Card("Constant Uninitialized", 34, 3, 500, 2))
+      new Card("Constant Uninitialized", 34, 3, 500, 2),
+      new Card("Constant Uninitialized", 37, 4, 500, 2))
 
     val expectedEnemyBoard = List(
       new Card("Stonetusk Boar", 60, 500, 1, 2),
@@ -238,7 +233,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
-
+  it should "Detect Hex"
 
 
 }
