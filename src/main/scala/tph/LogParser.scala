@@ -15,7 +15,7 @@ import scala.util.matching.Regex
 class LogParser() {
 
     val config = ConfigFactory.load()
-    val defaultFileNameString = config.getString("tph.actionLog.path")
+    val defaultFileNameString = config.getString("tph.writerFiles.actionLog")
     val defaultLog = new File(defaultFileNameString)
 
     def IdentifyHSAction(actionString: String): HSAction = {

@@ -1,0 +1,17 @@
+----------------Friendly Hand----------------
+new Card("Equality", 67, 1, 500, 2)
+new Card("Leeroy Jenkins", 71, 2, 500, 2)
+new Card("Don Han'Cho", 79, 3, 500, 2)
+new Card("Blessed Champion", 53, 4, 500, 2)
+----------------Friendly Board----------------
+new Card("The Coin", 86, 500, 0, 2)
+new Card("Uther Lightbringer", 84, 500, 3, 2)
+new Card("Reinforce", 85, 500, 2, 2)
+new Card("Wild Pyromancer", 80, 500, 1, 2)
+----------------Enemy Hand----------------
+----------------Enemy Board----------------
+new Card("Shapeshift", 83, 500, 1, 1)
+new Card("Sapling", 87, 500, 2, 1)
+new Card("Malfurion Stormrage", 82, 500, 4, 1)
+new Card("Sapling", 88, 500, 3, 1)
+new Card("Living Roots", 35, 500, 0, 1)

@@ -17,8 +17,8 @@ class StartToEndTests extends FlatSpec with Matchers {
   "TPH" should "Initialize LogFileReader" in {
 
     val config = ConfigFactory.load()
-    val logFileWriter = new PrintWriter(new FileWriter(config.getString("tph.outputLog.path")))
-    val actionFileReader = new BufferedReader(new FileReader(config.getString("tph.actionLog.path")))
+    val logFileWriter = new PrintWriter(new FileWriter(config.getString("tph.readerFiles.outputLog")))
+    val actionFileReader = new BufferedReader(new FileReader(config.getString("tph.writerFiles.actionLog")))
 
 
     logFileWriter.println("This is a test line")

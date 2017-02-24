@@ -4,7 +4,7 @@ import java.io._
 
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
-import tph.LogFileReader
+import tph._
 
 /**
   * Created by Harambe on 2/22/2017.
@@ -12,12 +12,12 @@ import tph.LogFileReader
 class LogFileReaderTests extends FlatSpec with Matchers {
 
   val config = ConfigFactory.load()
-  val hearthstoneLogFile = new File(config.getString("tph.outputLog.path"))
-  val actionLogFile = new File(config.getString("tph.actionLog.path"))
+  val hearthstoneLogFile = new File(config.getString("tph.readerFiles.outputLog"))
+  val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
 
 
 
-  "LogFileReader" should "monitor changes in Hearthstone output log" in {
+  "LogFileReader" should "monitor changes in Hearthstone output log and print to actionLog" in {
 
 
     val writer = new PrintWriter(new FileWriter(hearthstoneLogFile))
@@ -90,9 +90,42 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
   "LogFileReader scenarios" should "detect and define player" in {
 
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/DefinePlayers.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand =actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
 
+    val expectedFriendlyHand = List[HSCard](
+      new Card("Equality", 67, 1, 500, 2),
+    new Card("Leeroy Jenkins", 71, 2, 500, 2),
+    new Card("Don Han'Cho", 79, 3, 500, 2),
+    new Card("Blessed Champion", 53, 4, 500, 2)
+    )
 
+    val expectedFriendlyBoard = List[HSCard](
+      new Card("The Coin", 86, 500, 0, 2),
+    new Card("Uther Lightbringer", 84, 500, 3, 2),
+    new Card("Reinforce", 85, 500, 2, 2),
+    new Card("Wild Pyromancer", 80, 500, 1, 2)
 
+    )
+
+    val expectedEnemyHand = List[HSCard](
+
+    )
+    val expectedEnemyBoard = List[HSCard](
+      new Card("Shapeshift", 83, 500, 1, 1),
+    new Card("Sapling", 87, 500, 2, 1),
+    new Card("Malfurion Stormrage", 82, 500, 4, 1),
+    new Card("Sapling", 88, 500, 3, 1),
+    new Card("Living Roots", 35, 500, 0, 1)
+    )
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
 
   }
 

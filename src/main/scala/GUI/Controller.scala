@@ -1,15 +1,22 @@
 package GUI
 
+import java.beans.EventHandler
+import java.io.{FileWriter, PrintWriter, File}
 import java.util.concurrent.{TimeUnit, ScheduledThreadPoolExecutor}
 import javafx.beans.property.SimpleStringProperty
 
+import com.typesafe.config.ConfigFactory
 import tph.{Card, NoCards, LogParser, GameState}
 
 import scala.collection.mutable.ListBuffer
+import scalafx.event.ActionEvent
 import scalafx.geometry.Pos
+import scalafx.scene.input.MouseEvent
 import scalafx.scene.{Node, Scene}
-import scalafx.scene.control.{Separator, Label}
+import scalafx.scene.control._
 import scalafx.scene.layout.{Priority, AnchorPane, VBox, FlowPane}
+import scalafx.Includes._
+import scalafx.stage.{Stage, FileChooser}
 
 /**
   * Created by Harambe on 2/22/2017.
@@ -18,7 +25,12 @@ import scalafx.scene.layout.{Priority, AnchorPane, VBox, FlowPane}
 
 class Controller(){
 
+
   val root = new AnchorPane()
+  val config = ConfigFactory.load()
+//  var defaultReaderFile = new File(config.getString("tph.writerFiles.actionLog"))
+  var defaultReaderFile = new File(getClass.getResource("/debugsituations/DefinePlayers.txt").getPath)
+  var defaultWriterFile = new File(config.getString("tph.writerFiles.guiPrintFile"))
 
   val vboxContainer = new VBox()
   vboxContainer.setAlignment(Pos.Center)
@@ -136,10 +148,72 @@ class Controller(){
   enemyBoardPane.children = enemyBoardCards
   enemyBoardVBox.children.addAll(enemyBoardSeparator, enemyBoardLabel, enemyBoardPane)
 
+  val menuBar = new MenuBar()
+  val saveMenu = new Menu("Save")
+  val loadMenu = new Menu("Load")
+  val menuList = Iterable[Menu](saveMenu,loadMenu)
+  val defaultSaveItem = new MenuItem("Print to file")
+  defaultSaveItem.onAction = {
+    e: ActionEvent =>
+      val gameState = new LogParser().ConstructGameState(defaultReaderFile)
+      PrintGameState(gameState, defaultWriterFile)
 
-  root.children.add(vboxContainer)
-  vboxContainer.children.addAll(enemyHandVBox,enemyBoardVBox, friendlyBoardVBox, friendlyHandVbox)
+  }
+  val setReaderFileItem = new MenuItem("Set file to read GameState")
+  setReaderFileItem.onAction = {
+    e: ActionEvent =>
+      defaultReaderFile = new FileChooser().showOpenDialog(root.getScene.getWindow())
+  }
+  val saveMenuItems = Iterable(defaultSaveItem)
+  saveMenu.items = saveMenuItems
 
+  val loadMenuItems = Iterable(setReaderFileItem)
+  loadMenu.items = loadMenuItems
+
+  menuBar.menus = menuList
+  menuBar.setVisible(true)
+
+  root.children.addAll(vboxContainer)
+  vboxContainer.children.addAll(menuBar,enemyHandVBox,enemyBoardVBox, friendlyBoardVBox, friendlyHandVbox)
+
+
+  def PrintGameState(gameState: GameState, writerFile:File): Unit ={
+
+    val writer = new PrintWriter(new FileWriter(writerFile))
+    val friendlyHand = gameState.friendlyPlayer.hand
+    val friendlyBoard = gameState.friendlyPlayer.board
+    val enemyHand = gameState.enemyPlayer.hand
+    val enemyBoard = gameState.enemyPlayer.board
+
+    writer.println("----------------Friendly Hand----------------")
+    writer.flush()
+    for(a<-1 to friendlyHand.size) {
+      writer.println("new Card(\""+friendlyHand(a-1).name+"\", "+ friendlyHand(a - 1).id + ", "+friendlyHand(a - 1).handPosition + ", "+ friendlyHand(a - 1).boardPosition + ", "+friendlyHand(a - 1).player+")")
+      writer.flush()
+    }
+    writer.println("----------------Friendly Board----------------")
+    writer.flush()
+    for(a<-1 to friendlyBoard.size) {
+
+      writer.println("new Card(\""+friendlyBoard(a-1).name+"\", "+ friendlyBoard(a - 1).id + ", "+friendlyBoard(a - 1).handPosition + ", "+ friendlyBoard(a - 1).boardPosition + ", "+friendlyBoard(a - 1).player+")")
+      writer.flush()
+    }
+    writer.println("----------------Enemy Hand----------------")
+    writer.flush()
+    for(a<-1 to enemyHand.size) {
+
+      writer.println("new Card(\""+enemyHand(a-1).name+"\", "+ enemyHand(a - 1).id + ", "+enemyHand(a - 1).handPosition + ", "+ enemyHand(a - 1).boardPosition + ", "+enemyHand(a - 1).player+")")
+      writer.flush()
+    }
+
+    writer.println("----------------Enemy Board----------------")
+    writer.flush()
+    for(a<-1 to enemyBoard.size) {
+
+      writer.println("new Card(\""+enemyBoard(a-1).name+"\", "+ enemyBoard(a - 1).id + ", "+enemyBoard(a - 1).handPosition + ", "+ enemyBoard(a - 1).boardPosition + ", "+enemyBoard(a - 1).player+")")
+      writer.flush()
+    }
+  }
 
 
   def UpdateFriendlyHand(gameState:GameState): Unit = {
@@ -210,7 +284,7 @@ class Controller(){
   }
 
   def UpdateGUIWindow():Unit ={
-    val gameState = new LogParser().ConstructGameState()
+    val gameState = new LogParser().ConstructGameState(defaultReaderFile)
     UpdateFriendlyHand(gameState)
     UpdateFriendlyBoard(gameState)
     UpdateEnemyHand(gameState)
