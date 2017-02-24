@@ -26,13 +26,33 @@ class IrcLogicTests extends FlatSpec with Matchers {
       MockVote(40, new CardPlay(sender, 5)) :::
       MockVote(20, new NormalAttack(sender, 2, 3))
 
-    val results: Map[ActionVote, Int] = ircLogic.GetBaseResults(listOfVotes)
+    val results: Map[ActionVote, Double] = ircLogic.GetBaseResults(listOfVotes)
     val highestResult = results.values.max
     val actualDecision: ActionVote = results.find(_._2 == highestResult).getOrElse((new ActionUninit(sender), tph.Constants.INT_UNINIT))._1
     val expectedDecision = new CardPlay(sender, 5)
 
     actualDecision shouldEqual expectedDecision
   }
+
+
+//  "A Decision" should "be influenced by previous vote" ignore {
+//
+//    val ircLogic = new IRCLogic()
+//    val listOfVotes: List[ActionVote] =
+//    //30 CardPlay() summed with
+//      MockVote(40, new CardPlay(sender, 4)) :::
+//        MockVote(39, new CardPlay(sender, 5)) :::
+//        MockVote(20, new NormalAttack(sender, 2, 3))
+//
+//    val previousVote = new CardPlay(sender, 4)
+//
+//    val results: Map[ActionVote, Int] = ircLogic.GetBaseResults(listOfVotes)
+//    val influencedResults = ircLogic.InfluenceByPreviousDecision(results)
+//
+//
+//  }
+
+
 
   def MockVote(amount:Int, vote:ActionVote): List[ActionVote] ={
 

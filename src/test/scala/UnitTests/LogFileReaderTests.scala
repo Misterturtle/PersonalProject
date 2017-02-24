@@ -86,4 +86,17 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
     actualActionLogStrings shouldEqual expectedActionLogStrings
   }
+
+
+  "LogFileReader scenarios" should "detect and define player" in {
+
+
+
+
+
+  }
+
+
+
+
 }

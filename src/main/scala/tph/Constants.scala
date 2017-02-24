@@ -45,6 +45,13 @@ object Constants {
           new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2))))
   }
 
+  object InfluenceFactors{
+    val previousDecisionBonus = .5
+
+
+
+  }
+
   object MenuNames {
 
     val MAIN_MENU = "Main Menu"
