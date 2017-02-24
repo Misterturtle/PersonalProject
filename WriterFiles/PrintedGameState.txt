@@ -1,16 +1,20 @@
 ----------------Friendly Hand----------------
-new Card("Equality", 67, 1, 500, 2)
-new Card("Leeroy Jenkins", 71, 2, 500, 2)
-new Card("Don Han'Cho", 79, 3, 500, 2)
-new Card("Blessed Champion", 53, 4, 500, 2)
+new Card("Truesilver Champion", 28, 1, 500, 1),
+new Card("Wild Pyromancer", 15, 3, 500, 1),
+new Card("The Coin", 68, 4, 500, 1),
+new Card("Acolyte of Pain", 25, 2, 500, 1),
+new Card("Solemn Vigil", 12, 5, 500, 1),
+new Card("Eater of Secrets", 32, 6, 500, 1),
+new Card("Spellbreaker", 30, 7, 500, 1),
 ----------------Friendly Board----------------
-new Card("Wild Pyromancer", 80, 500, 1, 2)
 ----------------Enemy Hand----------------
-new Card("Constant Uninitialized", 4, 1, 500, 1)
-new Card("Constant Uninitialized", 43, 2, 500, 1)
-new Card("Constant Uninitialized", 48, 3, 500, 1)
-new Card("Constant Uninitialized", 48, 5, 500, 1)
-new Card("Constant Uninitialized", 17, 4, 500, 1)
+new Card("Constant Uninitialized", 39, 1, 500, 2),
+new Card("Constant Uninitialized", 59, 2, 500, 2),
+new Card("Constant Uninitialized", 59, 4, 500, 2),
+new Card("Constant Uninitialized", 34, 6, 500, 2),
+new Card("Constant Uninitialized", 37, 7, 500, 2),
+new Card("Constant Uninitialized", 37, 5, 500, 2),
+new Card("Constant Uninitialized", 34, 3, 500, 2),
 ----------------Enemy Board----------------
-new Card("Sapling", 87, 500, 1, 1)
-new Card("Sapling", 88, 500, 2, 1)
+new Card("Stonetusk Boar", 60, 500, 1, 2),
+new Card("Healing Totem", 69, 500, 2, 2),

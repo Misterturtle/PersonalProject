@@ -33,7 +33,8 @@ class LogParserTests extends FlatSpec with Matchers {
     writer.println("some[name=Enemy Minion 1 id=21 zone=PLAY zonePos=1 .+ zone from OPPOSING PLAY -> FRIENDLY PLAY")
     writer.flush()
     //Enemy Card Drawn
-    writer.println("someid=55 local=some [id=27 cardId=some type=some zone=HAND zonePos=7 player=2] pos from 55 -> 55")
+
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=27 zone=HAND zonePos=7 cardId= player=2] pos from 55 -> 55")
     writer.flush()
     //Face Attack Value
     writer.println("[Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=some id=55 zone=PLAY zonePos=0 cardId=HEROsome player=1] tag=ATK value=5")

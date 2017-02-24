@@ -165,14 +165,6 @@ object HSAction {
       }
     }
 
-
-
-  //// I don't think I should ever be using these for a HSAction. Add/Remove card should handle position shifts.
-  ////  case class HAND_POSITION_CHANGE(id:Int, pos:Int, player:Int, dstPos:Int) extends HSAction
-  ////
-  ////  case class BOARD_POSITION_CHANGE(id:Int, player:Int, dstPos:Int) extends HSAction
-  //
-
   case class MinionSummoned(name: String, id: Int, position: Int, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
       if (player == gameState.friendlyPlayer.playerNumber) {

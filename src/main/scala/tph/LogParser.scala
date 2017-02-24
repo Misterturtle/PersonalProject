@@ -61,10 +61,10 @@ class LogParser() {
         case DEFINE_PLAYERS(friendlyPlayerNumber) =>
           new DefinePlayers(friendlyPlayerNumber.toInt)
 
-        case MULLIGAN_REDRAW(name, id, position, player) =>
+        case MULLIGAN_REDRAW(name, id, position, player) if position.toInt != 0 =>
           new MulliganRedraw(name, id.toInt, position.toInt, player.toInt)
 
-        case ENEMY_MULLIGAN_REDRAW(id, position, player) =>
+        case ENEMY_MULLIGAN_REDRAW(id, position, player) if position.toInt != 0 =>
           new EnemyMulliganRedraw(id.toInt, position.toInt, player.toInt)
 
         case _ =>
