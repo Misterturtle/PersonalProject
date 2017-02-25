@@ -2,12 +2,13 @@
 [Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=some zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)
 
 //Setup Friendly Hand
-some id=55 local=False [name=Friendly Hand 1 id=1 zone=HAND zonePos=1 cardId=some player=1] pos from 55 -> 55
-some id=55 local=False [name=Friendly Hand 2 id=2 zone=HAND zonePos=2 cardId=some player=1] pos from 55 -> 55
-some id=55 local=False [name=Friendly Hand 3 id=3 zone=HAND zonePos=3 cardId=some player=1] pos from 55 -> 55
-some id=55 local=False [name=Friendly Hand 4 id=4 zone=HAND zonePos=4 cardId=some player=1] pos from 55 -> 55
-some id=55 local=False [name=Friendly Hand 5 id=5 zone=HAND zonePos=5 cardId=some player=1] pos from 55 -> 55
-some id=55 local=False [name=Friendly Hand 6 id=6 zone=HAND zonePos=6 cardId=some player=1] pos from 55 -> 55
+
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 1 id=1 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 2 id=2 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 3 id=3 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 4 id=4 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 5 id=5 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 6 id=6 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
 
 //Setup Friendly Board
 some FULL_ENTITY - Updating [name=Friendly Board 1 id=11 zone=PLAY zonePos=1 some player=1 some

@@ -2,6 +2,8 @@ package tph
 
 import com.typesafe.scalalogging.LazyLogging
 
+import scala.Option
+
 /**
   * Created by Harambe on 2/20/2017.
   */
@@ -110,4 +112,20 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
         new Player(playerNumber, hand, shiftedBoard)
       }
   }
+
+  def AddCardToNextHandPosition(name:String, id:Int): Player ={
+    val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber))
+    new Player(playerNumber, newHand, board)}
+
+  def GetNextHandPosition(): Int ={
+    for(a<-1 to 20){
+      if(hand.exists(x => x.handPosition == a)){
+      }
+      else{
+        return a
+      }
+    }
+    Constants.INT_UNINIT
+  }
+
 }

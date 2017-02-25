@@ -17,22 +17,16 @@ class HSActionTests extends FlatSpec with Matchers {
   import Constants.TestConstants._
 
 
-  "HSAction KnownCardDrawn" should "ExecuteAction" in {
+  "HSAction FriendlyCardDrawn" should "ExecuteAction" in {
 
 
-    val friendlyHSAction = new KnownCardDrawn("Friendly Hand 7", 7, 7, 1)
-    val enemyHSAction = new KnownCardDrawn("Enemy Hand 7", 27, 7, 2)
+    val friendlyHSAction = new FriendlyCardDrawn("Friendly Hand 7", 7, 7, 1)
 
     val newFriendlyHand = defaultGameState.friendlyPlayer.hand ::: List(new Card("Friendly Hand 7", 7, 7, tph.Constants.INT_UNINIT, 1))
-    val newEnemyHand = defaultGameState.enemyPlayer.hand ::: List(new Card("Enemy Hand 7", 27, 7, tph.Constants.INT_UNINIT, 2))
 
     val testFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
-    val testEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
 
     newFriendlyHand shouldEqual testFriendlyHand
-
-    newEnemyHand shouldEqual testEnemyHand
-
   }
 
   "HSAction CardDeath" should "ExecuteAction" in {

@@ -8965,9 +8965,74 @@ FSM not Preprocessed: Temp_ManaDestroy : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*****
 [Zone] ZoneChangeList.ProcessChanges() - processing index=2 change=powerTask=[power=[type=TAG_CHANGE entity=[id=7 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=6] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=7 zone=HAND zonePos=0 cardId= player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
-\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=0 cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - START waiting for [name=UNKNOWN ENTITY [cardType=INVALID] id=7 zone=HAND zonePos=0 cardId= player=1] to load (powerTask=(not null))
@@ -10912,6 +10977,9 @@ FSM not Preprocessed: Card_Hidden_SummonIn(Clone) : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
+
+
+*****
 [Zone] ZoneChangeList.ProcessChanges() - processing index=4 change=powerTask=[power=[type=TAG_CHANGE entity=[id=21 cardId=KAR_029 name=Runic Egg] tag=ZONE_POSITION value=6] complete=False] entity=[name=Runic Egg id=21 zone=HAND zonePos=1 cardId=KAR_029 player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -16544,10 +16612,8 @@ FSM not Preprocessed: Sneaky_Attack_Impact_Standard(Clone) : FSM
 
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-*****
 [Zone] ZoneChangeList.ProcessChanges() - processing index=9 change=powerTask=[power=[type=TAG_CHANGE entity=[id=21 cardId=KAR_029 name=Runic Egg] tag=ZONE_POSITION value=2] complete=False] entity=[name=Runic Egg id=21 zone=PLAY zonePos=5 cardId=KAR_029 player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
-\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - START waiting for [name=Runic Egg id=21 zone=PLAY zonePos=5 cardId=KAR_029 player=1] to load (powerTask=(not null))
@@ -16755,12 +16821,8 @@ FSM not Preprocessed: Sneaky_Attack_Impact_Standard(Clone) : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-
-
-
-*****
 [Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Runic Egg id=21 zone=PLAY zonePos=2 cardId=KAR_029 player=1]
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerProcessor.EndCurrentTaskList() - m_currentTaskList=110

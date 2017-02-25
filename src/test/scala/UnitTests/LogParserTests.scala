@@ -43,7 +43,7 @@ class LogParserTests extends FlatSpec with Matchers {
     writer.println("[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card someid=2 some zone=SECRET zonePos=55 some player=1] to some SECRET")
     writer.flush()
     //Known Card Drawn
-    writer.println("some id=55 local=False [name=Friendly Minion 7 id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 55 -> 55")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Minion 7 id=7 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=7")
     writer.flush()
     //Card Played
     writer.println("[Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Enemy Card 3 id=23 zone=PLAY zonePos=5 cardId=some player=2]")
@@ -76,10 +76,10 @@ class LogParserTests extends FlatSpec with Matchers {
       val expectedHSActionList = List(
         new FriendlyMinionControlled("Friendly Minion 1", 11, 1),
         new EnemyMinionControlled("Enemy Minion 1", 21, 1),
-        new EnemyCardDrawn(27, 2, 7),
+        new EnemyCardDrawn(27, 7, 2),
         new ChangeFaceAttackValue(1, 5),
         new SecretPlayed(2, 1),
-        new KnownCardDrawn("Friendly Minion 7", 7, 7, 1),
+        new FriendlyCardDrawn("Friendly Minion 7", 7, 7, 1),
         new CardPlayed("Enemy Card 3", 23, 5, 2),
         new CardDeath("Friendly Minion 2", 12, 1),
         new MinionSummoned("Friendly Minion 5", 15, 5, 1),

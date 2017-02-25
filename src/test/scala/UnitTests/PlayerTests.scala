@@ -2,7 +2,7 @@ package UnitTests
 
 import org.scalatest.{Matchers, FlatSpec}
 import tph._
-import tph.HSAction.KnownCardDrawn
+import tph.HSAction.{FriendlyCardReturn}
 
 /**
   * Created by Harambe on 2/20/2017.
@@ -100,5 +100,59 @@ class PlayerTests extends FlatSpec with Matchers {
     actualEnemyHand shouldEqual expectedEnemyHandCard
     actualEnemyBoard shouldEqual expectedEnemyBoard
 
+  }
+
+  it should "add card to next hand position" in {
+
+
+    val startingFriendlyHand = List(
+      new Card("Friendly Card 1", 1, 1, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 2", 2, 2, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 3", 3, 3, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 6", 6, 6, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 7", 7, 7, Constants.INT_UNINIT, 1))
+
+
+    val startingEnemyHand = List(
+      new Card("Enemy Card 1", 21, 1, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 3", 23, 3, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 6", 26, 6, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 7", 27, 7, Constants.INT_UNINIT, 2))
+
+
+    val gameState = new GameState(new Player(1, startingFriendlyHand, List[HSCard]()), new Player(2, startingEnemyHand, List[HSCard]()))
+
+
+    val part1FriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition("Friendly Card 4", 4)
+    val newFriendlyPlayer = part1FriendlyPlayer.AddCardToNextHandPosition("Friendly Card 5", 5)
+
+
+    val part1EnemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition("Enemy Card 4", 24)
+    val newEnemyPlayer = part1EnemyPlayer.AddCardToNextHandPosition("Enemy Card 5", 25)
+
+    val actualFriendlyHand = newFriendlyPlayer.hand
+    val expectedFriendlyHand = List(
+      new Card("Friendly Card 1", 1, 1, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 2", 2, 2, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 3", 3, 3, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 6", 6, 6, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 7", 7, 7, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 4", 4, 4, Constants.INT_UNINIT, 1),
+      new Card("Friendly Card 5", 5, 5, Constants.INT_UNINIT, 1))
+
+    val actualEnemyHand = newEnemyPlayer.hand
+    val expectedEnemyHand = List(
+      new Card("Enemy Card 1", 21, 1, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 2", 22, 2, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 3", 23, 3, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 6", 26, 6, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 7", 27, 7, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 4", 24, 4, Constants.INT_UNINIT, 2),
+      new Card("Enemy Card 5", 25, 5, Constants.INT_UNINIT, 2))
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualEnemyHand shouldEqual expectedEnemyHand
   }
 }

@@ -6255,6 +6255,7 @@ FSM not Preprocessed: Card_Hand_Ability_SummonIn(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=35 change=powerTask=[power=[type=FULL_ENTITY entity=[id=68 cardId=GAME_005 name=The Coin] tags=System.Collections.Generic.List`1[Network+Entity+Tag]] complete=False] entity=[name=The Coin id=68 zone=HAND zonePos=5 cardId=GAME_005 player=2] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=5
+\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=0 cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
@@ -6268,9 +6269,6 @@ FSM not Preprocessed: Card_Hand_Ability_SummonIn(Clone) : FSM
 
 [Zone] ZoneChangeList.ProcessChanges() - id=2 local=False [name=The Coin id=68 zone=HAND zonePos=5 cardId=GAME_005 player=2] pos from 0 -> 5
 
-
- *****
- *****
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=36 change=powerTask=[power=[type=TAG_CHANGE entity=[id=2 cardId= name=HughJigo] tag=TIMEOUT value=75] complete=False] entity=HughJigo srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=
@@ -7603,11 +7601,6 @@ FSM not Preprocessed: ShowEvent : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
-
-
-*****
-*****
-
 [Zone] ZoneChangeList.ProcessChanges() - id=3 local=False [name=Lay on Hands id=36 zone=HAND zonePos=1 cardId=EX1_354 player=2] pos from 0 -> 1
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -8173,6 +8166,12 @@ FSM not Preprocessed: ShowEvent : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
+
+
+
+
+
+*****Card Draw
 [Zone] ZoneChangeList.ProcessChanges() - processing index=1 change=powerTask=[power=[type=TAG_CHANGE entity=[id=21 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=1] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -8197,9 +8196,9 @@ FSM not Preprocessed: ShowEvent : FSM
 
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
+*****Mulligan Discard
 [Zone] ZoneChangeList.ProcessChanges() - id=4 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=18 zone=DECK zonePos=1 cardId= player=1] zone from OPPOSING HAND -> OPPOSING DECK
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=3 change=powerTask=[power=[type=TAG_CHANGE entity=[id=18 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=0] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=18 zone=DECK zonePos=1 cardId= player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=0
@@ -8225,7 +8224,7 @@ FSM not Preprocessed: ShowEvent : FSM
 [Zone] ZoneChangeList.ProcessChanges() - id=4 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=4 zone=HAND zonePos=0 cardId= player=1] zone from OPPOSING DECK -> OPPOSING HAND
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
+*****2nd Card Drawn
 [Zone] ZoneChangeList.ProcessChanges() - processing index=5 change=powerTask=[power=[type=TAG_CHANGE entity=[id=4 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=2] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=4 zone=HAND zonePos=0 cardId= player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -8249,7 +8248,7 @@ FSM not Preprocessed: ShowEvent : FSM
 [Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=UNKNOWN ENTITY [cardType=INVALID] id=6 zone=DECK zonePos=2 cardId= player=1] to OPPOSING DECK
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
+*****2nd Mulligan Discard
 [Zone] ZoneChangeList.ProcessChanges() - id=4 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=6 zone=DECK zonePos=2 cardId= player=1] zone from OPPOSING HAND -> OPPOSING DECK
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -8277,7 +8276,7 @@ FSM not Preprocessed: ShowEvent : FSM
 [Zone] ZoneChangeList.ProcessChanges() - id=4 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=10 zone=HAND zonePos=0 cardId= player=1] zone from OPPOSING DECK -> OPPOSING HAND
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
+*****3rd Card Draw
 [Zone] ZoneChangeList.ProcessChanges() - processing index=9 change=powerTask=[power=[type=TAG_CHANGE entity=[id=10 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=3] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=10 zone=HAND zonePos=0 cardId= player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -8303,7 +8302,46 @@ FSM not Preprocessed: ShowEvent : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - id=4 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=32 zone=DECK zonePos=3 cardId= player=1] zone from OPPOSING HAND -> OPPOSING DECK
- 
+ *****3rd discard
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=11 change=powerTask=[power=[type=TAG_CHANGE entity=[id=32 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=0] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=32 zone=DECK zonePos=3 cardId= player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=0

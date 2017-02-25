@@ -8557,7 +8557,8 @@ FSM not Preprocessed: ShowEvent : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=2 change=powerTask=[power=[type=TAG_CHANGE entity=[id=15 cardId=EX1_050 name=Coldlight Oracle] tag=ZONE_POSITION value=4] complete=False] entity=[name=Coldlight Oracle id=15 zone=HAND zonePos=0 cardId=EX1_050 player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
- 
+ \[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - START waiting for [name=Coldlight Oracle id=15 zone=HAND zonePos=0 cardId=EX1_050 player=1] to load (powerTask=(not null))

@@ -30,7 +30,7 @@ class StartToEndTests extends FlatSpec with Matchers {
     logFileWriter.println("This should erase the previous file")
     logFileWriter.println("This mocks hearthstones output_log.txt strings")
     logFileWriter.println("actionFileWriter should write known commands to actionLog")
-    logFileWriter.println("some id=55 local=False [name=Friendly Minion 7 id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 55 -> 55")
+    logFileWriter.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 7 id=7 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=7")
     logFileWriter.println("[Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Enemy Card 3 id=23 zone=PLAY zonePos=5 cardId=some player=2]")
     logFileWriter.flush()
 
@@ -40,7 +40,7 @@ class StartToEndTests extends FlatSpec with Matchers {
     val actualStringList = Stream.continually(actionFileReader.readLine()).takeWhile(_ != null).toList
 
     actualStringList.size shouldEqual 2
-    actualStringList(0) shouldEqual "some id=55 local=False [name=Friendly Minion 7 id=7 zone=HAND zonePos=7 cardId=some player=1] pos from 55 -> 55"
+    actualStringList(0) shouldEqual "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 7 id=7 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=7"
     actualStringList(1) shouldEqual "[Power] PowerProcessor.DoTaskListForCard() - unhandled BlockType PLAY for sourceEntity [name=Enemy Card 3 id=23 zone=PLAY zonePos=5 cardId=some player=2]"
   }
 
