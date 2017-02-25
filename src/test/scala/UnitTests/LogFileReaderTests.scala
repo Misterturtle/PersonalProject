@@ -233,7 +233,89 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
-  it should "Detect Hex"
+  it should "Detect friendly and enemy Hex" in {
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/Hex.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Hex.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+
+    val expectedFriendlyHand = List(
+      new Card("Fire Elemental", 8, 1, 500, 1),
+      new Card("Coldlight Oracle", 15, 2, 500, 1),
+      new Card("Azure Drake", 4, 3, 500, 1),
+      new Card("Coldlight Oracle", 22, 4, 500, 1),
+      new Card("Ancestral Knowledge", 5, 5, 500, 1),
+      new Card("Loot Hoarder", 33, 6, 500, 1))
+
+    val expectedFriendlyBoard = List(
+      new Card("Transformed Friendly Minion", 70, 500, 2, 1),
+      new Card("Flame Juggler", 10, 500, 1, 1))
+
+    val expectedEnemyHand = List(
+      new Card("Constant Uninitialized", 57, 1, 500, 2),
+      new Card("Constant Uninitialized", 54, 2, 500, 2),
+      new Card("Constant Uninitialized", 51, 3, 500, 2),
+      new Card("Constant Uninitialized", 39, 4, 500, 2),
+      new Card("Constant Uninitialized", 60, 5, 500, 2),
+      new Card("Constant Uninitialized", 62, 6, 500, 2),
+      new Card("Constant Uninitialized", 36, 7, 500, 2),
+      new Card("Constant Uninitialized", 55, 8, 500, 2))
+
+    val expectedEnemyBoard = List[HSCard]()
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+  }
+
+
+
+
+  it should "Detect friendly and enemy card return" in {
+
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/ShadowStep.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/ShadowStep.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+
+    val expectedFriendlyHand = List(
+      new Card("Cult Master", 35, 1, 500, 2),
+      new Card("The Coin", 68, 3, 500, 2),
+      new Card("Novice Engineer", 36, 2, 500, 2),
+      new Card("Cult Master", 51, 4, 500, 2),
+      new Card("Fan of Knives", 44, 5, 500, 2))
+
+    val expectedFriendlyBoard = List(
+      new Card("Loot Hoarder", 42, 500, 1, 2))
+
+    val expectedEnemyHand = List(
+      new Card("Constant Uninitialized", 4, 1, 500, 1),
+      new Card("Constant Uninitialized", 14, 2, 500, 1),
+      new Card("Constant Uninitialized", 7, 4, 500, 1),
+      new Card("Loot Hoarder", 23, 3, 500, 1))
+
+    val expectedEnemyBoard = List[HSCard]()
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+
+
+  }
+
+
 
 
 }

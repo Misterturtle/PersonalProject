@@ -35,7 +35,7 @@ object Main extends JFXApp {
 
   stage = new JFXApp.PrimaryStage() {
     title = "TPH Debug"
-    scene = new Scene(controller.root, 800, 600)
+    scene = new Scene(controller.root, 1000, 800)
   }
 
   def Poll(): Unit ={

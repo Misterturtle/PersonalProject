@@ -14,9 +14,7 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
 
       (friendlyPlayer.hand ::: friendlyPlayer.board ::: enemyPlayer.hand ::: enemyPlayer.board).find(_.id == cardID) match {
         case Some(card) => card
-        case None =>
-          logger.debug("Not able to find card with id " + cardID)
-          NoCards()
+        case None => NoCards()
       }
     }
 

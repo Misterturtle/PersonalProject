@@ -59,6 +59,21 @@ object HSAction {
     }
   }
 
+  case class EnemyCardReturn(name:String, id:Int, player:Int) extends HSAction{
+    override def ExecuteAction(gameState: GameState): GameState ={
+      val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
+      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+    }
+  }
+
+  case class FriendlyCardReturn(name:String, id:Int, player:Int) extends HSAction{
+    override def ExecuteAction(gameState: GameState): GameState ={
+      val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
+      new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+    }
+  }
+
+
   case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
       val cardBeingControlled = gameState.GetCardByID(id)

@@ -67,6 +67,12 @@ class LogParser() {
         case ENEMY_MULLIGAN_REDRAW(id, position, player) if position.toInt != 0 =>
           new EnemyMulliganRedraw(id.toInt, position.toInt, player.toInt)
 
+        case FRIENDLY_CARD_RETURN(name, id, player) =>
+          new FriendlyCardReturn(name, id.toInt, player.toInt)
+
+        case ENEMY_CARD_RETURN(name, id, player) =>
+          new EnemyCardReturn(name, id.toInt, player.toInt)
+
         case _ =>
           new HSActionUninit()
       }
