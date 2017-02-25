@@ -109,7 +109,7 @@ class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction EnemyCardDrawn" should "ExectueAction" in{
 
-    val hsAction = new EnemyCardDrawn(27, 7, 2)
+    val hsAction = new EnemyCardDrawn(27, 2, 7)
 
     val actualEnemyHand = hsAction.ExecuteAction(defaultGameState).enemyPlayer.hand
     val expectedEnemyHand =  List(
@@ -215,51 +215,6 @@ class HSActionTests extends FlatSpec with Matchers {
 
     actualFriendlyHand shouldEqual expectedFriendlyHand
     actualEnemyHand shouldEqual expectedEnemyHand
-  }
-
-  "HSAction Sap" should "ExecuteAction" in {
-
-    val friendHSAction = new Sap("Friendly Board 1", 11, 1)
-    val enemyHSAction = new Sap("Enemy Board 1", 31, 2)
-
-    val actualFriendlyHand = friendHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
-    val expectedFriendlyHand = List(
-      new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
-      new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
-      new Card("Friendly Hand 3", 3, 3, Constants.INT_UNINIT, 1),
-      new Card("Friendly Hand 4", 4, 4, Constants.INT_UNINIT, 1),
-      new Card("Friendly Hand 5", 5, 5, Constants.INT_UNINIT, 1),
-      new Card("Friendly Hand 6", 6, 6, Constants.INT_UNINIT, 1),
-      new Card("Friendly Board 1", 11, 7, Constants.INT_UNINIT, 1))
-
-
-    val actualFriendlyBoard = friendHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
-    val expectedFriendlyBoard = List(
-      new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 1, 1),
-      new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 2, 1),
-      new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 3, 1))
-
-    val actualEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
-    val expectedEnemyHand = List(
-      new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
-      new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
-      new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
-      new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
-      new Card("Enemy Hand 5", 25, 5, Constants.INT_UNINIT, 2),
-      new Card("Enemy Hand 6", 26, 6, Constants.INT_UNINIT, 2),
-      new Card("Enemy Board 1", 31, 7, Constants.INT_UNINIT, 2))
-
-    val actualEnemyBoard = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
-    val expectedEnemyBoard = List(
-      new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 1, 2),
-      new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 2, 2),
-      new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 3, 2))
-
-
-    actualFriendlyHand shouldEqual expectedFriendlyHand
-    actualFriendlyBoard shouldEqual expectedFriendlyBoard
-    actualEnemyHand shouldEqual expectedEnemyHand
-    actualEnemyBoard shouldEqual expectedEnemyBoard
   }
 
 

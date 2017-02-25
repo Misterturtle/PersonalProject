@@ -32,10 +32,13 @@ Loading C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\PlayMaker.dl
 - Completed reload, in  0.074 seconds
 Platform assembly: C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\System.dll (this message is harmless)
-<RI> Initializing input.
-<RI> Input initialized.
+<RI> Initializing input.
+
+<RI> Input initialized.
+
 desktop: 1920x1080 60Hz; virtual: 3600x1080 at 0,0
-<RI> Initialized touch support.
+<RI> Initialized touch support.
+
 UnloadTime: 0.706618 ms
 Error loading config file client.config
  
@@ -6520,7 +6523,11 @@ FSM not Preprocessed: Card_Hand_Ability_SummonIn(Clone) : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
+
+*****
+\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=(\d+) cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)
 [Zone] ZoneChangeList.ProcessChanges() - processing index=35 change=powerTask=[power=[type=FULL_ENTITY entity=[id=68 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tags=System.Collections.Generic.List`1[Network+Entity+Tag]] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=68 zone=HAND zonePos=5 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=5
+\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=.+ entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag.+ complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 

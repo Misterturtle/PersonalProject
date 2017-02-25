@@ -49,13 +49,11 @@ object HSAction {
   }
 
   //Enemy Events
-  case class EnemyCardDrawn(id: Int, position: Int, player: Int) extends HSAction {
+
+  case class EnemyCardDrawn(id:Int, player:Int, position:Int ) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      if(gameState.GetCardByID(id) == NoCards()){
       val newEnemyPlayer = gameState.enemyPlayer.AddCard(new Card(Constants.STRING_UNINIT, id, position, Constants.INT_UNINIT, player), true)
-      new GameState(gameState.friendlyPlayer, newEnemyPlayer)}
-      else
-        gameState
+      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
     }
   }
 
@@ -65,6 +63,7 @@ object HSAction {
       new GameState(gameState.friendlyPlayer, newEnemyPlayer)
     }
   }
+
 
   case class FriendlyCardReturn(name:String, id:Int, player:Int) extends HSAction{
     override def ExecuteAction(gameState: GameState): GameState ={
@@ -127,35 +126,6 @@ object HSAction {
       }
     }
   }
-
-  //  // I don't think this will ever be used
-  //  // case class OldZoneChange(id: Int, zone: String, player: Int, dstZone: Int) extends HSAction
-  //
-  //  //I dont think this will ever be used
-  //  //case class ZoneChange(id: Int, player: Int, zone: String, dstZone: Int) extends HSAction
-  //
-  //
-  case class Sap(name: String, id: Int, player: Int) extends HSAction {
-    override def ExecuteAction(gameState: GameState): GameState = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val cardBeingSapped = gameState.GetCardByID(id)
-        val convertedCard = new Card(name, id, gameState.friendlyPlayer.hand.size + 1, Constants.INT_UNINIT, 1)
-
-        val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(cardBeingSapped)
-        val newPlayer = playerWithNewHand.AddCard(convertedCard, true)
-        new GameState(newPlayer, gameState.enemyPlayer)
-      }
-      else {
-        val cardBeingSapped = gameState.GetCardByID(id)
-        val convertedCard = new Card(name, id, gameState.enemyPlayer.hand.size + 1, Constants.INT_UNINIT, 2)
-
-        val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingSapped)
-        val newPlayer = playerWithNewHand.AddCard(convertedCard, true)
-        new GameState(gameState.friendlyPlayer, newPlayer)
-      }
-    }
-  }
-
 
   case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {

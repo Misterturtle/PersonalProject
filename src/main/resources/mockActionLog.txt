@@ -16,12 +16,12 @@ some FULL_ENTITY - Updating [name=Friendly Board 3 id=13 zone=PLAY zonePos=3 som
 some FULL_ENTITY - Updating [name=Friendly Board 4 id=14 zone=PLAY zonePos=4 some player=1 some
 
 //Setup Enemy Hand
-[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=1 cardId= player=2] pos from 55 -> 55
-[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=2 cardId= player=2] pos from 55 -> 55
-[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=3 cardId= player=2] pos from 55 -> 55
-[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=24 zone=HAND zonePos=4 cardId= player=2] pos from 55 -> 55
-[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=25 zone=HAND zonePos=5 cardId= player=2] pos from 55 -> 55
-[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=26 zone=HAND zonePos=6 cardId= player=2] pos from 55 -> 55
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=24 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=25 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=26 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
 
 //Setup Enemy Board
 some FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 some player=2 some

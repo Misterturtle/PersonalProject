@@ -34,7 +34,7 @@ class LogParserTests extends FlatSpec with Matchers {
     writer.flush()
     //Enemy Card Drawn
 
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=27 zone=HAND zonePos=7 cardId= player=2] pos from 55 -> 55")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=27 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=7")
     writer.flush()
     //Face Attack Value
     writer.println("[Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=some id=55 zone=PLAY zonePos=0 cardId=HEROsome player=1] tag=ATK value=5")
@@ -58,7 +58,7 @@ class LogParserTests extends FlatSpec with Matchers {
     writer.println("[Power] some.DebugPrintPower() -     TAG_CHANGE Entity=someid=3 zone=PLAY some tag=LINKED_ENTITY value=102")
     writer.flush()
     //Sap
-    writer.println("[Power] PowerTaskList.DebugPrintPower() - BLOCK_START BlockType=POWER Entity=[name=Sap id=55 zone=PLAY zonePos=55 cardId=55 player=some] EffectCardId= EffectIndex=some Target=[name=Friendly Minion 2 id=12 zone=PLAY zonePos=some cardId=some player=1]")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=some [name=Friendly Minion 5 id=15 zone=HAND zonePos=55 cardId=some player=1] zone from FRIENDLY PLAY -> FRIENDLY HAND")
     writer.flush()
     //Weapon
     writer.println("[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=3 zone=PLAY zonePos=0 cardId=some player=1] to some PLAY (Weapon)")
@@ -76,7 +76,7 @@ class LogParserTests extends FlatSpec with Matchers {
       val expectedHSActionList = List(
         new FriendlyMinionControlled("Friendly Minion 1", 11, 1),
         new EnemyMinionControlled("Enemy Minion 1", 21, 1),
-        new EnemyCardDrawn(27, 7, 2),
+        new EnemyCardDrawn(27, 2, 7),
         new ChangeFaceAttackValue(1, 5),
         new SecretPlayed(2, 1),
         new KnownCardDrawn("Friendly Minion 7", 7, 7, 1),
@@ -84,7 +84,7 @@ class LogParserTests extends FlatSpec with Matchers {
         new CardDeath("Friendly Minion 2", 12, 1),
         new MinionSummoned("Friendly Minion 5", 15, 5, 1),
         new Transform(3, 102),
-        new Sap("Friendly Minion 2", 12, 1),
+        new FriendlyCardReturn("Friendly Minion 5", 15, 1),
         new WeaponPlayed(3, 1))
 
     new FriendlyMinionControlled("test", 1, 1) shouldEqual new FriendlyMinionControlled("test", 1, 1)

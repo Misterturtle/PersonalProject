@@ -52,9 +52,6 @@ class LogParser() {
         case TRANSFORM(id, newID) =>
           new Transform(id.toInt, newID.toInt)
 
-        case SAP(name, id, player)=>
-          new Sap(name, id.toInt, player.toInt)
-
         case WEAPON(id, player) =>
           new WeaponPlayed(id.toInt, player.toInt)
 
@@ -72,6 +69,9 @@ class LogParser() {
 
         case ENEMY_CARD_RETURN(name, id, player) =>
           new EnemyCardReturn(name, id.toInt, player.toInt)
+
+        case ENEMY_COIN_DRAWN(id, player, position) =>
+          new EnemyCardDrawn(id.toInt, player.toInt, position.toInt)
 
         case _ =>
           new HSActionUninit()

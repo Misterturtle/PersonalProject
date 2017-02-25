@@ -46,16 +46,16 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     writer.println("some FULL_ENTITY - Updating [name=Friendly Board 2 id=12 zone=PLAY zonePos=2 some player=1 some")
     writer.flush()
 
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=1 cardId= player=2] pos from .* -> .*")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1")
     writer.flush()
 
     writer.println("Someother text that isnt a heartstone action")
     writer.flush()
 
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=2 cardId= player=2] pos from .* -> .*")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2")
     writer.flush()
 
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=3 cardId= player=2] pos from .* -> .*")
+    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3")
     writer.flush()
 
     writer.println("some FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 some player=2 some")
@@ -77,15 +77,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       "some id=55 local=False [name=Friendly Hand 3 id=3 zone=HAND zonePos=3 cardId=some player=1] pos from 55 -> 55",
       "some FULL_ENTITY - Updating [name=Friendly Board 1 id=11 zone=PLAY zonePos=1 some player=1 some",
       "some FULL_ENTITY - Updating [name=Friendly Board 2 id=12 zone=PLAY zonePos=2 some player=1 some",
-      "[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=1 cardId= player=2] pos from .* -> .*",
-      "[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=2 cardId= player=2] pos from .* -> .*",
-      "[Zone] ZoneChangeList.ProcessChanges() - id=55 local=False [name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=3 cardId= player=2] pos from .* -> .*",
+      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1",
+      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2",
+      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3",
       "some FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 some player=2 some",
       "some FULL_ENTITY - Updating [name=Enemy Board 2 id=32 zone=PLAY zonePos=2 some player=2 some")
 
     actualActionLogStrings shouldEqual expectedActionLogStrings
   }
-
 
   "LogFileReader scenarios" should "detect and define player" in {
 
@@ -135,11 +134,11 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     val actualEnemyHand = actualGameState.enemyPlayer.hand
 
     val expectedFriendlyHand = List(
-      new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1)
+      new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, 2),
+      new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, 2),
+      new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, 2),
+      new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, 2),
+      new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, 2)
     )
 
     val expectedEnemyHand = List(
@@ -166,11 +165,11 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     val actualEnemyBoard = actualGameState.enemyPlayer.board
 
     val expectedFriendlyHand = List(
-      new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, playerNumbers._1),
-      new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, playerNumbers._1))
+      new Card("Lay on Hands", 36, 1, Constants.INT_UNINIT, 2),
+      new Card("Spellbreaker", 44, 2, Constants.INT_UNINIT, 2),
+      new Card("Aldor Peacekeeper", 40, 3, Constants.INT_UNINIT, 2),
+      new Card("Acidic Swamp Ooze", 58, 4, Constants.INT_UNINIT, 2),
+      new Card("Solemn Vigil", 38, 5, Constants.INT_UNINIT, 2))
 
     val expectedFriendlyBoard = List(
       new Card("Acolyte of Pain", 48, Constants.INT_UNINIT, 1, 2))
@@ -311,9 +310,11 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     actualFriendlyBoard shouldEqual expectedFriendlyBoard
     actualEnemyHand shouldEqual expectedEnemyHand
     actualEnemyBoard shouldEqual expectedEnemyBoard
-
-
   }
+
+
+
+
 
 
 
