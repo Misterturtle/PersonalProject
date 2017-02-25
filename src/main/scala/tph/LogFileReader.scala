@@ -14,17 +14,17 @@ class LogFileReader() {
   val config = ConfigFactory.load()
   val defaultFile = new File(config.getString("tph.readerFiles.outputLog"))
   val scheduler = new ScheduledThreadPoolExecutor(1)
+  val reader = new BufferedReader(new FileReader(defaultFile))
+
+  val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
+  val writer = new PrintWriter(new FileWriter(actionLogFile))
+
   val pollRunnable = new Runnable {
     def run() = poll()
   }
 
 
   def poll(): Unit = {
-
-    val reader = new BufferedReader(new FileReader(defaultFile))
-
-    val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
-    val writer = new PrintWriter(new FileWriter(actionLogFile))
 
     while (reader.ready()) {
       val line = reader.readLine()

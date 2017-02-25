@@ -1,0 +1,31 @@
+[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=Some id=150 zone=PLAY zonePos=0 cardId=150ID player=2] to FRIENDLY PLAY (Hero)
+
+//Friendly Hand Setup
+someid=55 local=False [name="Friendly Card 1" id=1 zone=HAND zonePos=1 cardId=some player=2] pos from 500 -> 500
+someid=55 local=False [name="Friendly Card 2" id=2 zone=HAND zonePos=2 cardId=some player=2] pos from 500 -> 500
+someid=55 local=False [name="Friendly Card 3" id=3 zone=HAND zonePos=3 cardId=some player=2] pos from 500 -> 500
+someid=55 local=False [name="Friendly Card 4" id=4 zone=HAND zonePos=4 cardId=some player=2] pos from 500 -> 500
+someid=55 local=False [name="Friendly Card 5" id=5 zone=HAND zonePos=5 cardId=some player=2] pos from 500 -> 500
+someid=55 local=False [name="Friendly Card 6" id=6 zone=HAND zonePos=6 cardId=some player=2] pos from 500 -> 500
+
+//Friendly Board Setup
+some FULL_ENTITY - Updating [name="Friendly Minion 1" id=11 zone=PLAY zonePos=1 player=2 some
+some FULL_ENTITY - Updating [name="Friendly Minion 2" id=12 zone=PLAY zonePos=2 player=2 some
+some FULL_ENTITY - Updating [name="Friendly Minion 3" id=13 zone=PLAY zonePos=3 player=2 some
+some FULL_ENTITY - Updating [name="Friendly Minion 4" id=14 zone=PLAY zonePos=4 player=2 some
+some FULL_ENTITY - Updating [name="Friendly Minion 5" id=15 zone=PLAY zonePos=5 player=2 some
+
+//Enemy Hand Setup
+someid=55 local=False [name="Enemy Card 1" id=21 zone=HAND zonePos=1 cardId=some player=1] pos from 500 -> 500
+someid=55 local=False [name="Enemy Card 2" id=22 zone=HAND zonePos=2 cardId=some player=1] pos from 500 -> 500
+someid=55 local=False [name="Enemy Card 3" id=23 zone=HAND zonePos=3 cardId=some player=1] pos from 500 -> 500
+someid=55 local=False [name="Enemy Card 4" id=24 zone=HAND zonePos=4 cardId=some player=1] pos from 500 -> 500
+someid=55 local=False [name="Enemy Card 5" id=25 zone=HAND zonePos=5 cardId=some player=1] pos from 500 -> 500
+someid=55 local=False [name="Enemy Card 6" id=26 zone=HAND zonePos=6 cardId=some player=1] pos from 500 -> 500
+
+//Enemy Board Setup
+some FULL_ENTITY - Updating [name="Enemy Minion 1" id=31 zone=PLAY zonePos=1 player=1 some
+some FULL_ENTITY - Updating [name="Enemy Minion 2" id=32 zone=PLAY zonePos=2 player=1 some
+some FULL_ENTITY - Updating [name="Enemy Minion 3" id=33 zone=PLAY zonePos=3 player=1 some
+some FULL_ENTITY - Updating [name="Enemy Minion 4" id=34 zone=PLAY zonePos=4 player=1 some
+some FULL_ENTITY - Updating [name="Enemy Minion 5" id=35 zone=PLAY zonePos=5 player=1 some

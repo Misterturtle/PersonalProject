@@ -97,15 +97,12 @@ class LogParser() {
         case DEFINE_PLAYERS(friendlyPlayer) =>
           friendlyPlayer.toInt match {
             case 1 =>
-              reader.close()
               return (1, 2)
             case 2 =>
-              reader.close()
               return (2, 1)
           }
         case _ =>
       }
-      reader.close()
     println("Couldn't find DEFINE_PLAYERS regex string")
 
     (Constants.INT_UNINIT, Constants.INT_UNINIT)
