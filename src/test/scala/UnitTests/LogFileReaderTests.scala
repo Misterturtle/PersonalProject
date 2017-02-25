@@ -318,6 +318,95 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   }
 
 
+  it should "Detect vanish" in{
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/Vanish.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Vanish.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val expectedFriendlyHand  = List(
+      new Card("Sprint", 48, 1, 500, 2),
+      new Card("Gnomish Inventor", 58, 2, 500, 2),
+      new Card("Coldlight Oracle", 35, 3, 500, 2),
+      new Card("Shiv", 38, 4, 500, 2),
+      new Card("Shiv", 53, 5, 500, 2),
+      new Card("Coldlight Oracle", 39, 6, 500, 2),
+      new Card("Sap", 36, 7, 500, 2),
+      new Card("Fan of Knives", 45, 8, 500, 2),
+      new Card("Acolyte of Pain", 37, 9, 500, 2),
+      new Card("Gnomish Inventor", 56, 10, 500, 2))
+
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val expectedFriendlyBoard = List[HSCard]()
+
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
+    val expectedEnemyHand = List(
+
+      new Card("Coldlight Oracle", 10, 1, 500, 1),
+      new Card("Constant Uninitialized", 11, 2, 500, 1),
+      new Card("Constant Uninitialized", 12, 3, 500, 1),
+      new Card("Constant Uninitialized", 6, 4, 500, 1),
+      new Card("Constant Uninitialized", 15, 5, 500, 1),
+      new Card("Runic Egg", 14, 6, 500, 1),
+      new Card("Bloodmage Thalnos", 20, 7, 500, 1),
+      new Card("Gnomish Inventor", 4, 8, 500, 1),
+      new Card("Loot Hoarder", 22, 9, 500, 1))
+
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+    val expectedEnemyBoard = List(new Card("Cult Master", 17, 500, 1, 1))
+
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+  }
+
+
+  it should "Detect friendly and enemy minions being controlled" in {
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/MinionsControlled.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/MinionsControlled.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+
+    val expectedFriendlyHand = List(
+      new Card("Cult Master", 4, 1, 500, 1),
+      new Card("Gnomish Inventor", 5, 2, 500, 1),
+      new Card("Coldlight Oracle", 27, 3, 500, 1),
+      new Card("Azure Drake", 26, 4, 500, 1),
+      new Card("Gnomish Inventor", 8, 5, 500, 1),
+      new Card("Polluted Hoarder", 33, 6, 500, 1))
+
+    val expectedFriendlyBoard = List[HSCard]()
+
+    val expectedEnemyHand = List(
+      new Card("Constant Uninitialized", 61, 2, 500, 2),
+      new Card("Constant Uninitialized", 43, 1, 500, 2),
+      new Card("Constant Uninitialized", 62, 3, 500, 2),
+      new Card("Constant Uninitialized", 60, 4, 500, 2),
+      new Card("Constant Uninitialized", 37, 5, 500, 2),
+      new Card("Constant Uninitialized", 36, 6, 500, 2),
+      new Card("Constant Uninitialized", 34, 7, 500, 2))
+
+    val expectedEnemyBoard = List(
+      new Card("Gnomish Inventor", 51, 500, 2, 2),
+      new Card("Novice Engineer", 25, 500, 3, 2),
+      new Card("Cabal Shadow Priest", 55, 500, 1, 2))
+
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+
+  }
+
+
 
 
 
