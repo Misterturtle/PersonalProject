@@ -2,9 +2,10 @@ package UnitTests
 
 import java.io._
 
+import FileReaders.{HSAction, LogParser}
 import org.scalatest.{FlatSpec, Matchers}
-import tph.HSAction.HSAction
-import tph.{Card, Constants, LogParser}
+import HSAction.HSAction
+import tph.{Card, Constants}
 
 /**
   * Created by Harambe on 2/21/2017.
@@ -21,7 +22,7 @@ class LogParserTests extends FlatSpec with Matchers {
   }
 
   it should "Identify HSAction" in{
-    import tph.HSAction._
+    import HSAction._
     val tempFile = new File(this.getClass.getResource("/tempHSActionLog.txt").getPath)
     val writer = new PrintWriter(new FileWriter(tempFile))
     val reader = new BufferedReader(new FileReader(tempFile))

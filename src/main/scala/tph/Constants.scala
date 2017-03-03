@@ -17,32 +17,28 @@ object Constants {
 
 
   object TestConstants{
-    val defaultGameState = new GameState(new Player(1,
-      List(
-        new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
-        new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
-        new Card("Friendly Hand 3", 3, 3, Constants.INT_UNINIT, 1),
-        new Card("Friendly Hand 4", 4, 4, Constants.INT_UNINIT, 1),
-        new Card("Friendly Hand 5", 5, 5, Constants.INT_UNINIT, 1),
-        new Card("Friendly Hand 6", 6, 6, Constants.INT_UNINIT, 1)),
-      List(
-        new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
-        new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1),
-        new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
-        new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1))),
-      new Player(2,
-        List(
-          new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
-          new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
-          new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
-          new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
-          new Card("Enemy Hand 5", 25, 5, Constants.INT_UNINIT, 2),
-          new Card("Enemy Hand 6", 26, 6, Constants.INT_UNINIT, 2)),
-        List(
-          new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
-          new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
-          new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 3, 2),
-          new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2))))
+    val defaultGameState = new GameState(new Player(1, 0, hand = List(
+            new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
+            new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
+            new Card("Friendly Hand 3", 3, 3, Constants.INT_UNINIT, 1),
+            new Card("Friendly Hand 4", 4, 4, Constants.INT_UNINIT, 1),
+            new Card("Friendly Hand 5", 5, 5, Constants.INT_UNINIT, 1),
+            new Card("Friendly Hand 6", 6, 6, Constants.INT_UNINIT, 1)), board = List(
+            new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
+            new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1),
+            new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
+            new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1))),
+      new Player(2, 0, hand = List(
+                new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
+                new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
+                new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
+                new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
+                new Card("Enemy Hand 5", 25, 5, Constants.INT_UNINIT, 2),
+                new Card("Enemy Hand 6", 26, 6, Constants.INT_UNINIT, 2)), board = List(
+                new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
+                new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
+                new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 3, 2),
+                new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2))))
   }
 
   object InfluenceFactors{
@@ -219,6 +215,8 @@ object Constants {
       val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
       val KNOWN_ENEMY_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
 
+
+      //Neutral HSActions
       val FACE_ATTACK_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=HERO.+ player=(\d+)] tag=ATK value=(\d+)""".r
       val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
       val CARD_PLAYED = """\[Power\] PowerProcessor.DoTaskListForCard\(\) - unhandled BlockType PLAY for sourceEntity \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\]""".r
@@ -227,6 +225,7 @@ object Constants {
       val TRANSFORM ="""\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)""".r
       val WEAPON = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)] to .+ PLAY \(Weapon\)""".r
       val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=.+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
+      val GAME_OVER = "[Power] GameState.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=NEXT_STEP value=FINAL_GAMEOVER"
 
 
 

@@ -17,24 +17,6 @@
         </encoder>
     </appender>-->
 
-    <!--&lt;!&ndash; Outputs logs to the Log tab in the GUI of the Hearthstats Companion &ndash;&gt;-->
-    <!--<appender name="APP" class="net.hearthstats.log.LogPaneAppender">-->
-    <!--</appender>-->
-
-
-    <!--&lt;!&ndash; Send app logs to the Log tab in the GUI. This logger should be left at INFO level. &ndash;&gt;-->
-    <!--<logger name="net.hearthstats.app" level="INFO">-->
-        <!--<appender-ref ref="APP" />-->
-    <!--</logger>-->
-
-    <!--&lt;!&ndash; Send all other logs to the log file and the console. &ndash;&gt;-->
-    <!--&lt;!&ndash; Change the level to DEBUG to enable full log output. &ndash;&gt;-->
-    <!--<logger name="net.hearthstats" level="INFO"></logger>-->
-
-    <!--<logger name="net.hearthstats.video" level="INFO"></logger>-->
-    <!--<logger name="tph.LogFileReader" level="WARN"></logger>
-    <logger name="tph.GameStatus" level="WARN"></logger>
-       -->
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />

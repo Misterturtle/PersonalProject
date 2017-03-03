@@ -2,8 +2,9 @@ package UnitTests
 
 import java.io.{FileReader, Reader, BufferedReader, File}
 
+import FileReaders.HSAction
 import org.scalatest.{Matchers, FlatSpec}
-import tph.HSAction.CardDeath
+import HSAction.CardDeath
 import tph._
 
 /**
@@ -37,7 +38,7 @@ class GameStateTests extends FlatSpec with Matchers {
 
   it should "set player numbers" in{
     val actualGameState = new GameState().SetPlayerNumbers(2)
-    val expectedGameState = new GameState(new Player(2), new Player(1))
+    val expectedGameState = new GameState(new Player(2, 0), new Player(1, 0))
 
     actualGameState shouldEqual expectedGameState
   }

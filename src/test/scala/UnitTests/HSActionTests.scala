@@ -1,9 +1,10 @@
 package UnitTests
 
+import FileReaders.HSAction
 import jdk.internal.org.objectweb.asm.tree.MethodInsnNode
 import jdk.nashorn.internal.ir.annotations.Ignore
 import org.scalatest.{Matchers, FlatSpec}
-import tph.HSAction._
+import HSAction._
 import tph._
 
 
@@ -329,7 +330,7 @@ class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction Define Players" should "Execute Action" in{
     val actualGameState = new GameState().SetPlayerNumbers(2)
-    val expectedGameState = new GameState(new Player(2), new Player(1))
+    val expectedGameState = new GameState(new Player(2,0), new Player(1,0))
   }
 
 

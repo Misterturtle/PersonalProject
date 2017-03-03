@@ -1,7 +1,9 @@
 package UnitTests
 
 import java.io._
+import javax.swing.plaf.nimbus.NimbusLookAndFeel
 
+import FileReaders.{LogParser, LogFileReader}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{Matchers, FlatSpec}
 import tph._
@@ -403,7 +405,81 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     actualFriendlyBoard shouldEqual expectedFriendlyBoard
     actualEnemyHand shouldEqual expectedEnemyHand
     actualEnemyBoard shouldEqual expectedEnemyBoard
+  }
 
+  it should "Detect weapon played" in {
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/WeaponsEquipped.txt").getPath))
+
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/WeaponsEquipped.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+    val actualFriendlyWeaponValue = actualGameState.firstPlayer.weaponValue
+    val actualEnemyWeaponValue = actualGameState.enemyPlayer.weaponValue
+
+
+    val expectedFriendlyHand = List(
+      new Card("Equality", 48, 1, 500, 2),
+      new Card("The Coin", 68, 4, 500, 2),
+      new Card("Eater of Secrets", 49, 2, 500, 2),
+      new Card("Tirion Fordring", 40, 3, 500, 2),
+      new Card("Solemn Vigil", 54, 5, 500, 2),
+      new Card("Equality", 46, 6, 500, 2),
+      new Card("Acidic Swamp Ooze", 63, 7, 500, 2),
+      new Card("Aldor Peacekeeper", 59, 8, 500, 2))
+
+    val expectedFriendlyBoard = Nil
+
+    val expectedEnemyHand = List(
+      new Card("Constant Uninitialized", 27, 1, 500, 1),
+      new Card("Constant Uninitialized", 4, 2, 500, 1),
+      new Card("Constant Uninitialized", 16, 3, 500, 1),
+      new Card("Constant Uninitialized", 22, 4, 500, 1),
+      new Card("Constant Uninitialized", 23, 5, 500, 1),
+      new Card("Constant Uninitialized", 10, 6, 500, 1),
+      new Card("Constant Uninitialized", 5, 7, 500, 1))
+
+    val expectedEnemyBoard = Nil
+
+    val expectedFriendlyWeaponValue = 0
+    val expectedEnemyWeaponValue = 5
+
+    actualFriendlyHand shouldEqual expectedFriendlyHand
+    actualFriendlyBoard shouldEqual expectedFriendlyBoard
+    actualEnemyHand shouldEqual expectedEnemyHand
+    actualEnemyBoard shouldEqual expectedEnemyBoard
+    actualFriendlyWeaponValue shouldEqual expectedFriendlyWeaponValue
+    actualEnemyWeaponValue shouldEqual expectedEnemyWeaponValue
+  }
+
+  it should "Detect weapon destroyed" in {
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/WeaponsDestroyed.txt").getPath))
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/WeaponsDestroyed.txt").getPath))
+    val actualFriendlyWeaponValue = actualGameState.friendlyPlayer.weaponValue
+    val actualEnemyWeaponValue = actualGameState.enemyPlayer.weaponValue
+
+    actualFriendlyWeaponValue shouldEqual 0
+    actualEnemyWeaponValue shouldEqual 0
+  }
+
+  it should "Detect when a game is over" in {
+
+    val playerNumbers = new LogParser().GetPlayerNumbers(new File(getClass.getResource("/debugsituations/Concede.txt").getPath))
+    val actualGameState = new LogParser().ConstructGameState(new File(getClass.getResource("/debugsituations/Concede.txt").getPath))
+    val actualFriendlyHand = actualGameState.friendlyPlayer.hand
+    val actualFriendlyBoard = actualGameState.friendlyPlayer.board
+    val actualEnemyHand = actualGameState.enemyPlayer.hand
+    val actualEnemyBoard = actualGameState.enemyPlayer.board
+    val actualFriendlyWeaponValue = actualGameState.friendlyPlayer.weaponValue
+    val actualEnemyWeaponValue = actualGameState.enemyPlayer.weaponValue
+
+    actualFriendlyHand shouldEqual Nil
+    actualFriendlyBoard shouldEqual Nil
+    actualEnemyHand shouldEqual Nil
+    actualEnemyBoard shouldEqual Nil
+    actualFriendlyWeaponValue shouldEqual 0
+    actualEnemyWeaponValue shouldEqual 0
   }
 
 

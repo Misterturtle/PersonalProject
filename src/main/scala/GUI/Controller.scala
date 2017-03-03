@@ -5,8 +5,9 @@ import java.io.{FileWriter, PrintWriter, File}
 import java.util.concurrent.{TimeUnit, ScheduledThreadPoolExecutor}
 import javafx.beans.property.SimpleStringProperty
 
+import FileReaders.LogParser
 import com.typesafe.config.ConfigFactory
-import tph.{Card, NoCards, LogParser, GameState}
+import tph.{Card, NoCards, GameState}
 
 import scala.collection.mutable.ListBuffer
 import scalafx.event.ActionEvent

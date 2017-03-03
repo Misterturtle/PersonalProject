@@ -5,7 +5,9 @@ import java.io._
 import com.typesafe.config.ConfigFactory
 import org.jibble.pircbot.PircBot
 import org.scalatest.{Matchers, FlatSpec}
-import tph.{IRCBot, LogFileReader}
+import tph.IRCBot
+import FileReaders.LogFileReader
+
 
 import scala.collection.mutable.ListBuffer
 

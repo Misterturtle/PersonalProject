@@ -3,7 +3,8 @@ package GUI
 import java.util.concurrent.{TimeUnit, ScheduledThreadPoolExecutor}
 import javafx.concurrent.Task
 
-import tph.{LogFileReader, TheBrain, LogParser}
+import tph.TheBrain
+import FileReaders.{LogFileReader, LogParser}
 
 import scalafx.application.{Platform, JFXApp}
 import scalafx.scene.Scene

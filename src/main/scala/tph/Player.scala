@@ -7,7 +7,7 @@ import scala.Option
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board: List[HSCard] = List[HSCard](), weaponValue: Int = 0) extends LazyLogging {
+case class Player(playerNumber: Int, weaponValue: Int, hand: List[HSCard] = List[HSCard](), board: List[HSCard] = List[HSCard]()) extends LazyLogging {
 
   def AddCard(card: HSCard, isHand: Boolean): Player = {
     if (isHand && board.contains(card))
@@ -32,7 +32,7 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
           }
       }
 
-      new Player(playerNumber, shiftedHand ::: List(card), board)
+      new Player(playerNumber, weaponValue, shiftedHand ::: List(card), board)
     }
     else
     {
@@ -53,7 +53,7 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
               changingBoard
           }
       }
-      new Player(playerNumber, hand, shiftedBoard ::: List(card))
+      new Player(playerNumber, weaponValue, hand, shiftedBoard ::: List(card))
     }
   }
 
@@ -87,7 +87,7 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
           }
       }
 
-        new Player(playerNumber, shiftedHand, board)
+        new Player(playerNumber, weaponValue, shiftedHand, board)
       }
     else
       {
@@ -109,13 +109,13 @@ case class Player(playerNumber: Int, hand: List[HSCard] = List[HSCard](), board:
             }
         }
 
-        new Player(playerNumber, hand, shiftedBoard)
+        new Player(playerNumber, weaponValue, hand, shiftedBoard)
       }
   }
 
   def AddCardToNextHandPosition(name:String, id:Int): Player ={
     val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber))
-    new Player(playerNumber, newHand, board)}
+    new Player(playerNumber, weaponValue, newHand, board)}
 
   def GetNextHandPosition(): Int ={
     for(a<-1 to 20){

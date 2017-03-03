@@ -5,7 +5,7 @@ import com.typesafe.scalalogging.LazyLogging
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HSCard]()), secondPlayer: Player = new Player(2, List[HSCard](), List[HSCard]())) extends LazyLogging {
+case class GameState(firstPlayer: Player = new Player(1, 0), secondPlayer: Player = new Player(2, 0)) extends LazyLogging {
 
   val friendlyPlayer = firstPlayer
   val enemyPlayer = secondPlayer
@@ -23,30 +23,9 @@ case class GameState(firstPlayer: Player = new Player(1, List[HSCard](), List[HS
       friendlyPlayerNumber match {
         case 1 => 2
         case 2 => 1
-        case _ => -5
+        case _ => Constants.INT_UNINIT
       }
 
-    new GameState(new Player(friendlyPlayerNumber, friendlyPlayer.hand, friendlyPlayer.board), new Player(enemyPlayerNumber, enemyPlayer.hand,enemyPlayer.board))
+    new GameState(new Player(friendlyPlayerNumber, friendlyPlayer.weaponValue,  hand = friendlyPlayer.hand, board = friendlyPlayer.board), new Player(enemyPlayerNumber, enemyPlayer.weaponValue, hand = enemyPlayer.hand, board = enemyPlayer.board))
   }
-
-  //  def GetCardAddress(card: Card): CardAddress = {
-  //
-  //    CardAddress(card.player, FindList(card)._1, FindList(card)._2, FindIndex(card))
-  //
-  //    def FindList(card: Card): (Boolean, List[Card]) = {
-  //      if (GetFriendlyHand().contains(card))
-  //        return (true, GetFriendlyHand())
-  //
-  //      if (GetFriendlyBoard().contains(card))
-  //        return (false, GetFriendlyBoard())
-  //
-  //      if (GetEnemyBoard().contains(card))
-  //        return (true, GetEnemyHand())
-  //
-  //      if (GetEnemyHand().contains(card))
-  //        return (false, GetEnemyBoard())
-  //
-  //      return (false, List(NoCards()))
-  //    }
-  //  }
 }

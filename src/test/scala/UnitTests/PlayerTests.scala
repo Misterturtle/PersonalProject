@@ -1,8 +1,9 @@
 package UnitTests
 
+import FileReaders.HSAction
 import org.scalatest.{Matchers, FlatSpec}
 import tph._
-import tph.HSAction.{FriendlyCardReturn}
+import HSAction.{FriendlyCardReturn}
 
 /**
   * Created by Harambe on 2/20/2017.
@@ -121,7 +122,7 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Enemy Card 7", 27, 7, Constants.INT_UNINIT, 2))
 
 
-    val gameState = new GameState(new Player(1, startingFriendlyHand, List[HSCard]()), new Player(2, startingEnemyHand, List[HSCard]()))
+    val gameState = new GameState(new Player(1, 0, hand = startingFriendlyHand, board = List[HSCard]()), new Player(2, 0, hand = startingEnemyHand, board = List[HSCard]()))
 
 
     val part1FriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition("Friendly Card 4", 4)
