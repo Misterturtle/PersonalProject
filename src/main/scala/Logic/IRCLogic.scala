@@ -32,7 +32,7 @@ class IRCLogic {
 
   def GetBaseResults(listOfVotes: List[ActionVote]): Map[ActionVote, Double] ={
 
-    val results = listOfVotes.foldLeft(Map[ActionVote, Double](new CardPlay("ircLogic", 0) -> 0)){
+    val results = listOfVotes.foldLeft(Map[ActionVote, Double](new CardPlay(0) -> 0)){
       (resultsMap: Map[ActionVote, Double], currentVote:ActionVote) =>
 
         if(resultsMap.contains(currentVote)) {

@@ -22,10 +22,10 @@ class LogParser() {
 
         //////////////////////////////////////////////////Friendly Events//////////////////////////////////////////////////////
         case FRIENDLY_CARD_DRAWN(name, id, player, position) =>
-          new FriendlyCardDrawn(name, id.toInt, position.toInt, player.toInt)
+          new CardDrawn(name, id.toInt, position.toInt, player.toInt)
 
-        case FRIENDLY_COIN_DRAWN(name, id, player, position) =>
-          new FriendlyCardDrawn(name, id.toInt, position.toInt, player.toInt)
+        case FRIENDLY_CARD_CREATED(name, id, player, position) =>
+          new CardDrawn(name, id.toInt, position.toInt, player.toInt)
 
         case FRIENDLY_MINION_CONTROLLED(name, id, position) =>
           new FriendlyMinionControlled(name, id.toInt, position.toInt)
@@ -40,7 +40,7 @@ class LogParser() {
 
         //////////////////////////////////////////////////Enemy Events//////////////////////////////////////////////////////
         case ENEMY_CARD_DRAWN(id, player, position) =>
-          new EnemyCardDrawn(id.toInt, position.toInt, player.toInt)
+          new CardDrawn(Constants.STRING_UNINIT,id.toInt, position.toInt, player.toInt)
 
         case ENEMY_MINION_CONTROLLED(name, id, position) =>
           new EnemyMinionControlled(name, id.toInt, position.toInt)
@@ -51,13 +51,19 @@ class LogParser() {
         case ENEMY_CARD_RETURN(name, id, player) =>
           new EnemyCardReturn(name, id.toInt, player.toInt)
 
-        case ENEMY_COIN_DRAWN(id, player, position) =>
-          new EnemyCardDrawn(id.toInt, player.toInt, position.toInt)
+        case ENEMY_CARD_CREATED(id, player, position) =>
+          new CardDrawn(Constants.STRING_UNINIT, id.toInt, player.toInt, position.toInt)
 
         //////////////////////////////////////////////////Neutral Events//////////////////////////////////////////////////////
 
         case FACE_ATTACK_VALUE(player, value) =>
           new ChangeFaceAttackValue(player.toInt, value.toInt)
+
+        case DECK_TO_BOARD(name, id, player) =>
+          new DeckToBoard(name, id.toInt, player.toInt)
+
+        case RETURNED_CARD_PLAYED(name, id, position,player) if position.toInt != 0 =>
+          new CardPlayed(name, id.toInt, position.toInt, player.toInt)
 
         case SECRET_PLAYED(id, player) =>
           new SecretPlayed(id.toInt, player.toInt)
@@ -71,14 +77,20 @@ class LogParser() {
         case MINION_SUMMONED(name, id, position, player) if position.toInt != 0 =>
           new MinionSummoned(name, id.toInt, position.toInt, player.toInt)
 
-        case TRANSFORM(id, newID) =>
-          new Transform(id.toInt, newID.toInt)
+        case TRANSFORM(id, position, newID) if position.toInt != 0 =>
+          new Transform(id.toInt, position.toInt, newID.toInt)
 
-        case WEAPON(id, player) =>
-          new WeaponPlayed(id.toInt, player.toInt)
+        case BOARD_SETASIDE_REMOVAL(name, id, player) =>
+          new CardDeath(Constants.STRING_UNINIT, id.toInt, player.toInt)
+
+        case HAND_SETASIDE_REMOVAL(id, player) =>
+          new CardDeath(Constants.STRING_UNINIT, id.toInt, player.toInt)
 
         case DEFINE_PLAYERS(friendlyPlayerNumber) =>
           new DefinePlayers(friendlyPlayerNumber.toInt)
+
+        case MODIFIED_HERO_FACE_VALUE(player, value) =>
+          new ChangeFaceAttackValue(player.toInt, value.toInt)
 
         case GAME_OVER =>
           new GameOver()

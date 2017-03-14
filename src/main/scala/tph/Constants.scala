@@ -2,7 +2,6 @@ package tph
 
 
 import VoteSystem.{ActionVote, EmojiVote, Vote, MenuVote}
-import tph.Constants.VoteStringNames._
 
 import scala.collection.mutable.ListBuffer
 
@@ -67,132 +66,65 @@ object Constants {
   object ActionVotes {
 
     //Discover Type
-    case class Discover(sender:String, card: Int) extends ActionVote(sender)
+    case class Discover(card: Int) extends ActionVote()
     //Battlecry Option with Position Type
-    case class CardPlayWithFriendlyTargetWithPosition(sender:String, card: Int, friendlyTarget: Int, position: Int) extends ActionVote(sender)
-    case class CardPlayWithFriendlyFaceTargetWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyTargetWithPosition(sender:String, card: Int, enemyTarget: Int, position: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyFaceTargetWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
+    case class CardPlayWithFriendlyTargetWithPosition(card: Int, friendlyTarget: Int, position: Int) extends ActionVote()
+    case class CardPlayWithEnemyTargetWithPosition(card: Int, enemyTarget: Int, position: Int) extends ActionVote()
     //Normal Turn Play Type
-    case class CardPlayWithPosition(sender:String, card: Int, position: Int) extends ActionVote(sender)
-    case class CardPlay(sender:String, card: Int) extends ActionVote(sender)
-    case class CardPlayWithFriendlyTarget(sender:String, card: Int, friendlyTarget: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyTarget(sender:String, card: Int, enemyTarget: Int) extends ActionVote(sender)
-    case class CardPlayWithFriendlyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
-    case class CardPlayWithEnemyFaceTarget(sender:String, card: Int) extends ActionVote(sender)
-    case class HeroPower(sender:String) extends ActionVote(sender)
-    case class HeroPowerWithFriendlyTarget(sender:String, friendlyTarget: Int) extends ActionVote(sender)
-    case class HeroPowerWithEnemyTarget(sender:String, enemyTarget: Int) extends ActionVote(sender)
-    case class HeroPowerWithFriendlyFace(sender:String) extends ActionVote(sender)
-    case class HeroPowerWithEnemyFace(sender:String) extends ActionVote(sender)
+    case class CardPlayWithPosition(card: Int, position: Int) extends ActionVote()
+    case class CardPlay(card: Int) extends ActionVote()
+    case class CardPlayWithFriendlyTarget(card: Int, friendlyTarget: Int) extends ActionVote()
+    case class CardPlayWithEnemyTarget(card: Int, enemyTarget: Int) extends ActionVote()
+    case class HeroPower() extends ActionVote()
+    case class HeroPowerWithFriendlyTarget(friendlyTarget: Int) extends ActionVote()
+    case class HeroPowerWithEnemyTarget(enemyTarget: Int) extends ActionVote()
     //3 part commands
 
     //Attack Type
-    case class NormalAttack(sender:String, friendlyTarget: Int, enemyTarget: Int) extends ActionVote(sender)
-    case class FaceAttack(sender:String, position: Int) extends ActionVote(sender)
-    case class NormalAttackToFace(sender:String, position: Int) extends ActionVote (sender)
-    case class FaceAttackToFace(sender:String) extends ActionVote(sender)
-    case class ActionUninit(sender:String) extends ActionVote(sender)
-    case class Bind(sender:String) extends ActionVote(sender)
-    case class Future(sender:String) extends ActionVote(sender)
-    case class MulliganVote(sender:String, first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends Vote(sender)
+    case class NormalAttack(friendlyTarget: Int, enemyTarget: Int) extends ActionVote()
+    case class ActionUninit() extends ActionVote()
+    case class Bind() extends ActionVote()
+    case class Future() extends ActionVote()
+    case class MulliganVote(first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends ActionVote()
   }
 
   object MiscVotes {
 
-    case class UninitVote(sender:String) extends Vote(sender)
-    case class Hurry(sender:String) extends Vote(sender)
-    case class EndTurn(sender:String) extends Vote(sender)
-    case class Uninit(sender:String) extends Vote(sender)
+    case class UninitVote() extends Vote()
+    case class Hurry() extends Vote()
+    case class EndTurn() extends Vote()
+    case class Uninit() extends Vote()
   }
 
   object EmojiVotes {
 
-    case class Greetings(sender:String) extends EmojiVote(sender)
-    case class Thanks(sender:String) extends EmojiVote(sender)
-    case class WellPlayed(sender:String) extends EmojiVote(sender)
-    case class Wow(sender:String) extends EmojiVote(sender)
-    case class Oops(sender:String) extends EmojiVote(sender)
-    case class Threaten(sender:String) extends EmojiVote(sender)
-    case class EmojiUninit(sender:String) extends EmojiVote(sender)
+    case class Greetings() extends EmojiVote()
+    case class Thanks() extends EmojiVote()
+    case class WellPlayed() extends EmojiVote()
+    case class Wow() extends EmojiVote()
+    case class Oops() extends EmojiVote()
+    case class Threaten() extends EmojiVote()
+    case class EmojiUninit() extends EmojiVote()
   }
 
 
   object MenuVotes {
 
-    case class MenuUninit(sender:String) extends MenuVote(sender)
-    case class Back(sender:String) extends MenuVote(sender)
-    case class Play(sender:String) extends MenuVote(sender)
-    case class Collection(sender:String) extends MenuVote(sender)
-    case class Shop(sender:String) extends MenuVote(sender)
-    case class OpenPacks(sender:String) extends MenuVote(sender)
-    case class QuestLog(sender:String) extends MenuVote(sender)
-    case class Casual(sender:String) extends MenuVote(sender)
-    case class Ranked(sender:String) extends MenuVote(sender)
-    case class Deck(sender:String, deckNumber: Int) extends MenuVote(sender)
-    case class FirstPage(sender:String) extends MenuVote(sender)
-    case class SecondPage(sender:String) extends MenuVote(sender)
-    case class Quest( sender:String, number: Int) extends MenuVote(sender)
+    case class MenuUninit() extends MenuVote()
+    case class Back() extends MenuVote()
+    case class Play() extends MenuVote()
+    case class Collection() extends MenuVote()
+    case class Shop() extends MenuVote()
+    case class OpenPacks() extends MenuVote()
+    case class QuestLog() extends MenuVote()
+    case class Casual() extends MenuVote()
+    case class Ranked() extends MenuVote()
+    case class Deck(deckNumber: Int) extends MenuVote()
+    case class FirstPage() extends MenuVote()
+    case class SecondPage() extends MenuVote()
+    case class Quest(number: Int) extends MenuVote()
   }
 
-  object VoteStringNames {
-    val totalVoteStringNames = 20
-
-    val DISCOVER = "Discover"
-
-    //Battlecry and Position Type
-    val CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION = "CardPlayWithFriendlyTargetWithPosition"
-    val CARD_PLAY_WITH_FRIENDLY_FACE_TARGET_WITH_POSITION = "CardPlayWithFriendlyFaceTargetWithPosition"
-    val CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION = "CardPlayWithEnemyTargetWithPosition"
-    val CARD_PLAY_WITH_ENEMY_FACE_TARGET_WITH_POSITION = "CardPlayWithEnemyFaceTargetWithPosition"
-
-
-    //Normal Turn Play Type
-    val CARD_PLAY = "CardPlay"
-    val CARD_PLAY_WITH_POSITION = "CardPlayWithPosition"
-    val CARD_PLAY_WITH_FRIENDLY_TARGET = "CardPlayWithFriendlyTarget"
-    val CARD_PLAY_WITH_ENEMY_TARGET = "CardPlayWithEnemyTarget"
-    val CARD_PLAY_WITH_FRIENDLY_FACE_TARGET = "CardPlayWithFriendlyFaceTarget"
-    val CARD_PLAY_WITH_ENEMY_FACE_TARGET = "CardPlayWithEnemyFaceTarget"
-
-
-    //Hero Power Type
-    val HERO_POWER = "HeroPower"
-    val HERO_POWER_WITH_ENEMY_FACE = "HeroPowerWithEnemyFace"
-    val HERO_POWER_WITH_ENEMY_TARGET = "HeroPowerWithEnemyTarget"
-    val HERO_POWER_WITH_FRIENDLY_FACE = "HeroPowerWithFriendlyFace"
-    val HERO_POWER_WITH_FRIENDLY_TARGET = "HeroPowerWithFriendlyTarget"
-
-
-    //Attack Type
-    val NORMAL_ATTACK_WITH_ENEMY_TARGET = "NormalAttackWithEnemyTarget"
-    val NORMAL_ATTACK_WITH_ENEMY_FACE_TARGET = "NormalAttackWithEnemyFaceTarget"
-    val FACE_ATTACK_WITH_ENEMY_TARGET = "FaceAttackWithEnemyTarget"
-    val FACE_ATTACK_WITH_ENEMY_FACE_TARGET = "FaceAttackWithEnemyFaceTarget"
-
-
-    val listOfVoteStringNames = List[String](
-      DISCOVER,
-      CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION,
-      CARD_PLAY_WITH_FRIENDLY_FACE_TARGET_WITH_POSITION,
-      CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION ,
-      CARD_PLAY_WITH_ENEMY_FACE_TARGET_WITH_POSITION,
-      CARD_PLAY ,
-      CARD_PLAY_WITH_POSITION  ,
-      CARD_PLAY_WITH_FRIENDLY_TARGET  ,
-      CARD_PLAY_WITH_ENEMY_TARGET ,
-      CARD_PLAY_WITH_FRIENDLY_FACE_TARGET,
-      CARD_PLAY_WITH_ENEMY_FACE_TARGET  ,
-      HERO_POWER ,
-      HERO_POWER_WITH_ENEMY_FACE,
-      HERO_POWER_WITH_ENEMY_TARGET,
-      HERO_POWER_WITH_FRIENDLY_FACE ,
-      HERO_POWER_WITH_FRIENDLY_TARGET ,
-      NORMAL_ATTACK_WITH_ENEMY_TARGET,
-      NORMAL_ATTACK_WITH_ENEMY_FACE_TARGET,
-      FACE_ATTACK_WITH_ENEMY_TARGET ,
-      FACE_ATTACK_WITH_ENEMY_FACE_TARGET)
-  }
 
 
 
@@ -202,35 +134,36 @@ object Constants {
 
       //Friendly HSActions
       val FRIENDLY_MINION_CONTROLLED = """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from FRIENDLY PLAY -> OPPOSING PLAY""".r
-      val FRIENDLY_COIN_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=FULL_ENTITY entity=\[id=\d+ cardId=.+ name=The Coin\] tags=System.Collections.Generic.List`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
-      val FRIENDLY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=0 cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
+      val FRIENDLY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val FRIENDLY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from FRIENDLY PLAY -> FRIENDLY HAND""".r
       val FRIENDLY_MULLIGAN_REDRAW = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     HIDE_ENTITY - Entity=\[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=.+ player=(\d+)] tag=ZONE value=DECK""".r
+      val FRIENDLY_CARD_CREATED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=FULL_ENTITY entity=\[id=\d+ cardId=.+ name=.+\] tags=System.Collections.Generic.List\`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
 
       //Enemy HSActions
       val ENEMY_MINION_CONTROLLED = """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from OPPOSING PLAY -> FRIENDLY PLAY""".r
-      val ENEMY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=0 cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
-      val ENEMY_COIN_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=.+ entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag.+ complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
+      val ENEMY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val ENEMY_MULLIGAN_REDRAW = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=DECK zonePos=\d+ cardId= player=(\d+)\] zone from OPPOSING HAND -> OPPOSING DECK""".r
       val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
       val KNOWN_ENEMY_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+      val ENEMY_CARD_CREATED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=.+ entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag.+ complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
 
 
       //Neutral HSActions
+      val CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val FACE_ATTACK_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=HERO.+ player=(\d+)] tag=ATK value=(\d+)""".r
       val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
-      val CARD_PLAYED = """\[Power\] PowerProcessor.DoTaskListForCard\(\) - unhandled BlockType PLAY for sourceEntity \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\]""".r
-      val CARD_DEATH = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=.+ zonePos=.+ player=(\d+).+ tag=ZONE value=GRAVEYARD""".r
+      val RETURNED_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=COST value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+      val CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+      val CARD_DEATH = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=(.+) id=(\d+) zone=GRAVEYARD zonePos=\d+ cardId=.+ player=(\d+)] to .+ GRAVEYARD""".r
       val MINION_SUMMONED = """^.+FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+player=(\d+).+""".r
-      val TRANSFORM ="""\[Power\] .+.DebugPrintPower\(\) -     TAG_CHANGE Entity=.+id=(\d+) zone=PLAY.+tag=LINKED_ENTITY value=(\d+)""".r
+      val TRANSFORM ="""\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=\d+] tag=LINKED_ENTITY value=(\d+)""".r
       val WEAPON = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)] to .+ PLAY \(Weapon\)""".r
       val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=.+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
       val GAME_OVER = "[Power] GameState.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=NEXT_STEP value=FINAL_GAMEOVER"
-
-
-
-
-
+      val DECK_TO_BOARD = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=(.+) id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] zone from .+ DECK -> .+ PLAY""".r
+      val BOARD_SETASIDE_REMOVAL = """\[Power\] PowerProcessor.DoTaskListForCard\(\) - unhandled BlockType PLAY for sourceEntity \[name=(.+) id=(\d+) zone=SETASIDE zonePos=0 cardId=.+ player=(\d+)\]""".r
+      val MODIFIED_HERO_FACE_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] tag=ATK value=(\d+)""".r
+      val HAND_SETASIDE_REMOVAL = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=.+ id=(\d+) zone=SETASIDE zonePos=\d+ cardId= player=(\d+)] zone from .+ HAND -> """.r
     }
 
     object GameStateStrings{

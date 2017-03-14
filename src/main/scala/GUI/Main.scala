@@ -1,8 +1,10 @@
 package GUI
 
+import java.io.{PrintWriter, FileWriter, File}
 import java.util.concurrent.{TimeUnit, ScheduledThreadPoolExecutor}
 import javafx.concurrent.Task
 
+import com.typesafe.config.ConfigFactory
 import tph.TheBrain
 import FileReaders.{LogFileReader, LogParser}
 
@@ -19,11 +21,12 @@ import scalafx.Includes._
   */
 object Main extends JFXApp {
 
+  val config = ConfigFactory.load()
   val controller = new Controller()
   val theBrain = new TheBrain()
   //Reads hearthstone's output_log.txt file and filters known HSActions to actionLog.txt
   val logFileReader = new LogFileReader()
-  logFileReader.poll()
+
 
   val scheduler = new ScheduledThreadPoolExecutor(1)
   val poll = new Runnable{
@@ -44,9 +47,14 @@ object Main extends JFXApp {
     Platform.runLater(updateGUI)
     scheduler.schedule(poll, 1, TimeUnit.SECONDS)
   }
+
+  def ClearLog(file: File): Unit = {
+    val writer = new PrintWriter(new FileWriter(file))
+    writer.close()
+  }
+
+  ClearLog(new File(config.getString("tph.writerFiles.actionLog")))
+  logFileReader.poll()
   Poll()
-
-
-
 
 }

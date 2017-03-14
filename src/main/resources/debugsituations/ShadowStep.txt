@@ -13736,6 +13736,9 @@ FSM not Preprocessed: Card_Hand_Ally_SummonIn(Clone) : FSM
 
 [Zone] ZoneChangeList.ProcessChanges() - processing index=6 change=powerTask=[power=[type=TAG_CHANGE entity=[id=42 cardId=EX1_096 name=Loot Hoarder] tag=COST value=2] complete=False] entity=[name=Loot Hoarder id=42 zone=PLAY zonePos=1 cardId=EX1_096 player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=
 
+\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=COST value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=
+
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.UpdateDirtyZones() - m_id=17 loadingEntities.Count=0 m_dirtyZones.Count=0

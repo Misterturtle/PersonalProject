@@ -2,9 +2,10 @@ package tph
 
 import java.io.{File, FileWriter, PrintWriter}
 
-import VoteSystem.VoteParser
+import VoteSystem.{Vote, VoteManager, VoteParser}
 import com.typesafe.config.ConfigFactory
 import org.jibble.pircbot.PircBot
+import tph.Constants.ActionVotes.ActionUninit
 
 import scala.util.matching.Regex
 
@@ -12,78 +13,53 @@ import scala.util.matching.Regex
   * Created by Harambe on 2/22/2017.
   */
 
-object IRCBot {
-  //Emote Type
-  val GREETINGS = "!greetings"
-  val THANKS = "!thanks"
-  val WELL_PLAYED = "!well played"
-  val WOW = "!wow"
-  val OOPS = "!oops"
-  val THREATEN = "!threaten"
-
-  //In Game Always Type
-  val END_TURN = "!end turn"
-  val BIND = "!bind"
-  val FUTURE = "!future"
-
-  //Parsing
-  val ONE_PART_COMMAND =
-    """!(.+)""".r
-  val TWO_PART_COMMAND = """!(.+), (.+)""".r
-  val THREE_PART_COMMAND = """!(.+), (.+), (.+)""".r
-  val PLAY_COMMAND = """play (\d+)""".r
-  val ATTACK_COMMAND = """att (.+)""".r
-  val MY_REGEX_NUMBER = """my (\d+)""".r
-  val HIS_REGEX_NUMBER = """his (\d+)""".r
-  val SPOT_COMMAND = """spot (\d+)""".r
-  val TARGET_COMMAND = """target (.+)""".r
-  val BATTLECRY_COMMAND = """battlecry (.+)""".r
-  val HERO_POWER_COMMAND = """hero power (.+)""".r
-  val DISCOVER_COMMAND = """discover (\d+)""".r
-  val MULLIGAN = """!mulligan(.*)""".r
-
-  //Main Menu
-  val PLAY = "!play"
-  val COLLECTION = "!collection"
-  val OPEN_PACKS = "!open packs"
-  val SHOP = "!shop"
-  val QUEST_LOG = "!quest log"
-
-  //Play Menu
-  val BACK = "!back"
-  val CASUAL = "!casual"
-  val RANKED = "!ranked"
-  val DECK = """!deck (\d+)""".r
-  val FIRST_PAGE = "!first page"
-  val SECOND_PAGE = "!second page"
-
-  //Quest Menu
-  val QUEST =
-    """!quest (\d+)""".r
-
-  //All of CollectionMenu will be automated at subscribers request
+class IRCBot(voteManager: VoteManager) extends PircBot {
 
 
-}
-
-class IRCBot extends PircBot {
-
-  import IRCBot._
   val config = ConfigFactory.load()
-
-
   val hostName = config.getString("tph.irc.host")
   val channel = config.getString("tph.irc.channel")
   val nickname = "TPHBot"
-  val writer = new PrintWriter(new FileWriter(new File(config.getString("tph.voteLog.path"))))
+  val writer = new PrintWriter(new FileWriter(new File(config.getString("tph.writerFiles.voteLog"))))
+  val GENERAL_COMMAND = """!(.+)""".r
 
-  setName(nickname)
-  setVerbose(false)
-  connect(hostName)
-  joinChannel(channel)
+  def init(): Unit = {
+    setName(nickname)
+    setVerbose(false)
+    connect(hostName)
+  }
+
+  override def onConnect(): Unit = {
+    joinChannel(channel)
+  }
+
+  def identifyTwitchInput(sender:String, message:String, voteParser:VoteParser): Vote = {
+    voteParser.createVote(sender, message)
+  }
+
+  def parseMultipleCommands(twitchInput: String, accumlator:List[String] = List[String]()): List[String] = {
+    val headAndTail = """(^[^,]*),(.+)""".r
+    twitchInput match {
+      case headAndTail(head, tail) =>
+        parseMultipleCommands(tail, head :: accumlator)
+      case _ =>
+        (twitchInput :: accumlator).reverse
+    }
+  }
 
   override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
+        message match{
+          case GENERAL_COMMAND(command) =>
+            val commands = parseMultipleCommands(command)
+            commands foreach {
+              case singleCommand =>
+              val vote = identifyTwitchInput(sender, singleCommand, new VoteParser())
+              if (vote != ActionUninit())
+                voteManager.voteEntry(sender, vote)
+            }
 
-
+          case _ =>
+        }
     }
+
 }

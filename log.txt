@@ -1,0 +1,2 @@
+01:55:19.798 [serTests] DEBUG         V.VoteParser - Unexpected mulligan string 3 a14 
+01:55:19.819 [serTests] DEBUG         V.VoteParser - Creating empty vote to match return type

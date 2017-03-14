@@ -5,5 +5,5 @@ package VoteSystem
   */
 
 
-class MenuVote(sender:String) extends Vote(sender) {
+class MenuVote() extends Vote() {
 }

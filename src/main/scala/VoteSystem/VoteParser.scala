@@ -11,250 +11,168 @@ import tph.{Constants, IRCBot}
   * Created by Harambe on 2/22/2017.
   */
 class VoteParser extends LazyLogging {
+  //Emote Type
+  val GREETINGS = "greetings"
+  val THANKS = "thanks"
+  val WELL_PLAYED = "well played"
+  val WOW = "wow"
+  val OOPS = "oops"
+  val THREATEN = "threaten"
 
-  import IRCBot._
+  //In Game Always Type
+  val END_TURN = "end turn"
+  val BIND = "bind"
+  val FUTURE = "future"
 
-  def ParseVote(stringVote: String, sender: String): Vote = {
+  def createVote(sender:String, command:String): Vote = {
 
-    stringVote.toLowerCase match {
+    command.toLowerCase match {
 
-      case PLAY =>
-        new Play(sender)
-      case SHOP =>
-        new Shop(sender)
-      case OPEN_PACKS =>
-        new OpenPacks(sender)
-      case COLLECTION =>
-        new Collection(sender)
-      case QUEST_LOG =>
-        new QuestLog(sender)
-      case CASUAL =>
-        new Casual(sender)
-      case RANKED =>
-        new Ranked(sender)
-      case BACK =>
-        new Back(sender)
-      case DECK(deckNumber) =>
-        new Deck(sender, deckNumber.toInt)
-      case FIRST_PAGE =>
-        new FirstPage(sender)
-      case SECOND_PAGE =>
-        new SecondPage(sender)
-      case QUEST(number) =>
-        new Quest(sender, number.toInt)
+        //----------Emoji Votes-------//
       case GREETINGS =>
-        new Greetings(sender)
+        new Greetings()
       case THANKS =>
-        new Thanks(sender)
+        new Thanks()
       case WELL_PLAYED =>
-        new WellPlayed(sender)
+        new WellPlayed()
       case WOW =>
-        new Wow(sender)
+        new Wow()
       case OOPS =>
-        new Oops(sender)
+        new Oops()
       case THREATEN =>
-        new Threaten(sender)
+        new Threaten()
+
+
+        //-----------Misc Votes----------//
       case END_TURN =>
-        new EndTurn(sender)
+        new EndTurn()
       case BIND =>
-        new Bind(sender)
+        new Bind()
       case FUTURE =>
-        new Future(sender)
+        new Future()
 
-      case MULLIGAN(stringVote: String) =>
-        ParseMulligan(sender, stringVote)
 
+        //------------Action Votes----------//
       case _ =>
-        new ActionUninit(sender)
-
+        createActionVote(sender, command)
 
     }
   }
 
-//  def CreateActionVote(sender: String, stringVote:String): ActionVote ={
-//    //Add Cast command
-//    //!f1 att e2 then play
-//    val friendlyCardRegex = """c(\d)""".r
-//    val friendlyBoardRegex = """f(\d)""".r
-//    val enemyRegex = """.*e(\d).*""".r
-//    val attackRegex = """.*att.*""".r
-//    val castRegex = """.*cast(.*)""".r
-//
-//
-//  }
+  def createActionVote(sender:String, command:String): ActionVote ={
+    val CARD_PLAY_COMMAND = """\s*c(\d+)\s*""".r
+    val CARD_PLAY_WITH_POSITION = """\s*c(\d+)\s*>\s*>\s*f(\d+)\s*""".r
+    val CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION = """\s*c(\d+)\s*>\s*>\s*f(\d+)\s*>\s*f(\d+)\s*""".r
+    val REVERSE_CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION = """\s*c(\d+)\s*>\s*f(\d+)\s*>\s*>\s*f(\d+)\s*""".r
+    val CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION = """\s*c(\d+)\s*>\s*>\s*f(\d+)\s*>\s*e(\d+)\s*""".r
+    val REVERSE_CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION = """\s*c(\d+)\s*>\s*e(\d+)\s*>\s*>\s*f(\d+)\s*""".r
+    val CARD_PLAY_WITH_FRIENDLY_TARGET = """\s*c(\d+)\s*>\s*f(\d+)\s*""".r
+    val CARD_PLAY_WITH_ENEMY_TARGET = """\s*c(\d+)\s*>\s*e(\d+)\s*""".r
+    val NORMAL_ATTACK_COMMAND = """\s*f(\d+)\s*>\s*e(\d+)\s*""".r
+    val HERO_POWER = """\s*hp\s*""".r
+    val HERO_POWER_WITH_FRIENDLY_TARGET = """\s*hp\s*>\s*f(\d+)\s*""".r
+    val HERO_POWER_WITH_ENEMY_TARGET = """\s*hp\s*>\s*e(\d+)\s*""".r
+    val DISCOVER = """\s*discover\s*(\d)\s*""".r
+    val MULLIGAN_VOTE = """\s*mulligan\s*(.+)\s*""".r
 
+    command match{
+      case CARD_PLAY_COMMAND(card) =>
+        new CardPlay(card.toInt)
 
-  def ParseMulligan(sender: String, stringVote: String): MulliganVote = {
-    val ONE = """.*(\d).*""".r
-    val TWO = """.*(\d).*,.*(\d).*""".r
-    val THREE = """.*(\d).*,.*(\d).*,.*(\d).*""".r
-    val FOUR = """.*(\d).*,.*(\d).*,.*(\d).*,.*(\d).*""".r
+      case CARD_PLAY_WITH_POSITION(card, position)=>
+        new CardPlayWithPosition(card.toInt, position.toInt)
 
-    stringVote match {
-      case FOUR(first, second, third, fourth) =>
-        var firstCard = false
-        var secondCard = false
-        var thirdCard = false
-        var fourthCard = false
+      case CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION(card, position, friendlyTarget) =>
+        new CardPlayWithFriendlyTargetWithPosition(card.toInt, friendlyTarget.toInt, position.toInt)
 
+      case REVERSE_CARD_PLAY_WITH_FRIENDLY_TARGET_WITH_POSITION(card, friendlyTarget, position) =>
+        new CardPlayWithFriendlyTargetWithPosition(card.toInt, friendlyTarget.toInt, position.toInt)
 
-        first match {
+      case CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION(card, position, enemyTarget) =>
+        new CardPlayWithEnemyTargetWithPosition(card.toInt, enemyTarget.toInt, position.toInt)
 
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
+      case REVERSE_CARD_PLAY_WITH_ENEMY_TARGET_WITH_POSITION(card, enemyTarget, position) =>
+        new CardPlayWithEnemyTargetWithPosition(card.toInt, enemyTarget.toInt, position.toInt)
 
-        second match {
+      case CARD_PLAY_WITH_FRIENDLY_TARGET(card, friendlyTarget)=>
+        new CardPlayWithFriendlyTarget(card.toInt, friendlyTarget.toInt)
 
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
+      case CARD_PLAY_WITH_ENEMY_TARGET(card, enemyTarget) =>
+        new CardPlayWithEnemyTarget(card.toInt, enemyTarget.toInt)
 
-        third match {
+      case NORMAL_ATTACK_COMMAND(friendlyTarget, enemyTarget) =>
+        new NormalAttack(friendlyTarget.toInt, enemyTarget.toInt)
 
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
+      case HERO_POWER()=>
+        new HeroPower()
 
-        fourth match {
+      case HERO_POWER_WITH_FRIENDLY_TARGET(friendlyTarget)=>
+        new HeroPowerWithFriendlyTarget(friendlyTarget.toInt)
 
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
+      case HERO_POWER_WITH_ENEMY_TARGET(enemyTarget)=>
+        new HeroPowerWithEnemyTarget(enemyTarget.toInt)
 
-        new MulliganVote(sender, firstCard, secondCard, thirdCard, fourthCard)
+      case DISCOVER(card)=>
+        new Discover(card.toInt)
 
-
-      case THREE(first, second, third) =>
-        var firstCard = false
-        var secondCard = false
-        var thirdCard = false
-        var fourthCard = false
-
-
-        first match {
-
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
-
-        second match {
-
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
-
-        third match {
-
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
-
-        new MulliganVote(sender, firstCard, secondCard, thirdCard, fourthCard)
-
-
-      case TWO(first, second) =>
-        var firstCard = false
-        var secondCard = false
-        var thirdCard = false
-        var fourthCard = false
-
-
-        first match {
-
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
-
-        second match {
-
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
-
-        new MulliganVote(sender, firstCard, secondCard, thirdCard, fourthCard)
-
-      case ONE(first) =>
-        var firstCard = false
-        var secondCard = false
-        var thirdCard = false
-        var fourthCard = false
-
-
-        first match {
-
-          case "1" =>
-            firstCard = true
-          case "2" =>
-            secondCard = true
-          case "3" =>
-            thirdCard = true
-          case "4" =>
-            fourthCard = true
-        }
-
-
-        new MulliganVote(sender, firstCard, secondCard, thirdCard, fourthCard)
+      case MULLIGAN_VOTE(cards)=>
+        parseMulligan(sender, cards)
 
       case _ =>
-        logger.debug("Unexpected mulligan string " + stringVote)
-        logger.debug("Creating empty vote to match return type")
+        new ActionUninit()
+    }
+  }
 
-        new MulliganVote(sender, false, false, false, false)
+
+  def parseMulligan(sender: String, cards: String): ActionVote = {
+    val ONE = """\s*(\d)\s*""".r
+    val TWO = """\s*(\d)\s*(\d)\s*""".r
+    val THREE = """\s*(\d)\s*(\d)\s*(\d)\s*""".r
+    val FOUR = """\s*(\d)\s*(\d)\s*(\d)\s*(\d)\s*""".r
+
+    var firstCard = false
+    var secondCard = false
+    var thirdCard = false
+    var fourthCard = false
+
+    def chooseMulligan(number:String):Unit = {
+      number match {
+        case "1" => firstCard = true
+        case "2" => secondCard = true
+        case "3" => thirdCard = true
+        case "4" => fourthCard = true}}
+    
+
+    cards match {
+      case FOUR(a, b, c, d) =>
+        chooseMulligan(a)
+        chooseMulligan(b)
+        chooseMulligan(c)
+        chooseMulligan(d)
+        new MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+      case THREE(a, b, c) =>
+        chooseMulligan(a)
+        chooseMulligan(b)
+        chooseMulligan(c)
+
+        new MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+
+      case TWO(a, b) =>
+        chooseMulligan(a)
+        chooseMulligan(b)
+        new MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+      case ONE(a) =>
+        chooseMulligan(a)
+
+        new MulliganVote(firstCard, secondCard, thirdCard, fourthCard)
+
+      case _ =>
+        logger.debug("Unexpected mulligan string " + cards)
+        logger.debug("Creating empty vote to match return type")
+        new ActionUninit()
     }
   }
 }

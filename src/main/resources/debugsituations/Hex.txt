@@ -17955,6 +17955,9 @@ FSM not Preprocessed: Holy_Untargeted_01(Clone) : FSM
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
+
+*****
+
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=Polluted Hoarder id=13 zone=PLAY zonePos=1 cardId=OG_323 player=1] tag=LINKED_ENTITY value=70
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
@@ -19832,6 +19835,7 @@ FSM not Preprocessed: Arcane_Idle_01(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=Wrath of Air Totem id=69 zone=PLAY zonePos=1 cardId=CS2_052 player=2] tag=LINKED_ENTITY value=71
+
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
