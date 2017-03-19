@@ -7,9 +7,9 @@ import scala.Option
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class Player(playerNumber: Int, weaponValue: Int, hand: List[HSCard] = List[HSCard](), board: List[HSCard] = List[HSCard]()) extends LazyLogging {
+case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0, hand: List[Card] = List[Card](), board: List[Card] = List[Card]()) extends LazyLogging {
 
-  def AddCard(card: HSCard, isHand: Boolean): Player = {
+  def AddCard(card: Card, isHand: Boolean): Player = {
     if (isHand && board.contains(card))
       println("Safety check to make sure the added card is not in both the hand and board")
 
@@ -23,16 +23,14 @@ case class Player(playerNumber: Int, weaponValue: Int, hand: List[HSCard] = List
           val lessThan = oldCard.handPosition < card.handPosition
 
           true match {
-            case `equalTo` =>
-              (changingHand diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition +1, oldCard.boardPosition, oldCard.player))
-            case `greaterThan` =>
-              (changingHand diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition +1, oldCard.boardPosition, oldCard.player))
+            case `equalTo` | `greaterThan` =>
+              (changingHand diff List(oldCard)) ::: List(oldCard.copy(handPosition = oldCard.handPosition +1))
             case `lessThan` =>
               changingHand
           }
       }
 
-      new Player(playerNumber, weaponValue, shiftedHand ::: List(card), board)
+      this.copy(hand = shiftedHand ::: List(card))
     }
     else
     {
@@ -43,22 +41,19 @@ case class Player(playerNumber: Int, weaponValue: Int, hand: List[HSCard] = List
           val lessThan = oldCard.boardPosition < card.boardPosition
 
           true match {
-            case `equalTo` =>
-              (changingBoard diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition, oldCard.boardPosition +1, oldCard.player))
-
-            case `greaterThan` =>
-              (changingBoard diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition, oldCard.boardPosition +1, oldCard.player))
+            case `equalTo` | `greaterThan` =>
+              (changingBoard diff List(oldCard)) ::: List(oldCard.copy(boardPosition = oldCard.boardPosition +1))
 
             case `lessThan` =>
               changingBoard
           }
       }
-      new Player(playerNumber, weaponValue, hand, shiftedBoard ::: List(card))
+      this.copy(board = shiftedBoard ::: List(card))
     }
   }
 
 
-  def RemoveCard(card: HSCard): Player = {
+  def RemoveCard(card: Card): Player = {
 
     val isHand = hand.contains(card)
 
@@ -80,14 +75,13 @@ case class Player(playerNumber: Int, weaponValue: Int, hand: List[HSCard] = List
               changingHand diff List(oldCard)
 
             case `greaterThan` =>
-              (changingHand diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition -1, oldCard.boardPosition, oldCard.player))
+              (changingHand diff List(oldCard)) ::: List(oldCard.copy(handPosition = oldCard.handPosition-1))
 
             case `lessThan` =>
               changingHand
           }
       }
-
-        new Player(playerNumber, weaponValue, shiftedHand, board)
+        this.copy(hand = shiftedHand)
       }
     else
       {
@@ -102,20 +96,19 @@ case class Player(playerNumber: Int, weaponValue: Int, hand: List[HSCard] = List
                 changingBoard diff List(oldCard)
 
               case `greaterThan` =>
-                (changingBoard diff List(oldCard)) ::: List(new Card(oldCard.name, oldCard.id, oldCard.handPosition, oldCard.boardPosition -1, oldCard.player))
+                (changingBoard diff List(oldCard)) ::: List(oldCard.copy(boardPosition = oldCard.boardPosition-1))
 
               case `lessThan` =>
                 changingBoard
             }
         }
-
-        new Player(playerNumber, weaponValue, hand, shiftedBoard)
+        this.copy(board = shiftedBoard)
       }
   }
 
-  def AddCardToNextHandPosition(name:String, id:Int): Player ={
-    val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber))
-    new Player(playerNumber, weaponValue, newHand, board)}
+  def AddCardToNextHandPosition(name:String, id:Int, cardID:String): Player ={
+    val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber, cardID))
+    this.copy(hand = newHand)}
 
   def GetNextHandPosition(): Int ={
     for(a<-1 to 20){

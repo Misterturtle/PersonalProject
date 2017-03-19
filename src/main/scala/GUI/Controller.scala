@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty
 
 import FileReaders.LogParser
 import com.typesafe.config.ConfigFactory
-import tph.{Card, NoCards, GameState}
+import tph.{Card, GameState}
 
 import scala.collection.mutable.ListBuffer
 import scalafx.event.ActionEvent
@@ -51,16 +51,16 @@ class Controller(){
   val friendlyHandLabel = new Label("Friendly Hand")
   val friendlyHandSeparator = new Separator()
   var friendlyHandCards = List[CardVbox](
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards())
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox()
   )
   friendlyHandPane.children = friendlyHandCards
   friendlyHandVbox.setFillWidth(true)
@@ -79,16 +79,16 @@ class Controller(){
   val friendlyBoardSeparator = new Separator()
   val friendlyBoardLabel = new Label("Friendly Board")
   var friendlyBoardCards = List[CardVbox](
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards())
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox()
   )
   friendlyBoardPane.children = friendlyBoardCards
   friendlyBoardVBox.children.addAll(friendlyBoardSeparator, friendlyBoardLabel, friendlyBoardPane)
@@ -105,16 +105,16 @@ class Controller(){
   val enemyHandSeparator = new Separator()
   val enemyHandLabel = new Label("Enemy Hand")
   var enemyHandCards = List[CardVbox](
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards())
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox()
   )
 
   enemyHandPane.children = enemyHandCards
@@ -133,16 +133,16 @@ class Controller(){
   val enemyBoardSeparator = new Separator()
   val enemyBoardLabel = new Label("Enemy Board")
   var enemyBoardCards = List[CardVbox](
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards()),
-    new CardVbox(NoCards())
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox(),
+    new CardVbox()
   )
 
   enemyBoardPane.children = enemyBoardCards
@@ -155,7 +155,7 @@ class Controller(){
   val defaultSaveItem = new MenuItem("Print to file")
   defaultSaveItem.onAction = {
     e: ActionEvent =>
-      val gameState = new LogParser().ConstructGameState(defaultReaderFile)
+      val gameState = new LogParser().constructGameState(defaultReaderFile)
       PrintGameState(gameState, defaultWriterFile)
 
   }
@@ -185,34 +185,45 @@ class Controller(){
     val enemyHand = gameState.enemyPlayer.hand
     val enemyBoard = gameState.enemyPlayer.board
 
-    writer.println("----------------Friendly Hand----------------")
+    writer.println("val expectedFriendlyHand = List[Card](")
     writer.flush()
     for(a<-1 to friendlyHand.size) {
-      writer.println("new Card(\""+friendlyHand(a-1).name+"\", "+ friendlyHand(a - 1).id + ", "+friendlyHand(a - 1).handPosition + ", "+ friendlyHand(a - 1).boardPosition + ", "+friendlyHand(a - 1).player+"),")
+      if(a == friendlyHand.size)
+      writer.println("new Card(\""+friendlyHand(a-1).name+"\", "+ friendlyHand(a - 1).id + ", "+friendlyHand(a - 1).handPosition + ", "+ friendlyHand(a - 1).boardPosition + ", "+friendlyHand(a - 1).player+ ", \""+friendlyHand(a-1).cardID+"\"))")
+      else
+        writer.println("new Card(\""+friendlyHand(a-1).name+"\", "+ friendlyHand(a - 1).id + ", "+friendlyHand(a - 1).handPosition + ", "+ friendlyHand(a - 1).boardPosition + ", "+friendlyHand(a - 1).player+ ", \""+friendlyHand(a-1).cardID+"\"),")
       writer.flush()
     }
-    writer.println("----------------Friendly Board----------------")
+    writer.println("val expectedFriendlyBoard = List[Card](")
     writer.flush()
     for(a<-1 to friendlyBoard.size) {
-
-      writer.println("new Card(\""+friendlyBoard(a-1).name+"\", "+ friendlyBoard(a - 1).id + ", "+friendlyBoard(a - 1).handPosition + ", "+ friendlyBoard(a - 1).boardPosition + ", "+friendlyBoard(a - 1).player+"),")
+      if(a == friendlyBoard.size)
+      writer.println("new Card(\""+friendlyBoard(a-1).name+"\", "+ friendlyBoard(a - 1).id + ", "+friendlyBoard(a - 1).handPosition + ", "+ friendlyBoard(a - 1).boardPosition + ", "+friendlyBoard(a - 1).player+ ", \""+friendlyBoard(a-1).cardID+"\"))")
+      else
+        writer.println("new Card(\""+friendlyBoard(a-1).name+"\", "+ friendlyBoard(a - 1).id + ", "+friendlyBoard(a - 1).handPosition + ", "+ friendlyBoard(a - 1).boardPosition + ", "+friendlyBoard(a - 1).player+ ", \""+friendlyBoard(a-1).cardID+"\"),")
       writer.flush()
     }
-    writer.println("----------------Enemy Hand----------------")
+    writer.println("val expectedEnemyHand = List[Card](")
     writer.flush()
     for(a<-1 to enemyHand.size) {
-
-      writer.println("new Card(\""+enemyHand(a-1).name+"\", "+ enemyHand(a - 1).id + ", "+enemyHand(a - 1).handPosition + ", "+ enemyHand(a - 1).boardPosition + ", "+enemyHand(a - 1).player+"),")
+      if(a == enemyHand.size)
+      writer.println("new Card(\""+enemyHand(a-1).name+"\", "+ enemyHand(a - 1).id + ", "+enemyHand(a - 1).handPosition + ", "+ enemyHand(a - 1).boardPosition + ", "+enemyHand(a - 1).player+ ", \""+enemyHand(a-1).cardID+"\"))")
+      else
+        writer.println("new Card(\""+enemyHand(a-1).name+"\", "+ enemyHand(a - 1).id + ", "+enemyHand(a - 1).handPosition + ", "+ enemyHand(a - 1).boardPosition + ", "+enemyHand(a - 1).player+ ", \""+enemyHand(a-1).cardID+"\"),")
       writer.flush()
     }
 
-    writer.println("----------------Enemy Board----------------")
+    writer.println("val expectedEnemyBoard = List[Card](")
     writer.flush()
     for(a<-1 to enemyBoard.size) {
 
-      writer.println("new Card(\""+enemyBoard(a-1).name+"\", "+ enemyBoard(a - 1).id + ", "+enemyBoard(a - 1).handPosition + ", "+ enemyBoard(a - 1).boardPosition + ", "+enemyBoard(a - 1).player+"),")
+      if(a == enemyBoard.size)
+        writer.println("new Card(\""+enemyBoard(a-1).name+"\", "+ enemyBoard(a - 1).id + ", "+enemyBoard(a - 1).handPosition + ", "+ enemyBoard(a - 1).boardPosition + ", "+enemyBoard(a - 1).player+ ", \""+enemyBoard(a-1).cardID+ "\"))")
+        else
+      writer.println("new Card(\""+enemyBoard(a-1).name+"\", "+ enemyBoard(a - 1).id + ", "+enemyBoard(a - 1).handPosition + ", "+ enemyBoard(a - 1).boardPosition + ", "+enemyBoard(a - 1).player+ ", \""+enemyBoard(a-1).cardID+ "\"),")
       writer.flush()
     }
+
   }
 
 
@@ -225,7 +236,6 @@ class Controller(){
           friendlyHandCards(a).setVisible(true)}
 
       else{
-      friendlyHandCards(a).UpdateCard(NoCards())
         friendlyHandCards(a).setVisible(false)}
       }
     }else {
@@ -242,7 +252,6 @@ class Controller(){
           friendlyBoardCards(a).setVisible(true)}
 
         else{
-          friendlyBoardCards(a).UpdateCard(NoCards())
           friendlyBoardCards(a).setVisible(false)}
       }
     }else {
@@ -258,7 +267,6 @@ class Controller(){
           enemyHandCards(a).setVisible(true)}
 
         else{
-          enemyHandCards(a).UpdateCard(NoCards())
           enemyHandCards(a).setVisible(false)}
       }
     }else {
@@ -274,7 +282,6 @@ class Controller(){
           enemyBoardCards(a).setVisible(true)}
 
         else{
-          enemyBoardCards(a).UpdateCard(NoCards())
           enemyBoardCards(a).setVisible(false)}
       }
     }
@@ -284,7 +291,7 @@ class Controller(){
   }
 
   def UpdateGUIWindow():Unit ={
-    val gameState = new LogParser().ConstructGameState(defaultReaderFile)
+    val gameState = new LogParser().constructGameState(defaultReaderFile)
     UpdateFriendlyHand(gameState)
     UpdateFriendlyBoard(gameState)
     UpdateEnemyHand(gameState)

@@ -5,141 +5,152 @@ import tph.{Card, Constants, GameState, Player}
 
 object HSAction {
 
-  trait HSAction{
+  trait HSAction {
     def ExecuteAction(gameState: GameState): GameState
   }
 
   //////////////////////////////////////////////////Friendly Events//////////////////////////////////////////////////////
 
-//  case class FriendlyCardDrawn(name:String, id:Int, position:Int, player:Int) extends HSAction {
-//    override def ExecuteAction(gameState: GameState): GameState = {
-//      if(player == gameState.friendlyPlayer.playerNumber) {
-//        val existingCard = gameState.friendlyPlayer.hand.find(_.id == id)
-//        existingCard match {
-//          case Some(card) =>
-//            gameState
-//          case None =>
-//            val newFriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition(name, id)
-//            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
-//        }
-//      }
-//      else
-//        gameState
-//      }
-//  }
+  //  case class FriendlyCardDrawn(name:String, id:Int, position:Int, player:Int) extends HSAction {
+  //    override def ExecuteAction(gameState: GameState): GameState = {
+  //      if(player == gameState.friendlyPlayer.playerNumber) {
+  //        val existingCard = gameState.friendlyPlayer.hand.find(_.id == id)
+  //        existingCard match {
+  //          case Some(card) =>
+  //            gameState
+  //          case None =>
+  //            val newFriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition(name, id)
+  //            new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+  //        }
+  //      }
+  //      else
+  //        gameState
+  //      }
+  //  }
 
   case class FriendlyMinionControlled(name: String, id: Int, position: Int) extends HSAction {
     //Friendly minion gets removed from board and added to other board
     def ExecuteAction(gameState: GameState): GameState = {
-      val cardBeingControlled = gameState.GetCardByID(id)
-      val friendlyPlayer = gameState.friendlyPlayer.RemoveCard(cardBeingControlled)
+      if (gameState.getCardByID(id).isDefined) {
+        val cardBeingControlled = gameState.getCardByID(id).get
+        gameState.friendlyPlayer = gameState.friendlyPlayer.RemoveCard(cardBeingControlled)
 
-      val convertedCard = new Card(cardBeingControlled.name, cardBeingControlled.id, Constants.INT_UNINIT, gameState.enemyPlayer.board.size + 1, 2)
-      val enemyPlayer = gameState.enemyPlayer.AddCard(convertedCard, false)
-      new GameState(friendlyPlayer, enemyPlayer)
+        val convertedCard = cardBeingControlled.copy(boardPosition = gameState.enemyPlayer.board.size + 1, player = gameState.enemyPlayer.playerNumber)
+        gameState.enemyPlayer = gameState.enemyPlayer.AddCard(convertedCard, false)
+        gameState
+      }
+      else
+        gameState
     }
   }
 
-  case class FriendlyCardReturn(name:String, id:Int, player:Int) extends HSAction{
-    override def ExecuteAction(gameState: GameState): GameState ={
-      val part1Friendly = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-      val newFriendly = part1Friendly.AddCardToNextHandPosition(name, id)
-      new GameState(newFriendly, gameState.enemyPlayer)
+  case class FriendlyCardReturn(name: String, id: Int, player: Int) extends HSAction {
+    override def ExecuteAction(gameState: GameState): GameState = {
+      if (gameState.getCardByID(id).isDefined) {
+        val boardCard = gameState.getCardByID(id).get
+        val part1Friendly = gameState.friendlyPlayer.RemoveCard(boardCard)
+        gameState.friendlyPlayer = part1Friendly.AddCardToNextHandPosition(name, id, boardCard.cardID)
+        gameState
+      }
+      else
+        gameState
     }
   }
 
-  case class FriendlyCardCreated(name:String, id:Int, position:Int, player:Int) extends HSAction {
-    override def ExecuteAction(gameState: GameState) : GameState = {
-      val newFriendly = gameState.friendlyPlayer.AddCardToNextHandPosition(name, id)
-      new GameState(newFriendly, gameState.enemyPlayer)
-    }
-
-  }
-
-  case class MulliganRedraw(name:String, id:Int, position:Int, playerNumber:Int) extends HSAction{
-    override def ExecuteAction(gameState: GameState):GameState ={
-      val card = gameState.GetCardByID(id)
-      //Remove card without adjusting hand position.
-      //New mulligan redraw will fill empty hand positions.
-      val friendlyPlayer = new Player(playerNumber, gameState.friendlyPlayer.weaponValue, gameState.friendlyPlayer.hand diff List(card), gameState.friendlyPlayer.board)
-      new GameState(friendlyPlayer, gameState.enemyPlayer)
+  case class MulliganRedraw(name: String, id: Int, position: Int, playerNumber: Int) extends HSAction {
+    override def ExecuteAction(gameState: GameState): GameState = {
+      if (gameState.getCardByID(id).isDefined) {
+        val card = gameState.getCardByID(id).get
+        //Remove card without adjusting hand position.
+        //New mulligan redraw will fill empty hand positions.
+        gameState.friendlyPlayer = new Player(playerNumber, gameState.friendlyPlayer.weaponValue, gameState.friendlyPlayer.hand diff List(card), gameState.friendlyPlayer.board)
+        gameState
+      }
+      else
+        gameState
     }
   }
-
-
 
 
   //////////////////////////////////////////////////Enemy Events//////////////////////////////////////////////////////
 
 
-//  case class EnemyCardDrawn(id:Int, position:Int, player:Int ) extends HSAction {
-//    override def ExecuteAction(gameState: GameState): GameState = {
-//      val newEnemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition(Constants.STRING_UNINIT, id)
-//      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-//    }
-//  }
+  //  case class EnemyCardDrawn(id:Int, position:Int, player:Int ) extends HSAction {
+  //    override def ExecuteAction(gameState: GameState): GameState = {
+  //      val newEnemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition(Constants.STRING_UNINIT, id)
+  //      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+  //    }
+  //  }
 
-  case class EnemyCardReturn(name:String, id:Int, player:Int) extends HSAction{
-    override def ExecuteAction(gameState: GameState): GameState ={
-      val card = gameState.GetCardByID(id)
-      val part1Enemy = gameState.enemyPlayer.RemoveCard(card)
-      val newEnemy = part1Enemy.AddCardToNextHandPosition(name, id)
-      new GameState(gameState.friendlyPlayer, newEnemy)
+  case class EnemyCardReturn(name: String, id: Int, cardID: String, player: Int) extends HSAction {
+    override def ExecuteAction(gameState: GameState): GameState = {
+      if (gameState.getCardByID(id).isDefined) {
+        val card = gameState.getCardByID(id).get
+        val part1Enemy = gameState.enemyPlayer.RemoveCard(card)
+        gameState.enemyPlayer = part1Enemy.AddCardToNextHandPosition(name, id, cardID)
+        gameState
+      }
+      else gameState
     }
   }
 
   case class EnemyMinionControlled(name: String, id: Int, zonePos: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      val cardBeingControlled = gameState.GetCardByID(id)
-      val convertedCard = new Card(name, id, Constants.INT_UNINIT, gameState.friendlyPlayer.board.size + 1, 1)
-      val friendlyPlayer = gameState.friendlyPlayer.AddCard(convertedCard, false)
+      if (gameState.getCardByID(id).isDefined) {
+        val cardBeingControlled = gameState.getCardByID(id).get
+        val convertedCard = cardBeingControlled.copy(boardPosition = gameState.friendlyPlayer.board.size + 1, player = gameState.friendlyPlayer.playerNumber)
+        gameState.friendlyPlayer = gameState.friendlyPlayer.AddCard(convertedCard, false)
 
-      val enemyPlayer = gameState.enemyPlayer.RemoveCard(cardBeingControlled)
-      new GameState(friendlyPlayer, enemyPlayer)
+        gameState.enemyPlayer = gameState.enemyPlayer.RemoveCard(cardBeingControlled)
+        gameState
+      }
+      else
+        gameState
     }
   }
 
-  case class EnemyMulliganRedraw(id:Int, playerNumber:Int) extends HSAction{
-    override def ExecuteAction(gameState: GameState):GameState = {
-      //Weird logic due to the ordering of hearthstones log output
-      //A new card is drawn before a mulligan discard is detected.
-      val replacementCard = gameState.enemyPlayer.hand.last
-      val discardCard = gameState.GetCardByID(id)
-      val removeMulliganPlayer = gameState.enemyPlayer.RemoveCard(discardCard)
-      //Due to the log output order, the new card is drawn before the old card is removed.
-      //So we have to remove the last card and re-add it AFTER we removed the old mulligan card
-      val newEnemyPlayer = removeMulliganPlayer.RemoveCard(removeMulliganPlayer.hand.last).AddCard(new Card(replacementCard.name, replacementCard.id, discardCard.handPosition, Constants.INT_UNINIT, playerNumber), true)
-      new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+  case class EnemyMulliganRedraw(id: Int, playerNumber: Int) extends HSAction {
+    override def ExecuteAction(gameState: GameState): GameState = {
+      if (gameState.getCardByID(id).isDefined) {
+        //Weird logic due to the ordering of hearthstones log output
+        //A new card is drawn before a mulligan discard is detected.
+        val replacementCard = gameState.enemyPlayer.hand.last
+        val discardCard = gameState.getCardByID(id).get
+        val removeMulliganPlayer = gameState.enemyPlayer.RemoveCard(discardCard)
+        //Due to the log output order, the new card is drawn before the old card is removed.
+        //So we have to remove the last card and re-add it AFTER we removed the old mulligan card
+        gameState.enemyPlayer = removeMulliganPlayer.RemoveCard(removeMulliganPlayer.hand.last).AddCard(replacementCard.copy(handPosition = discardCard.handPosition, boardPosition = Constants.INT_UNINIT, player = playerNumber), true)
+        gameState
+      }
+      else
+        gameState
     }
   }
-
-
-
 
 
   //////////////////////////////////////////////////Neutral Events//////////////////////////////////////////////////////
 
 
-  case class CardDrawn(name: String, id: Int, position:Int, player:Int) extends HSAction {
+  case class CardDrawn(name: String, id: Int, cardID: String, position: Int, player: Int) extends HSAction {
     def ExecuteAction(gameState: GameState): GameState = {
-      if(player == gameState.friendlyPlayer.playerNumber){
+      if (player == gameState.friendlyPlayer.playerNumber) {
         val existingCard = gameState.friendlyPlayer.hand.find(_.id == id)
         existingCard match {
           case Some(card) =>
             gameState
           case None =>
-            val newFriendly = gameState.friendlyPlayer.AddCardToNextHandPosition(name, id)
-            new GameState(newFriendly, gameState.enemyPlayer)
+            gameState.friendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition(name, id, cardID)
+            gameState
         }
       }
-      else{
+      else {
         val existingCard = gameState.enemyPlayer.hand.find(_.id == id)
         existingCard match {
           case Some(card) =>
             gameState
           case None =>
-            val newEnemy = gameState.enemyPlayer.AddCardToNextHandPosition(name, id)
-            new GameState(gameState.friendlyPlayer, newEnemy)
+            gameState.enemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition(name, id, cardID)
+            gameState
         }
       }
     }
@@ -147,158 +158,181 @@ object HSAction {
 
   case class CardDeath(name: String, id: Int, player: Int) extends HSAction {
     def ExecuteAction(gameState: GameState): GameState = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+      if (gameState.getCardByID(id).isDefined) {
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          gameState.friendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.getCardByID(id).get)
+          gameState
+        }
+        else {
+          gameState.enemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.getCardByID(id).get)
+          gameState
+        }
       }
-      else {
-        val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-      }
+      else
+        gameState
     }
   }
 
-  case class DeckToBoard(name:String, id:Int, player:Int) extends HSAction {
-    def ExecuteAction(gameState: GameState) : GameState = {
-      if(player == gameState.friendlyPlayer.playerNumber){
-        val friendly = gameState.friendlyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, gameState.friendlyPlayer.board.size +1, player), false)
-        new GameState(friendly, gameState.enemyPlayer)
+  case class DeckToBoard(name: String, id: Int, cardID: String, player: Int) extends HSAction {
+    def ExecuteAction(gameState: GameState): GameState = {
+      if (player == gameState.friendlyPlayer.playerNumber) {
+        gameState.friendlyPlayer = gameState.friendlyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, gameState.friendlyPlayer.board.size + 1, player, cardID), false)
+        gameState
       }
       else {
-        val enemy = gameState.enemyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, gameState.enemyPlayer.board.size + 1, player), false)
-        new GameState(gameState.friendlyPlayer, enemy)
+        gameState.enemyPlayer = gameState.enemyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, gameState.enemyPlayer.board.size + 1, player, cardID), false)
+        gameState
       }
     }
   }
 
   case class WeaponPlayed(id: Int, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+      if (gameState.getCardByID(id).isDefined) {
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          gameState.friendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.getCardByID(id).get)
+          gameState
+        }
+        else {
+          gameState.enemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.getCardByID(id).get)
+          gameState
+        }
       }
-      else {
-        val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-      }
+      else
+        gameState
     }
   }
 
   case class ChangeFaceAttackValue(player: Int, value: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
       if (player == gameState.friendlyPlayer.playerNumber) {
-        val newFriendlyPlayer = new Player(player, value, gameState.friendlyPlayer.hand, gameState.friendlyPlayer.board)
-        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+        gameState.friendlyPlayer = new Player(player, value, gameState.friendlyPlayer.hand, gameState.friendlyPlayer.board)
+        gameState
       }
       else {
-        val newEnemyPlayer = new Player(player, value, gameState.enemyPlayer.hand, gameState.enemyPlayer.board)
-        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
+        gameState.enemyPlayer = new Player(player, value, gameState.enemyPlayer.hand, gameState.enemyPlayer.board)
+        gameState
       }
     }
   }
 
   case class SecretPlayed(id: Int, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val newFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.GetCardByID(id))
-        new GameState(newFriendlyPlayer, gameState.enemyPlayer)
-      }
-      else {
-        val newEnemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.GetCardByID(id))
-        new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-      }
-    }
-  }
-
-  case class CardPlayed(name: String, id: Int, dstPos: Int, player: Int) extends HSAction {
-    override def ExecuteAction(gameState: GameState): GameState = {
+      if (gameState.getCardByID(id).isDefined) {
         if (player == gameState.friendlyPlayer.playerNumber) {
-          val cardBeingPlayed = gameState.GetCardByID(id)
-          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
+          gameState.friendlyPlayer = gameState.friendlyPlayer.RemoveCard(gameState.getCardByID(id).get)
+          gameState
+        }
+        else {
+          gameState.enemyPlayer = gameState.enemyPlayer.RemoveCard(gameState.getCardByID(id).get)
+          gameState
+        }
+      }
+      else
+        gameState
+    }
+  }
 
-          val playerWithNewHand = gameState.friendlyPlayer.RemoveCard(cardBeingPlayed)
-          if(dstPos == 0)
-            new GameState(playerWithNewHand, gameState.enemyPlayer)
+  case class CardPlayed(name: String, id: Int, dstPos: Int, cardID: String, player: Int) extends HSAction {
+    override def ExecuteAction(gameState: GameState): GameState = {
+      if (gameState.getCardByID(id).isDefined) {
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          val cardBeingPlayed = gameState.getCardByID(id).get
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player, cardID)
+
+          gameState.friendlyPlayer = gameState.friendlyPlayer.RemoveCard(cardBeingPlayed)
+          if (dstPos == 0)
+            gameState
           else {
-            val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
-            new GameState(newPlayer, gameState.enemyPlayer)
+            gameState.friendlyPlayer = gameState.friendlyPlayer.AddCard(convertedCard, false)
+            gameState
           }
         }
+
 
         else {
-          val cardBeingPlayed = gameState.GetCardByID(id)
-          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player)
+          val cardBeingPlayed = gameState.getCardByID(id).get
+          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player, cardID)
 
-          val playerWithNewHand = gameState.enemyPlayer.RemoveCard(cardBeingPlayed)
-          if(dstPos == 0)
-            new GameState(gameState.friendlyPlayer, playerWithNewHand)
+          gameState.enemyPlayer = gameState.enemyPlayer.RemoveCard(cardBeingPlayed)
+          if (dstPos == 0)
+            gameState
           else {
-            val newPlayer = playerWithNewHand.AddCard(convertedCard, false)
-            new GameState(gameState.friendlyPlayer, newPlayer)
+            gameState.enemyPlayer = gameState.enemyPlayer.AddCard(convertedCard, false)
+            gameState
           }
         }
       }
+      else
+        gameState
     }
+  }
 
-  case class MinionSummoned(name: String, id: Int, position: Int, player: Int) extends HSAction {
+  case class MinionSummoned(name: String, id: Int, position: Int, cardID: String, player: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
       if (player == gameState.friendlyPlayer.playerNumber) {
-        val newPlayer = gameState.friendlyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player), false)
-        new GameState(newPlayer, gameState.enemyPlayer)
+        gameState.friendlyPlayer = gameState.friendlyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player, cardID), false)
+        gameState
       }
       else {
-        val newPlayer = gameState.enemyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player), false)
-        new GameState(gameState.friendlyPlayer, newPlayer)
+        gameState.enemyPlayer = gameState.enemyPlayer.AddCard(new Card(name, id, Constants.INT_UNINIT, position, player, cardID), false)
+        gameState
       }
     }
   }
 
-  case class Transform(oldId: Int, position:Int, newId: Int) extends HSAction {
+  case class Transform(name: String, oldId: Int, position: Int, cardID: String, newId: Int) extends HSAction {
     override def ExecuteAction(gameState: GameState): GameState = {
-      val card = gameState.GetCardByID(oldId)
+      if (gameState.getCardByID(oldId).isDefined) {
+        val card = gameState.getCardByID(oldId).get
 
 
-      if (card.player == gameState.friendlyPlayer.playerNumber) {
-        if (card.handPosition != Constants.INT_UNINIT) {
-          val newCard = new Card("Transformed Friendly Card", newId, card.handPosition, card.boardPosition, card.player)
-          val removedCardFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(card)
-          val newFriendlyPlayer = removedCardFriendlyPlayer.AddCard(newCard, true)
-          new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+        if (card.player == gameState.friendlyPlayer.playerNumber) {
+          if (card.handPosition != Constants.INT_UNINIT) {
+            val newCard = card.copy(name = name, id = newId, cardID = cardID)
+            val removedCardFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(card)
+            gameState.friendlyPlayer = removedCardFriendlyPlayer.AddCard(newCard, true)
+            gameState
+          }
+          else {
+            val newCard = card.copy(name = name, id = newId, cardID = cardID)
+            val removedCardFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(card)
+            gameState.friendlyPlayer = removedCardFriendlyPlayer.AddCard(newCard, false)
+            gameState
+          }
         }
         else {
-          val newCard = new Card("Transformed Friendly Minion", newId, card.handPosition, card.boardPosition, card.player)
-          val removedCardFriendlyPlayer = gameState.friendlyPlayer.RemoveCard(card)
-          val newFriendlyPlayer = removedCardFriendlyPlayer.AddCard(newCard, false)
-          new GameState(newFriendlyPlayer, gameState.enemyPlayer)
+          if (card.handPosition != Constants.INT_UNINIT) {
+            val newCard = card.copy(name = name, id = newId, cardID = cardID)
+            val removedCardEnemyPlayer = gameState.enemyPlayer.RemoveCard(card)
+            gameState.enemyPlayer = removedCardEnemyPlayer.AddCard(newCard, true)
+            gameState
+          }
+          else {
+            val newCard = card.copy(name = name, id = newId, cardID = cardID)
+            val removedCardEnemyPlayer = gameState.enemyPlayer.RemoveCard(card)
+            gameState.enemyPlayer = removedCardEnemyPlayer.AddCard(newCard, false)
+            gameState
+          }
         }
       }
-      else {
-        if (card.handPosition != Constants.INT_UNINIT) {
-          val newCard = new Card("Transformed Enemy Card", newId, card.handPosition, card.boardPosition, card.player)
-          val removedCardEnemyPlayer = gameState.enemyPlayer.RemoveCard(card)
-          val newEnemyPlayer = removedCardEnemyPlayer.AddCard(newCard, true)
-          new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-        }
-        else {
-          val newCard = new Card("Transformed Enemy Minion", newId, card.handPosition, card.boardPosition, card.player)
-          val removedCardEnemyPlayer = gameState.enemyPlayer.RemoveCard(card)
-          val newEnemyPlayer = removedCardEnemyPlayer.AddCard(newCard, false)
-          new GameState(gameState.friendlyPlayer, newEnemyPlayer)
-        }
-      }
+      else
+        gameState
     }
   }
 
 
   case class DefinePlayers(friendlyPlayerNumber: Int) extends HSAction {
-    override def ExecuteAction(gameState: GameState):GameState = {
-      gameState.SetPlayerNumbers(friendlyPlayerNumber)
+    override def ExecuteAction(gameState: GameState): GameState = {
+      gameState.setPlayerNumbers(friendlyPlayerNumber)
+      gameState
     }
   }
 
   case class GameOver() extends HSAction {
-    override def ExecuteAction(gameState: GameState):GameState = {
-      new GameState(new Player(Constants.INT_UNINIT, 0), new Player(Constants.INT_UNINIT, 0))
+    override def ExecuteAction(gameState: GameState): GameState = {
+      gameState.gameOver()
+      gameState
 
     }
   }
@@ -309,12 +343,6 @@ object HSAction {
       gameState
     }
   }
-
-
-
-
-
-
 
 
 }

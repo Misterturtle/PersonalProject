@@ -5,27 +5,31 @@ import com.typesafe.scalalogging.LazyLogging
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class GameState(firstPlayer: Player = new Player(1, 0), secondPlayer: Player = new Player(2, 0)) extends LazyLogging {
+class GameState() extends LazyLogging {
 
-  val friendlyPlayer = firstPlayer
-  val enemyPlayer = secondPlayer
+  var friendlyPlayer = new Player()
+  var enemyPlayer = new Player()
 
-    def GetCardByID(cardID: Int): HSCard = {
+  def getCardByID(cardID: Int): Option[Card] = {
 
-      (friendlyPlayer.hand ::: friendlyPlayer.board ::: enemyPlayer.hand ::: enemyPlayer.board).find(_.id == cardID) match {
-        case Some(card) => card
-        case None => NoCards()
-      }
-    }
+    (friendlyPlayer.hand ::: friendlyPlayer.board ::: enemyPlayer.hand ::: enemyPlayer.board).find(_.id == cardID)
+  }
 
-  def SetPlayerNumbers(friendlyPlayerNumber:Int): GameState = {
+  def setPlayerNumbers(friendlyPlayerNumber: Int): Unit = {
     val enemyPlayerNumber =
       friendlyPlayerNumber match {
         case 1 => 2
         case 2 => 1
         case _ => Constants.INT_UNINIT
       }
-
-    new GameState(new Player(friendlyPlayerNumber, friendlyPlayer.weaponValue,  hand = friendlyPlayer.hand, board = friendlyPlayer.board), new Player(enemyPlayerNumber, enemyPlayer.weaponValue, hand = enemyPlayer.hand, board = enemyPlayer.board))
+    friendlyPlayer = friendlyPlayer.copy(playerNumber = friendlyPlayerNumber)
+    enemyPlayer = enemyPlayer.copy(playerNumber = enemyPlayerNumber)
   }
+
+  def gameOver(): Unit = {
+    friendlyPlayer = new Player()
+    enemyPlayer = new Player()
+  }
+
+
 }

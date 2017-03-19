@@ -1,7 +1,7 @@
 package UnitTests
 
 
-import Logic.IRCLogic
+import Logic.IRCState
 import VoteSystem.{VoteManager, ActionVote}
 import org.scalatest.{FlatSpec, Matchers}
 import tph.Constants.ActionVotes

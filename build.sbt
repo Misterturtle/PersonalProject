@@ -34,4 +34,6 @@ addCompilerPlugin("org.scalamacros" % "paradise_2.11.8" % "2.1.0")
 
 libraryDependencies += "org.scalafx" %% "scalafxml-core-sfx8" % "0.3"
 
+libraryDependencies += "net.liftweb" %% "lift-json" % "2.6+"
+
 fork in run := true

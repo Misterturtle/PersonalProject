@@ -1,12 +1,13 @@
 package VoteSystem
 
 import tph.Constants.ActionVotes.ActionUninit
+import tph.GameState
 
 
 /**
   * Created by Harambe on 2/23/2017.
   */
-class VoteManager()  {
+class VoteManager(gameState:GameState)  {
 
   var voterMap = Map[String, Voter]()
 
@@ -29,9 +30,9 @@ class VoteManager()  {
   def voteEntry(voterName:String, vote:Vote): Unit = {
     if(vote != ActionUninit()) {
       if (!voterMap.isDefinedAt(voterName)) {
-        voterMap = voterMap ++ Map[String, Voter](voterName -> new Voter(voterName))
+        voterMap = voterMap ++ Map[String, Voter](voterName -> new Voter(voterName, Nil))
       }
-      voterMap(voterName).voteEntry(vote)
+      voterMap = voterMap - voterName + (voterName -> voterMap(voterName).voteEntry(vote))
     }
   }
 

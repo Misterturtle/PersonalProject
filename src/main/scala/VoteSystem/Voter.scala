@@ -6,9 +6,10 @@ import tph.Constants.ActionVotes.ActionUninit
 /**
   * Created by Harambe on 3/10/2017.
   */
-class Voter(val name: String) {
+ case class Voter(name: String, actionVoteList:List[Vote] = Nil) {
 
-    def voteEntry(vote:Vote):Unit = {}
+
+    def voteEntry(vote:Vote):Voter = this.copy(actionVoteList = actionVoteList :+ vote)
 
     def updateVotes(updateMap: Map[Int,Int]):Unit = {}
 

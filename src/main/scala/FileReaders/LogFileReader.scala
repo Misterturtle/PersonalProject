@@ -28,7 +28,7 @@ class LogFileReader() {
 
     while (reader.ready()) {
       val line = reader.readLine()
-      if (new LogParser().IdentifyHSAction(line) != HSActionUninit()) {
+      if (new LogParser().identifyHSAction(line) != HSActionUninit()) {
         writer.println(line)
         writer.flush()
       }

@@ -25,7 +25,6 @@ class IRCBot(voteManager: VoteManager) extends PircBot {
 
   def init(): Unit = {
     setName(nickname)
-    setVerbose(false)
     connect(hostName)
   }
 
@@ -38,6 +37,9 @@ class IRCBot(voteManager: VoteManager) extends PircBot {
   }
 
   def parseMultipleCommands(twitchInput: String, accumlator:List[String] = List[String]()): List[String] = {
+    // todo Revist parsing apart twitch commands
+    val parts = twitchInput.split(',').map(_.trim)
+
     val headAndTail = """(^[^,]*),(.+)""".r
     twitchInput match {
       case headAndTail(head, tail) =>
@@ -46,6 +48,8 @@ class IRCBot(voteManager: VoteManager) extends PircBot {
         (twitchInput :: accumlator).reverse
     }
   }
+
+  // c1>f2, f1 > e3, c1 >> f2 > e3
 
   override def onMessage(channel: String, sender: String, login: String, hostName: String, message: String): Unit = {
         message match{

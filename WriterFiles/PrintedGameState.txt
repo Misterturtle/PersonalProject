@@ -1,16 +1,16 @@
-----------------Friendly Hand----------------
-new Card("Arcane Intellect", 13, 1, 500, 1),
-new Card("Polymorph", 33, 2, 500, 1),
-new Card("Boulderfist Ogre", 6, 3, 500, 1),
-new Card("River Crocolisk", 5, 4, 500, 1),
-new Card("Fireball", 8, 5, 500, 1),
-new Card("Murloc Raider", 24, 6, 500, 1),
-----------------Friendly Board----------------
-new Card("Novice Engineer", 23, 500, 1, 1),
-----------------Enemy Hand----------------
-new Card("Constant Uninitialized", 60, 1, 500, 2),
-new Card("Constant Uninitialized", 62, 2, 500, 2),
-new Card("Constant Uninitialized", 70, 3, 500, 2),
-new Card("Constant Uninitialized", 56, 4, 500, 2),
-----------------Enemy Board----------------
-new Card("Shattered Sun Cleric", 63, 500, 1, 2),
+val expectedFriendlyHand = List[Card](
+new Card("Arcane Intellect", 13, 1, 500, 1, "CS2_023"),
+new Card("Polymorph", 33, 2, 500, 1, "CS2_022"),
+new Card("Boulderfist Ogre", 6, 3, 500, 1, "CS2_200"),
+new Card("River Crocolisk", 5, 4, 500, 1, "CS2_120"),
+new Card("Fireball", 8, 5, 500, 1, "CS2_029"),
+new Card("Murloc Raider", 24, 6, 500, 1, "CS2_168"))
+val expectedFriendlyBoard = List[Card](
+new Card("Novice Engineer", 23, 500, 1, 1, "EX1_015"))
+val expectedEnemyHand = List[Card](
+new Card("Constant Uninitialized", 60, 1, 500, 2, "Constant Uninitialized"),
+new Card("Constant Uninitialized", 62, 2, 500, 2, "Constant Uninitialized"),
+new Card("Constant Uninitialized", 70, 3, 500, 2, "Constant Uninitialized"),
+new Card("Constant Uninitialized", 56, 4, 500, 2, "Constant Uninitialized"))
+val expectedEnemyBoard = List[Card](
+new Card("Shattered Sun Cleric", 63, 500, 1, 2, "EX1_019"))

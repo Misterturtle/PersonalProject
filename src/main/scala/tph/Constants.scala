@@ -16,35 +16,45 @@ object Constants {
 
 
   object TestConstants{
-    val defaultGameState = new GameState(new Player(1, 0, hand = List(
-            new Card("Friendly Hand 1", 1, 1, Constants.INT_UNINIT, 1),
-            new Card("Friendly Hand 2", 2, 2, Constants.INT_UNINIT, 1),
-            new Card("Friendly Hand 3", 3, 3, Constants.INT_UNINIT, 1),
-            new Card("Friendly Hand 4", 4, 4, Constants.INT_UNINIT, 1),
-            new Card("Friendly Hand 5", 5, 5, Constants.INT_UNINIT, 1),
-            new Card("Friendly Hand 6", 6, 6, Constants.INT_UNINIT, 1)), board = List(
-            new Card("Friendly Board 1", 11, Constants.INT_UNINIT, 1, 1),
-            new Card("Friendly Board 2", 12, Constants.INT_UNINIT, 2, 1),
-            new Card("Friendly Board 3", 13, Constants.INT_UNINIT, 3, 1),
-            new Card("Friendly Board 4", 14, Constants.INT_UNINIT, 4, 1))),
-      new Player(2, 0, hand = List(
-                new Card("Enemy Hand 1", 21, 1, Constants.INT_UNINIT, 2),
-                new Card("Enemy Hand 2", 22, 2, Constants.INT_UNINIT, 2),
-                new Card("Enemy Hand 3", 23, 3, Constants.INT_UNINIT, 2),
-                new Card("Enemy Hand 4", 24, 4, Constants.INT_UNINIT, 2),
-                new Card("Enemy Hand 5", 25, 5, Constants.INT_UNINIT, 2),
-                new Card("Enemy Hand 6", 26, 6, Constants.INT_UNINIT, 2)), board = List(
-                new Card("Enemy Board 1", 31, Constants.INT_UNINIT, 1, 2),
-                new Card("Enemy Board 2", 32, Constants.INT_UNINIT, 2, 2),
-                new Card("Enemy Board 3", 33, Constants.INT_UNINIT, 3, 2),
-                new Card("Enemy Board 4", 34, Constants.INT_UNINIT, 4, 2))))
+
+    def createFriendlyHandCard(position: Int): Card = new Card(s"Friendly Card $position", position, position, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT)
+    def createFriendlyBoardCard(position: Int): Card = new Card(s"Friendly Minion $position", 10+position, Constants.INT_UNINIT, position, 1, Constants.STRING_UNINIT)
+    def createEnemyHandCard(position: Int): Card = new Card(s"Enemy Card $position", 20+position, position, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT)
+    def createEnemyBoardCard(position: Int): Card = new Card(s"Enemy Minion $position", 30+position, Constants.INT_UNINIT, position, 2, Constants.STRING_UNINIT)
+
+
+    def defaultGameState:GameState = {
+      val gs = new GameState()
+      gs.friendlyPlayer = new Player(1, hand = List(
+        createFriendlyHandCard(1),
+        createFriendlyHandCard(2),
+        createFriendlyHandCard(3),
+        createFriendlyHandCard(4),
+        createFriendlyHandCard(5),
+        createFriendlyHandCard(6)), board = List(
+        createFriendlyBoardCard(1),
+        createFriendlyBoardCard(2),
+        createFriendlyBoardCard(3),
+        createFriendlyBoardCard(4)))
+
+      gs.enemyPlayer = new Player(2, hand = List(
+        createEnemyHandCard(1),
+        createEnemyHandCard(2),
+        createEnemyHandCard(3),
+        createEnemyHandCard(4),
+        createEnemyHandCard(5),
+        createEnemyHandCard(6)), board = List(
+        createEnemyBoardCard(1),
+        createEnemyBoardCard(2),
+        createEnemyBoardCard(3),
+        createEnemyBoardCard(4)))
+
+      gs
+    }
   }
 
   object InfluenceFactors{
     val previousDecisionBonus = .5
-
-
-
   }
 
   object MenuNames {
@@ -83,17 +93,12 @@ object Constants {
     //Attack Type
     case class NormalAttack(friendlyTarget: Int, enemyTarget: Int) extends ActionVote()
     case class ActionUninit() extends ActionVote()
-    case class Bind() extends ActionVote()
-    case class Future() extends ActionVote()
     case class MulliganVote(first: Boolean, second: Boolean, third: Boolean, fourth: Boolean) extends ActionVote()
+    case class EndTurn() extends ActionVote()
   }
 
   object MiscVotes {
-
     case class UninitVote() extends Vote()
-    case class Hurry() extends Vote()
-    case class EndTurn() extends Vote()
-    case class Uninit() extends Vote()
   }
 
   object EmojiVotes {
@@ -134,16 +139,16 @@ object Constants {
 
       //Friendly HSActions
       val FRIENDLY_MINION_CONTROLLED = """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from FRIENDLY PLAY -> OPPOSING PLAY""".r
-      val FRIENDLY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
+      val FRIENDLY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val FRIENDLY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from FRIENDLY PLAY -> FRIENDLY HAND""".r
       val FRIENDLY_MULLIGAN_REDRAW = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     HIDE_ENTITY - Entity=\[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=.+ player=(\d+)] tag=ZONE value=DECK""".r
-      val FRIENDLY_CARD_CREATED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=FULL_ENTITY entity=\[id=\d+ cardId=.+ name=.+\] tags=System.Collections.Generic.List\`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
+      val FRIENDLY_CARD_CREATED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=FULL_ENTITY entity=\[id=\d+ cardId=.+ name=.+\] tags=System.Collections.Generic.List\`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
 
       //Enemy HSActions
       val ENEMY_MINION_CONTROLLED = """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from OPPOSING PLAY -> FRIENDLY PLAY""".r
       val ENEMY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val ENEMY_MULLIGAN_REDRAW = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=DECK zonePos=\d+ cardId= player=(\d+)\] zone from OPPOSING HAND -> OPPOSING DECK""".r
-      val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
+      val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=(.+) player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
       val KNOWN_ENEMY_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
       val ENEMY_CARD_CREATED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=.+ entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag.+ complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
 
@@ -152,15 +157,15 @@ object Constants {
       val CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val FACE_ATTACK_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=HERO.+ player=(\d+)] tag=ATK value=(\d+)""".r
       val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
-      val RETURNED_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=COST value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
-      val CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+      val RETURNED_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=COST value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
+      val CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
       val CARD_DEATH = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=(.+) id=(\d+) zone=GRAVEYARD zonePos=\d+ cardId=.+ player=(\d+)] to .+ GRAVEYARD""".r
-      val MINION_SUMMONED = """^.+FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+).+player=(\d+).+""".r
-      val TRANSFORM ="""\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=(\d+) cardId=.+ player=\d+] tag=LINKED_ENTITY value=(\d+)""".r
+      val MINION_SUMMONED = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)] CardID=.+""".r
+      val TRANSFORM ="""\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=\d+] tag=LINKED_ENTITY value=(\d+)""".r
       val WEAPON = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)] to .+ PLAY \(Weapon\)""".r
       val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=.+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
       val GAME_OVER = "[Power] GameState.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=NEXT_STEP value=FINAL_GAMEOVER"
-      val DECK_TO_BOARD = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=(.+) id=(\d+) zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] zone from .+ DECK -> .+ PLAY""".r
+      val DECK_TO_BOARD = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=(.+) id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] zone from .+ DECK -> .+ PLAY""".r
       val BOARD_SETASIDE_REMOVAL = """\[Power\] PowerProcessor.DoTaskListForCard\(\) - unhandled BlockType PLAY for sourceEntity \[name=(.+) id=(\d+) zone=SETASIDE zonePos=0 cardId=.+ player=(\d+)\]""".r
       val MODIFIED_HERO_FACE_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=\d+ zone=PLAY zonePos=0 cardId=.+ player=(\d+)\] tag=ATK value=(\d+)""".r
       val HAND_SETASIDE_REMOVAL = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=.+ id=(\d+) zone=SETASIDE zonePos=\d+ cardId= player=(\d+)] zone from .+ HAND -> """.r

@@ -46,5 +46,10 @@
     <orderEntry type="library" name="SBT: com.typesafe.akka:akka-actor_2.11:2.4.1:jar" level="project" />
     <orderEntry type="library" name="SBT: com.typesafe.akka:akka-slf4j_2.11:2.4.1:jar" level="project" />
     <orderEntry type="library" name="SBT: org.slf4j:slf4j-api:1.7.12:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.thoughtworks.paranamer:paranamer:2.4.1:jar" level="project" />
+    <orderEntry type="library" name="SBT: net.liftweb:lift-json_2.11:2.6.3:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang:scala-compiler:2.11.1:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang:scalap:2.11.1:jar" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang.modules:scala-parser-combinators_2.11:1.0.1:jar" level="project" />
   </component>
 </module>

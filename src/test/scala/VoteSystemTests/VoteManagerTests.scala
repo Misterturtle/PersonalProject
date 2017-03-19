@@ -28,8 +28,9 @@ class VoteManagerTests extends FlatSpec with Matchers {
     val vote = new CardPlay(1)
     var voteEntered = false
     val mockVoter = new Voter(sender) {
-      override def voteEntry(vote: Vote): Unit = {
+      override def voteEntry(vote: Vote): Voter = {
         voteEntered = true
+        new Voter("")
       }
     }
     vm.voterMap = Map[String, Voter](sender -> mockVoter)
@@ -75,7 +76,7 @@ class VoteManagerTests extends FlatSpec with Matchers {
   it should "collect and combine vote values from multiple voters" in {
     val vm = new VoteManager()
     vm.voterMap = Map[String, Voter](
-      sender -> new Voter(sender){override def baseVoteValues():Map[Vote, Double] = {Map(new CardPlay(1) -> 10)}},
+      sender -> new Voter(sender,Nil){override def baseVoteValues():Map[Vote, Double] = {Map(new CardPlay(1) -> 10)}},
       "tester2" -> new Voter("tester2"){override def baseVoteValues():Map[Vote, Double] = {Map(new NormalAttack(1,2) -> 10)}},
       "tester3" -> new Voter("tester3"){override def baseVoteValues():Map[Vote, Double] = {Map(new NormalAttack(1,2) -> 10)}}
     )

@@ -11,6 +11,8 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by Harambe on 3/10/2017.
   */
+
+
 class IRCBotTests extends FlatSpec with Matchers {
 
 
@@ -18,10 +20,10 @@ class IRCBotTests extends FlatSpec with Matchers {
   val baseIRCBot = new IRCBot(new VoteManager())
 
   "The IRCBot" should "identify twitch input" in {
-
     val mockParser = new VoteParser() {
       override def createVote(sender: String, command: String): Vote = {
-        new CardPlay(1)
+        // TODO assert parameters
+        CardPlay(1)
       }
     }
     val ircBot = new IRCBot(new VoteManager())
@@ -36,6 +38,7 @@ class IRCBotTests extends FlatSpec with Matchers {
       }
     }
     val ircBot = new IRCBot(mockVM){
+      // TODO
       override def identifyTwitchInput(sender:String, message:String, voteParser: VoteParser): Vote = {
         new CardPlay(1)
       }
@@ -78,7 +81,7 @@ class IRCBotTests extends FlatSpec with Matchers {
     baseIRCBot.parseMultipleCommands("c1, f1>e4, f3  > e1, any string, ") shouldBe List[String]("c1", " f1>e4", " f3  > e1", " any string", " ")
   }
 
-  it should "pass multiple votes to VoteManager to be entered" in {
+  it should "split multiple votes and pass multiple votes to VoteManager to be entered" in {
     var voteCounter = 0
     val mockVM = new VoteManager(){
       override def voteEntry(voterName:String, vote:Vote): Unit = {
