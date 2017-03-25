@@ -11,6 +11,12 @@ import tph.Constants.ActionVotes._
   */
 
 class IRCState(ircAI:IRCAI, hearthstone: HearthStone, overlay: Overlay) {
+  var currentPhaseClock = 0
+  var currentTurnClock = 0
+  var myTurn = false
+
+
+
   def startTurn(): Unit = ???
 
   def isValidDecision(gs: GameState, decision: Vote): Option[Vote] = ???
@@ -35,6 +41,10 @@ class IRCState(ircAI:IRCAI, hearthstone: HearthStone, overlay: Overlay) {
     }
     results
   }
+
+  def endTurnWarning:Unit = ???
+
+  def hurryExecutionWarning:Unit = ???
 
  // def InfluenceWithPreviousDecision(results: Map[ActionVote, Double], previousDecision: ActionVote, influenceFactor: Double = Constants.InfluenceFactors.previousDecisionBonus): Map[ActionVote, Int] ={
 

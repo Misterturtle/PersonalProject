@@ -1,5 +1,6 @@
 package tph
 
+import FileReaders.CardInfo
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.Option
@@ -7,7 +8,7 @@ import scala.Option
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0, hand: List[Card] = List[Card](), board: List[Card] = List[Card]()) extends LazyLogging {
+case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0, hand: List[Card] = Nil, board: List[Card] = Nil, heroPower:Option[Card] = None, secretsInPlay:Int = 0, isWeaponEquipped:Boolean = false, isComboActive:Boolean = false, manaAvailable: Int = Constants.INT_UNINIT) extends LazyLogging {
 
   def AddCard(card: Card, isHand: Boolean): Player = {
     if (isHand && board.contains(card))
@@ -106,8 +107,8 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0
       }
   }
 
-  def AddCardToNextHandPosition(name:String, id:Int, cardID:String): Player ={
-    val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber, cardID))
+  def AddCardToNextHandPosition(name:String, id:Int, cardID:String, cardInfo:CardInfo): Player ={
+    val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber, cardID, cardInfo = cardInfo))
     this.copy(hand = newHand)}
 
   def GetNextHandPosition(): Int ={

@@ -55,6 +55,13 @@ object Constants {
 
   object InfluenceFactors{
     val previousDecisionBonus = .5
+    val maximumVoterHistory = 20
+    val substantialVoterFactor =   .3
+    val trollFactor =   .4
+  }
+
+  object IRCState{
+    val minimumDelayBeforeExecution = 5
   }
 
   object MenuNames {
@@ -75,19 +82,23 @@ object Constants {
 
   object ActionVotes {
 
+    trait CardCostsMana{def card:Int}
+    trait HeroPowerCostsMana
+
+
     //Discover Type
     case class Discover(card: Int) extends ActionVote()
     //Battlecry Option with Position Type
-    case class CardPlayWithFriendlyTargetWithPosition(card: Int, friendlyTarget: Int, position: Int) extends ActionVote()
-    case class CardPlayWithEnemyTargetWithPosition(card: Int, enemyTarget: Int, position: Int) extends ActionVote()
+    case class CardPlayWithFriendlyTargetWithPosition(card: Int, friendlyTarget: Int, position: Int) extends ActionVote() with CardCostsMana
+    case class CardPlayWithEnemyTargetWithPosition(card: Int, enemyTarget: Int, position: Int) extends ActionVote() with CardCostsMana
     //Normal Turn Play Type
-    case class CardPlayWithPosition(card: Int, position: Int) extends ActionVote()
-    case class CardPlay(card: Int) extends ActionVote()
-    case class CardPlayWithFriendlyTarget(card: Int, friendlyTarget: Int) extends ActionVote()
-    case class CardPlayWithEnemyTarget(card: Int, enemyTarget: Int) extends ActionVote()
-    case class HeroPower() extends ActionVote()
-    case class HeroPowerWithFriendlyTarget(friendlyTarget: Int) extends ActionVote()
-    case class HeroPowerWithEnemyTarget(enemyTarget: Int) extends ActionVote()
+    case class CardPlayWithPosition(card: Int, position: Int) extends ActionVote() with CardCostsMana
+    case class CardPlay(card: Int) extends ActionVote() with CardCostsMana
+    case class CardPlayWithFriendlyTarget(card: Int, friendlyTarget: Int) extends ActionVote() with CardCostsMana
+    case class CardPlayWithEnemyTarget(card: Int, enemyTarget: Int) extends ActionVote() with CardCostsMana
+    case class HeroPower() extends ActionVote() with HeroPowerCostsMana
+    case class HeroPowerWithFriendlyTarget(friendlyTarget: Int) extends ActionVote() with HeroPowerCostsMana
+    case class HeroPowerWithEnemyTarget(enemyTarget: Int) extends ActionVote() with HeroPowerCostsMana
     //3 part commands
 
     //Attack Type
@@ -129,8 +140,6 @@ object Constants {
     case class SecondPage() extends MenuVote()
     case class Quest(number: Int) extends MenuVote()
   }
-
-
 
 
   object LogFileReaderStrings {

@@ -2,7 +2,7 @@ package LogReaderTests
 
 import java.io._
 
-import FileReaders.{LogFileReader, LogParser}
+import FileReaders.{HSDataBase, LogFileReader, LogParser}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{FlatSpec, Matchers}
 import tph._
@@ -62,7 +62,13 @@ Misc:
 
  */
 
-
+//todo - Detect when a secret is destroyed in order to update player's secretsInPlay
+//todo - Detect when a minion is damaged AND no longer damaged in order to update the card's isDamaged property
+//todo - Detect when a minion is frozen AND unfrozen in order to update the card's isFrozen property
+//todo - Detect when a player equips and destoys a weapon (not just has face attack value) in order to update the card's isWeaponEquipped property
+//todo - Activate player's property isComboActive upon card play and deactivate upon end turn
+//todo - Update a player's heroPower property
+//todo - Update a player's heroPower cost
 
 /**
   * Created by Harambe on 2/22/2017.
@@ -72,6 +78,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   val config = ConfigFactory.load()
   val hearthstoneLogFile = new File(config.getString("tph.readerFiles.outputLog"))
   val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
+  val dataBase = new HSDataBase()
 
   def compareActualToExpected(file:File, friendlyHand: List[Card] = Nil, friendlyBoard: List[Card] = Nil, enemyHand: List[Card] = Nil, enemyBoard: List[Card] = Nil, friendlyWeaponValue: Int = 0, enemyWeaponValue: Int = 0): Unit = {
 
@@ -165,20 +172,20 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   "LogFileReader scenarios" should "detect and define player" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Equality", 67, 1, 500, 2, "EX1_619"),
-      new Card("Leeroy Jenkins", 71, 2, 500, 2, "EX1_116"),
-      new Card("Don Han'Cho", 79, 3, 500, 2, "CFM_685"),
-      new Card("Blessed Champion", 53, 4, 500, 2, "EX1_355"))
+      new Card("Equality", 67, 1, 500, 2, "EX1_619", cardInfo = dataBase.cardIDMap("EX1_619")),
+      new Card("Leeroy Jenkins", 71, 2, 500, 2, "EX1_116", cardInfo = dataBase.cardIDMap("EX1_116")),
+      new Card("Don Han'Cho", 79, 3, 500, 2, "CFM_685", cardInfo = dataBase.cardIDMap("CFM_685")),
+      new Card("Blessed Champion", 53, 4, 500, 2, "EX1_355", cardInfo = dataBase.cardIDMap("EX1_355")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Wild Pyromancer", 80, 500, 1, 2, "NEW1_020"))
+      new Card("Wild Pyromancer", 80, 500, 1, 2, "NEW1_020", cardInfo = dataBase.cardIDMap("NEW1_020")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 43, 2, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 4, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 48, 3, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 17, 4, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Sapling", 87, 500, 1, 1, "AT_037t"),
-      new Card("Sapling", 88, 500, 2, 1, "AT_037t"))
+      new Card("Sapling", 87, 500, 1, 1, "AT_037t", cardInfo = dataBase.cardIDMap("AT_037t")),
+      new Card("Sapling", 88, 500, 2, 1, "AT_037t", cardInfo = dataBase.cardIDMap("AT_037t")))
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/DefinePlayers.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
   }
@@ -187,13 +194,13 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect MulliganRedraw" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Lay on Hands", 36, 1, 500, 2, "EX1_354"),
-      new Card("Spellbreaker", 44, 2, 500, 2, "EX1_048"),
-      new Card("Aldor Peacekeeper", 40, 3, 500, 2, "EX1_382"),
-      new Card("Acidic Swamp Ooze", 58, 4, 500, 2, "EX1_066"),
-      new Card("Solemn Vigil", 38, 5, 500, 2, "BRM_001"))
+      new Card("Lay on Hands", 36, 1, 500, 2, "EX1_354", cardInfo = dataBase.cardIDMap("EX1_354")),
+      new Card("Spellbreaker", 44, 2, 500, 2, "EX1_048", cardInfo = dataBase.cardIDMap("EX1_048")),
+      new Card("Aldor Peacekeeper", 40, 3, 500, 2, "EX1_382", cardInfo = dataBase.cardIDMap("EX1_382")),
+      new Card("Acidic Swamp Ooze", 58, 4, 500, 2, "EX1_066", cardInfo = dataBase.cardIDMap("EX1_066")),
+      new Card("Solemn Vigil", 38, 5, 500, 2, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Acolyte of Pain", 48, 500, 1, 2, "EX1_007"))
+      new Card("Acolyte of Pain", 48, 500, 1, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 21, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 4, 2, 500, 1, "Constant Uninitialized"),
@@ -207,13 +214,13 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect CardPlayed" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Lay on Hands", 36, 1, 500, 2, "EX1_354"),
-      new Card("Spellbreaker", 44, 2, 500, 2, "EX1_048"),
-      new Card("Aldor Peacekeeper", 40, 3, 500, 2, "EX1_382"),
-      new Card("Acidic Swamp Ooze", 58, 4, 500, 2, "EX1_066"),
-      new Card("Solemn Vigil", 38, 5, 500, 2, "BRM_001"))
+      new Card("Lay on Hands", 36, 1, 500, 2, "EX1_354", cardInfo = dataBase.cardIDMap("EX1_354")),
+      new Card("Spellbreaker", 44, 2, 500, 2, "EX1_048", cardInfo = dataBase.cardIDMap("EX1_048")),
+      new Card("Aldor Peacekeeper", 40, 3, 500, 2, "EX1_382", cardInfo = dataBase.cardIDMap("EX1_382")),
+      new Card("Acidic Swamp Ooze", 58, 4, 500, 2, "EX1_066", cardInfo = dataBase.cardIDMap("EX1_066")),
+      new Card("Solemn Vigil", 38, 5, 500, 2, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Acolyte of Pain", 48, 500, 1, 2, "EX1_007"))
+      new Card("Acolyte of Pain", 48, 500, 1, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 21, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 4, 2, 500, 1, "Constant Uninitialized"),
@@ -227,21 +234,21 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect Card Death" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Truesilver Champion", 28, 1, 500, 1, "CS2_097"),
-      new Card("Wild Pyromancer", 15, 3, 500, 1, "NEW1_020"),
-      new Card("The Coin", 68, 4, 500, 1, "GAME_005"),
-      new Card("Acolyte of Pain", 25, 2, 500, 1, "EX1_007"),
-      new Card("Solemn Vigil", 12, 5, 500, 1, "BRM_001"),
-      new Card("Eater of Secrets", 32, 6, 500, 1, "OG_254"),
-      new Card("Spellbreaker", 30, 7, 500, 1, "EX1_048"))
+      new Card("Truesilver Champion", 28, 1, 500, 1, "CS2_097", cardInfo = dataBase.cardIDMap("CS2_097")),
+      new Card("Wild Pyromancer", 15, 3, 500, 1, "NEW1_020", cardInfo = dataBase.cardIDMap("NEW1_020")),
+      new Card("The Coin", 68, 4, 500, 1, "GAME_005", cardInfo = dataBase.cardIDMap("GAME_005")),
+      new Card("Acolyte of Pain", 25, 2, 500, 1, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")),
+      new Card("Solemn Vigil", 12, 5, 500, 1, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")),
+      new Card("Eater of Secrets", 32, 6, 500, 1, "OG_254", cardInfo = dataBase.cardIDMap("OG_254")),
+      new Card("Spellbreaker", 30, 7, 500, 1, "EX1_048", cardInfo = dataBase.cardIDMap("EX1_048")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 39, 1, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 59, 2, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 34, 3, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 37, 4, 500, 2, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Stonetusk Boar", 60, 500, 1, 2, "CS2_171"),
-      new Card("Healing Totem", 69, 500, 2, 2, "NEW1_009"))
+      new Card("Stonetusk Boar", 60, 500, 1, 2, "CS2_171", cardInfo = dataBase.cardIDMap("CS2_171")),
+      new Card("Healing Totem", 69, 500, 2, 2, "NEW1_009", cardInfo = dataBase.cardIDMap("NEW1_009")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/CardDeath.txt").getPath), expectedFriendlyHand, enemyHand = expectedEnemyHand, enemyBoard = expectedEnemyBoard)
@@ -250,15 +257,15 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect friendly and enemy Hex" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Fire Elemental", 8, 1, 500, 1, "CS2_042"),
-      new Card("Coldlight Oracle", 15, 2, 500, 1, "EX1_050"),
-      new Card("Azure Drake", 4, 3, 500, 1, "EX1_284"),
-      new Card("Coldlight Oracle", 22, 4, 500, 1, "EX1_050"),
-      new Card("Ancestral Knowledge", 5, 5, 500, 1, "AT_053"),
-      new Card("Loot Hoarder", 33, 6, 500, 1, "EX1_096"))
+      new Card("Fire Elemental", 8, 1, 500, 1, "CS2_042", cardInfo = dataBase.cardIDMap("CS2_042")),
+      new Card("Coldlight Oracle", 15, 2, 500, 1, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
+      new Card("Azure Drake", 4, 3, 500, 1, "EX1_284", cardInfo = dataBase.cardIDMap("EX1_284")),
+      new Card("Coldlight Oracle", 22, 4, 500, 1, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
+      new Card("Ancestral Knowledge", 5, 5, 500, 1, "AT_053", cardInfo = dataBase.cardIDMap("AT_053")),
+      new Card("Loot Hoarder", 33, 6, 500, 1, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Polluted Hoarder", 70, 500, 2, 1, "OG_323"),
-      new Card("Flame Juggler", 10, 500, 1, 1, "AT_094"))
+      new Card("Polluted Hoarder", 70, 500, 2, 1, "OG_323", cardInfo = dataBase.cardIDMap("OG_323")),
+      new Card("Flame Juggler", 10, 500, 1, 1, "AT_094", cardInfo = dataBase.cardIDMap("AT_094")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 57, 1, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 54, 2, 500, 2, "Constant Uninitialized"),
@@ -276,18 +283,18 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect friendly and enemy card return" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Cult Master", 35, 1, 500, 2, "EX1_595"),
-      new Card("The Coin", 68, 3, 500, 2, "GAME_005"),
-      new Card("Novice Engineer", 36, 2, 500, 2, "EX1_015"),
-      new Card("Cult Master", 51, 4, 500, 2, "EX1_595"),
-      new Card("Fan of Knives", 44, 5, 500, 2, "EX1_129"))
+      new Card("Cult Master", 35, 1, 500, 2, "EX1_595", cardInfo = dataBase.cardIDMap("EX1_595")),
+      new Card("The Coin", 68, 3, 500, 2, "GAME_005", cardInfo = dataBase.cardIDMap("GAME_005")),
+      new Card("Novice Engineer", 36, 2, 500, 2, "EX1_015", cardInfo = dataBase.cardIDMap("EX1_015")),
+      new Card("Cult Master", 51, 4, 500, 2, "EX1_595", cardInfo = dataBase.cardIDMap("EX1_595")),
+      new Card("Fan of Knives", 44, 5, 500, 2, "EX1_129", cardInfo = dataBase.cardIDMap("EX1_129")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Loot Hoarder", 42, 500, 1, 2, "EX1_096"))
+      new Card("Loot Hoarder", 42, 500, 1, 2, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 4, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 14, 2, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 7, 3, 500, 1, "Constant Uninitialized"),
-      new Card("Loot Hoarder", 23, 4, 500, 1, "EX1_096"))
+      new Card("Loot Hoarder", 23, 4, 500, 1, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")))
 
 
       compareActualToExpected(new File(getClass.getResource("/debugsituations/ShadowStep.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand)
@@ -296,28 +303,28 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect vanish" in{
 
     val expectedFriendlyHand = List[Card](
-      new Card("Sprint", 48, 1, 500, 2, "CS2_077"),
-      new Card("Gnomish Inventor", 58, 2, 500, 2, "CS2_147"),
-      new Card("Coldlight Oracle", 35, 3, 500, 2, "EX1_050"),
-      new Card("Shiv", 38, 4, 500, 2, "EX1_278"),
-      new Card("Shiv", 53, 5, 500, 2, "EX1_278"),
-      new Card("Coldlight Oracle", 39, 6, 500, 2, "EX1_050"),
-      new Card("Sap", 36, 7, 500, 2, "EX1_581"),
-      new Card("Fan of Knives", 45, 8, 500, 2, "EX1_129"),
-      new Card("Acolyte of Pain", 37, 9, 500, 2, "EX1_007"),
-      new Card("Gnomish Inventor", 56, 10, 500, 2, "CS2_147"))
+      new Card("Sprint", 48, 1, 500, 2, "CS2_077", cardInfo = dataBase.cardIDMap("CS2_077")),
+      new Card("Gnomish Inventor", 58, 2, 500, 2, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")),
+      new Card("Coldlight Oracle", 35, 3, 500, 2, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
+      new Card("Shiv", 38, 4, 500, 2, "EX1_278", cardInfo = dataBase.cardIDMap("EX1_278")),
+      new Card("Shiv", 53, 5, 500, 2, "EX1_278", cardInfo = dataBase.cardIDMap("EX1_278")),
+      new Card("Coldlight Oracle", 39, 6, 500, 2, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
+      new Card("Sap", 36, 7, 500, 2, "EX1_581", cardInfo = dataBase.cardIDMap("EX1_581")),
+      new Card("Fan of Knives", 45, 8, 500, 2, "EX1_129", cardInfo = dataBase.cardIDMap("EX1_129")),
+      new Card("Acolyte of Pain", 37, 9, 500, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")),
+      new Card("Gnomish Inventor", 56, 10, 500, 2, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")))
     val expectedEnemyHand = List[Card](
-      new Card("Coldlight Oracle", 10, 1, 500, 1, "EX1_050"),
+      new Card("Coldlight Oracle", 10, 1, 500, 1, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
       new Card("Constant Uninitialized", 11, 2, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 12, 3, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 6, 4, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 15, 5, 500, 1, "Constant Uninitialized"),
-      new Card("Runic Egg", 14, 6, 500, 1, "KAR_029"),
-      new Card("Bloodmage Thalnos", 20, 7, 500, 1, "EX1_012"),
-      new Card("Gnomish Inventor", 4, 8, 500, 1, "CS2_147"),
-      new Card("Loot Hoarder", 22, 9, 500, 1, "EX1_096"))
+      new Card("Runic Egg", 14, 6, 500, 1, "KAR_029", cardInfo = dataBase.cardIDMap("KAR_029")),
+      new Card("Bloodmage Thalnos", 20, 7, 500, 1, "EX1_012", cardInfo = dataBase.cardIDMap("EX1_012")),
+      new Card("Gnomish Inventor", 4, 8, 500, 1, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")),
+      new Card("Loot Hoarder", 22, 9, 500, 1, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")))
     val expectedEnemyBoard = List[Card](
-      new Card("Cult Master", 17, 500, 1, 1, "EX1_595"))
+      new Card("Cult Master", 17, 500, 1, 1, "EX1_595", cardInfo = dataBase.cardIDMap("EX1_595")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/Vanish.txt").getPath), expectedFriendlyHand, enemyHand = expectedEnemyHand, enemyBoard = expectedEnemyBoard)
@@ -326,12 +333,12 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect friendly and enemy minions being controlled" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Cult Master", 4, 1, 500, 1, "EX1_595"),
-      new Card("Gnomish Inventor", 5, 2, 500, 1, "CS2_147"),
-      new Card("Coldlight Oracle", 27, 3, 500, 1, "EX1_050"),
-      new Card("Azure Drake", 26, 4, 500, 1, "EX1_284"),
-      new Card("Gnomish Inventor", 8, 5, 500, 1, "CS2_147"),
-      new Card("Polluted Hoarder", 33, 6, 500, 1, "OG_323"))
+      new Card("Cult Master", 4, 1, 500, 1, "EX1_595", cardInfo = dataBase.cardIDMap("EX1_595")),
+      new Card("Gnomish Inventor", 5, 2, 500, 1, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")),
+      new Card("Coldlight Oracle", 27, 3, 500, 1, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
+      new Card("Azure Drake", 26, 4, 500, 1, "EX1_284", cardInfo = dataBase.cardIDMap("EX1_284")),
+      new Card("Gnomish Inventor", 8, 5, 500, 1, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")),
+      new Card("Polluted Hoarder", 33, 6, 500, 1, "OG_323", cardInfo = dataBase.cardIDMap("OG_323")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 61, 2, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 43, 1, 500, 2, "Constant Uninitialized"),
@@ -341,9 +348,9 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 36, 6, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 34, 7, 500, 2, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Gnomish Inventor", 51, 500, 2, 2, "CS2_147"),
-      new Card("Cabal Shadow Priest", 55, 500, 1, 2, "EX1_091"),
-      new Card("Novice Engineer", 25, 500, 3, 2, "EX1_015"))
+      new Card("Gnomish Inventor", 51, 500, 2, 2, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")),
+      new Card("Cabal Shadow Priest", 55, 500, 1, 2, "EX1_091", cardInfo = dataBase.cardIDMap("EX1_091")),
+      new Card("Novice Engineer", 25, 500, 3, 2, "EX1_015", cardInfo = dataBase.cardIDMap("EX1_015")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/MinionsControlled.txt").getPath), expectedFriendlyHand, enemyHand = expectedEnemyHand, enemyBoard = expectedEnemyBoard)
@@ -351,14 +358,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
   it should "Detect weapon played" in {
     val expectedFriendlyHand = List[Card](
-      new Card("Equality", 48, 1, 500, 2, "EX1_619"),
-      new Card("The Coin", 68, 4, 500, 2, "GAME_005"),
-      new Card("Eater of Secrets", 49, 2, 500, 2, "OG_254"),
-      new Card("Tirion Fordring", 40, 3, 500, 2, "EX1_383"),
-      new Card("Solemn Vigil", 54, 5, 500, 2, "BRM_001"),
-      new Card("Equality", 46, 6, 500, 2, "EX1_619"),
-      new Card("Acidic Swamp Ooze", 63, 7, 500, 2, "EX1_066"),
-      new Card("Aldor Peacekeeper", 59, 8, 500, 2, "EX1_382"))
+      new Card("Equality", 48, 1, 500, 2, "EX1_619", cardInfo = dataBase.cardIDMap("EX1_619")),
+      new Card("The Coin", 68, 4, 500, 2, "GAME_005", cardInfo = dataBase.cardIDMap("GAME_005")),
+      new Card("Eater of Secrets", 49, 2, 500, 2, "OG_254", cardInfo = dataBase.cardIDMap("OG_254")),
+      new Card("Tirion Fordring", 40, 3, 500, 2, "EX1_383", cardInfo = dataBase.cardIDMap("EX1_383")),
+      new Card("Solemn Vigil", 54, 5, 500, 2, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")),
+      new Card("Equality", 46, 6, 500, 2, "EX1_619", cardInfo = dataBase.cardIDMap("EX1_619")),
+      new Card("Acidic Swamp Ooze", 63, 7, 500, 2, "EX1_066", cardInfo = dataBase.cardIDMap("EX1_066")),
+      new Card("Aldor Peacekeeper", 59, 8, 500, 2, "EX1_382", cardInfo = dataBase.cardIDMap("EX1_382")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 27, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 4, 2, 500, 1, "Constant Uninitialized"),
@@ -391,20 +398,20 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect an overdraw" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Brann Bronzebeard", 60, 1, 500, 2, "LOE_077"),
-      new Card("Solemn Vigil", 57, 2, 500, 2, "BRM_001"),
-      new Card("The Coin", 68, 3, 500, 2, "GAME_005"),
-      new Card("Hammer of Wrath", 55, 4, 500, 2, "CS2_094"),
-      new Card("Loot Hoarder", 47, 5, 500, 2, "EX1_096"),
-      new Card("Blessed Champion", 48, 6, 500, 2, "EX1_355"),
-      new Card("Equality", 34, 7, 500, 2, "EX1_619"),
-      new Card("Lay on Hands", 62, 8, 500, 2, "EX1_354"),
-      new Card("Tirion Fordring", 44, 9, 500, 2, "EX1_383"),
-      new Card("Wild Pyromancer", 51, 10, 500, 2, "NEW1_020"))
+      new Card("Brann Bronzebeard", 60, 1, 500, 2, "LOE_077", cardInfo = dataBase.cardIDMap("LOE_077")),
+      new Card("Solemn Vigil", 57, 2, 500, 2, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")),
+      new Card("The Coin", 68, 3, 500, 2, "GAME_005", cardInfo = dataBase.cardIDMap("GAME_005")),
+      new Card("Hammer of Wrath", 55, 4, 500, 2, "CS2_094", cardInfo = dataBase.cardIDMap("CS2_094")),
+      new Card("Loot Hoarder", 47, 5, 500, 2, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")),
+      new Card("Blessed Champion", 48, 6, 500, 2, "EX1_355", cardInfo = dataBase.cardIDMap("EX1_355")),
+      new Card("Equality", 34, 7, 500, 2, "EX1_619", cardInfo = dataBase.cardIDMap("EX1_619")),
+      new Card("Lay on Hands", 62, 8, 500, 2, "EX1_354", cardInfo = dataBase.cardIDMap("EX1_354")),
+      new Card("Tirion Fordring", 44, 9, 500, 2, "EX1_383", cardInfo = dataBase.cardIDMap("EX1_383")),
+      new Card("Wild Pyromancer", 51, 10, 500, 2, "NEW1_020", cardInfo = dataBase.cardIDMap("NEW1_020")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Aldor Peacekeeper", 38, 500, 2, 2, "EX1_382"),
-      new Card("Silver Hand Recruit", 70, 500, 3, 2, "CS2_101t"),
-      new Card("Acolyte of Pain", 63, 500, 1, 2, "EX1_007"))
+      new Card("Aldor Peacekeeper", 38, 500, 2, 2, "EX1_382", cardInfo = dataBase.cardIDMap("EX1_382")),
+      new Card("Silver Hand Recruit", 70, 500, 3, 2, "CS2_101t", cardInfo = dataBase.cardIDMap("CS2_101t")),
+      new Card("Acolyte of Pain", 63, 500, 1, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 27, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 15, 2, 500, 1, "Constant Uninitialized"),
@@ -417,7 +424,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 23, 9, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 9, 10, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Dread Corsair", 14, 500, 1, 1, "NEW1_022"))
+      new Card("Dread Corsair", 14, 500, 1, 1, "NEW1_022", cardInfo = dataBase.cardIDMap("NEW1_022")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/OverDraw.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
@@ -426,14 +433,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect Enemy Kazakus's custom spell creation" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Solemn Vigil", 62, 1, 500, 2, "BRM_001"),
-      new Card("Eater of Secrets", 47, 2, 500, 2, "OG_254"),
-      new Card("Blessed Champion", 55, 3, 500, 2, "EX1_355"),
-      new Card("Solemn Vigil", 63, 4, 500, 2, "BRM_001"),
-      new Card("Spellbreaker", 53, 5, 500, 2, "EX1_048"),
-      new Card("Aldor Peacekeeper", 60, 6, 500, 2, "EX1_382"),
-      new Card("Acolyte of Pain", 52, 7, 500, 2, "EX1_007"),
-      new Card("Aldor Peacekeeper", 59, 8, 500, 2, "EX1_382"))
+      new Card("Solemn Vigil", 62, 1, 500, 2, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")),
+      new Card("Eater of Secrets", 47, 2, 500, 2, "OG_254", cardInfo = dataBase.cardIDMap("OG_254")),
+      new Card("Blessed Champion", 55, 3, 500, 2, "EX1_355", cardInfo = dataBase.cardIDMap("EX1_355")),
+      new Card("Solemn Vigil", 63, 4, 500, 2, "BRM_001", cardInfo = dataBase.cardIDMap("BRM_001")),
+      new Card("Spellbreaker", 53, 5, 500, 2, "EX1_048", cardInfo = dataBase.cardIDMap("EX1_048")),
+      new Card("Aldor Peacekeeper", 60, 6, 500, 2, "EX1_382", cardInfo = dataBase.cardIDMap("EX1_382")),
+      new Card("Acolyte of Pain", 52, 7, 500, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")),
+      new Card("Aldor Peacekeeper", 59, 8, 500, 2, "EX1_382", cardInfo = dataBase.cardIDMap("EX1_382")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 20, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 13, 2, 500, 1, "Constant Uninitialized"),
@@ -445,8 +452,8 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 78, 8, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 88, 9, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Brann Bronzebeard", 12, 500, 2, 1, "LOE_077"),
-      new Card("Kazakus", 5, 500, 1, 1, "CFM_621"))
+      new Card("Brann Bronzebeard", 12, 500, 2, 1, "LOE_077", cardInfo = dataBase.cardIDMap("LOE_077")),
+      new Card("Kazakus", 5, 500, 1, 1, "CFM_621", cardInfo = dataBase.cardIDMap("CFM_621")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/EnemyCustomSpell.txt").getPath), expectedFriendlyHand, Nil, expectedEnemyHand, expectedEnemyBoard)
@@ -456,14 +463,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect Friendly Kazakus's custom spell creation" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Kabal Courier", 23, 1, 500, 1, "CFM_649"),
-      new Card("Polymorph", 24, 2, 500, 1, "CS2_022"),
-      new Card("Arcane Blast", 27, 3, 500, 1, "AT_004"),
-      new Card("Ice Lance", 18, 4, 500, 1, "CS2_031"),
-      new Card("Frostbolt", 20, 5, 500, 1, "CS2_024"),
-      new Card("Kazakus Potion", 87, 6, 500, 1, "CFM_621t15"))
+      new Card("Kabal Courier", 23, 1, 500, 1, "CFM_649", cardInfo = dataBase.cardIDMap("CFM_649")),
+      new Card("Polymorph", 24, 2, 500, 1, "CS2_022", cardInfo = dataBase.cardIDMap("CS2_022")),
+      new Card("Arcane Blast", 27, 3, 500, 1, "AT_004", cardInfo = dataBase.cardIDMap("AT_004")),
+      new Card("Ice Lance", 18, 4, 500, 1, "CS2_031", cardInfo = dataBase.cardIDMap("CS2_031")),
+      new Card("Frostbolt", 20, 5, 500, 1, "CS2_024", cardInfo = dataBase.cardIDMap("CS2_024")),
+      new Card("Kazakus Potion", 87, 6, 500, 1, "CFM_621t15", cardInfo = dataBase.cardIDMap("CFM_621t15")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Kazakus", 16, 500, 1, 1, "CFM_621"))
+      new Card("Kazakus", 16, 500, 1, 1, "CFM_621", cardInfo = dataBase.cardIDMap("CFM_621")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 56, 1, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 43, 2, 500, 2, "Constant Uninitialized"),
@@ -473,7 +480,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 41, 6, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 47, 7, 500, 2, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Loot Hoarder", 46, 500, 1, 2, "EX1_096"))
+      new Card("Loot Hoarder", 46, 500, 1, 2, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/FriendlyCustomSpell.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
@@ -483,14 +490,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect Deck to board directly" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Call of the Wild", 37, 1, 500, 2, "OG_211"),
-      new Card("Call of the Wild", 38, 2, 500, 2, "OG_211"),
-      new Card("Houndmaster", 52, 3, 500, 2, "DS1_070"))
+      new Card("Call of the Wild", 37, 1, 500, 2, "OG_211", cardInfo = dataBase.cardIDMap("OG_211")),
+      new Card("Call of the Wild", 38, 2, 500, 2, "OG_211", cardInfo = dataBase.cardIDMap("OG_211")),
+      new Card("Houndmaster", 52, 3, 500, 2, "DS1_070", cardInfo = dataBase.cardIDMap("DS1_070")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Savannah Highmane", 34, 500, 1, 2, "EX1_534"),
-      new Card("Desert Camel", 59, 500, 2, 2, "LOE_020"),
-      new Card("Injured Kvaldir", 60, 500, 3, 2, "AT_105"),
-      new Card("Injured Kvaldir", 54, 500, 4, 2, "AT_105"))
+      new Card("Savannah Highmane", 34, 500, 1, 2, "EX1_534", cardInfo = dataBase.cardIDMap("EX1_534")),
+      new Card("Desert Camel", 59, 500, 2, 2, "LOE_020", cardInfo = dataBase.cardIDMap("LOE_020")),
+      new Card("Injured Kvaldir", 60, 500, 3, 2, "AT_105", cardInfo = dataBase.cardIDMap("AT_105")),
+      new Card("Injured Kvaldir", 54, 500, 4, 2, "AT_105", cardInfo = dataBase.cardIDMap("AT_105")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 12, 2, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 17, 1, 500, 1, "Constant Uninitialized"),
@@ -499,10 +506,10 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 14, 5, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 22, 6, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Knife Juggler", 28, 500, 1, 1, "NEW1_019"),
-      new Card("Mind Control Tech", 9, 500, 2, 1, "EX1_085"),
-      new Card("Argent Squire", 31, 500, 3, 1, "EX1_008"),
-      new Card("Desert Camel", 6, 500, 4, 1, "LOE_020"))
+      new Card("Knife Juggler", 28, 500, 1, 1, "NEW1_019", cardInfo = dataBase.cardIDMap("NEW1_019")),
+      new Card("Mind Control Tech", 9, 500, 2, 1, "EX1_085", cardInfo = dataBase.cardIDMap("EX1_085")),
+      new Card("Argent Squire", 31, 500, 3, 1, "EX1_008", cardInfo = dataBase.cardIDMap("EX1_008")),
+      new Card("Desert Camel", 6, 500, 4, 1, "LOE_020", cardInfo = dataBase.cardIDMap("LOE_020")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/DesertCamel.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
@@ -511,16 +518,16 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect Joust Draw" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Call of the Wild", 37, 1, 500, 2, "OG_211"),
-      new Card("Call of the Wild", 38, 2, 500, 2, "OG_211"),
-      new Card("Deadly Shot", 36, 3, 500, 2, "EX1_617"),
-      new Card("Desert Camel", 39, 4, 500, 2, "LOE_020"),
-      new Card("Infested Wolf", 55, 5, 500, 2, "OG_216"))
+      new Card("Call of the Wild", 37, 1, 500, 2, "OG_211", cardInfo = dataBase.cardIDMap("OG_211")),
+      new Card("Call of the Wild", 38, 2, 500, 2, "OG_211", cardInfo = dataBase.cardIDMap("OG_211")),
+      new Card("Deadly Shot", 36, 3, 500, 2, "EX1_617", cardInfo = dataBase.cardIDMap("EX1_617")),
+      new Card("Desert Camel", 39, 4, 500, 2, "LOE_020", cardInfo = dataBase.cardIDMap("LOE_020")),
+      new Card("Infested Wolf", 55, 5, 500, 2, "OG_216", cardInfo = dataBase.cardIDMap("OG_216")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Huge Toad", 63, 500, 3, 2, "LOE_046"),
-      new Card("Hyena", 93, 500, 2, 2, "EX1_534t"),
-      new Card("Hyena", 94, 500, 1, 2, "EX1_534t"),
-      new Card("King's Elekk", 35, 500, 4, 2, "AT_058"))
+      new Card("Huge Toad", 63, 500, 3, 2, "LOE_046", cardInfo = dataBase.cardIDMap("LOE_046")),
+      new Card("Hyena", 93, 500, 2, 2, "EX1_534t", cardInfo = dataBase.cardIDMap("EX1_534t")),
+      new Card("Hyena", 94, 500, 1, 2, "EX1_534t", cardInfo = dataBase.cardIDMap("EX1_534t")),
+      new Card("King's Elekk", 35, 500, 4, 2, "AT_058", cardInfo = dataBase.cardIDMap("AT_058")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 12, 2, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 17, 1, 500, 1, "Constant Uninitialized"),
@@ -529,7 +536,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 15, 5, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 26, 6, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Emperor Thaurissan", 18, 500, 1, 1, "BRM_028"))
+      new Card("Emperor Thaurissan", 18, 500, 1, 1, "BRM_028", cardInfo = dataBase.cardIDMap("BRM_028")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/KingElekkDraw.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, 3)
@@ -538,8 +545,8 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect discard" in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("Curse of Rafaam", 10, 1, 500, 1, "LOE_007"),
-      new Card("Coldlight Oracle", 22, 2, 500, 1, "EX1_050"))
+      new Card("Curse of Rafaam", 10, 1, 500, 1, "LOE_007", cardInfo = dataBase.cardIDMap("LOE_007")),
+      new Card("Coldlight Oracle", 22, 2, 500, 1, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 36, 1, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 68, 3, 500, 2, "Constant Uninitialized"),
@@ -553,18 +560,18 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect card creation directly to deck (Gang up scenario)" in{
 
     val expectedFriendlyHand = List[Card](
-      new Card("Gnomish Inventor", 62, 1, 500, 2, "CS2_147"),
-      new Card("Coldlight Oracle", 43, 2, 500, 2, "EX1_050"),
-      new Card("Ragnaros the Firelord", 60, 3, 500, 2, "EX1_298"),
-      new Card("Sprint", 55, 4, 500, 2, "CS2_077"),
-      new Card("Polluted Hoarder", 35, 5, 500, 2, "OG_323"),
-      new Card("Fan of Knives", 52, 6, 500, 2, "EX1_129"),
-      new Card("Gang Up", 41, 7, 500, 2, "BRM_007"),
-      new Card("Assassin's Blade", 39, 8, 500, 2, "CS2_080"),
-      new Card("Acolyte of Pain", 70, 9, 500, 2, "EX1_007"))
+      new Card("Gnomish Inventor", 62, 1, 500, 2, "CS2_147", cardInfo = dataBase.cardIDMap("CS2_147")),
+      new Card("Coldlight Oracle", 43, 2, 500, 2, "EX1_050", cardInfo = dataBase.cardIDMap("EX1_050")),
+      new Card("Ragnaros the Firelord", 60, 3, 500, 2, "EX1_298", cardInfo = dataBase.cardIDMap("EX1_298")),
+      new Card("Sprint", 55, 4, 500, 2, "CS2_077", cardInfo = dataBase.cardIDMap("CS2_077")),
+      new Card("Polluted Hoarder", 35, 5, 500, 2, "OG_323", cardInfo = dataBase.cardIDMap("OG_323")),
+      new Card("Fan of Knives", 52, 6, 500, 2, "EX1_129", cardInfo = dataBase.cardIDMap("EX1_129")),
+      new Card("Gang Up", 41, 7, 500, 2, "BRM_007", cardInfo = dataBase.cardIDMap("BRM_007")),
+      new Card("Assassin's Blade", 39, 8, 500, 2, "CS2_080", cardInfo = dataBase.cardIDMap("CS2_080")),
+      new Card("Acolyte of Pain", 70, 9, 500, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Acolyte of Pain", 56, 500, 1, 2, "EX1_007"),
-      new Card("Undercity Valiant", 48, 500, 2, 2, "AT_030"))
+      new Card("Acolyte of Pain", 56, 500, 1, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")),
+      new Card("Undercity Valiant", 48, 500, 2, 2, "AT_030", cardInfo = dataBase.cardIDMap("AT_030")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 7, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 24, 2, 500, 1, "Constant Uninitialized"),
@@ -575,7 +582,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 74, 7, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 31, 8, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Flame Juggler", 19, 500, 1, 1, "AT_094"))
+      new Card("Flame Juggler", 19, 500, 1, 1, "AT_094", cardInfo = dataBase.cardIDMap("AT_094")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/GangUp.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, 3)
@@ -583,14 +590,14 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
   it should "Detect Jaraxxus" in {
     val expectedFriendlyHand = List[Card](
-      new Card("Arcane Intellect", 21, 1, 500, 1, "CS2_023"),
-      new Card("The Coin", 68, 2, 500, 1, "GAME_005"),
-      new Card("Arcane Explosion", 30, 3, 500, 1, "CS2_025"),
-      new Card("Arcane Intellect", 26, 4, 500, 1, "CS2_023"))
+      new Card("Arcane Intellect", 21, 1, 500, 1, "CS2_023", cardInfo = dataBase.cardIDMap("CS2_023")),
+      new Card("The Coin", 68, 2, 500, 1, "GAME_005", cardInfo = dataBase.cardIDMap("GAME_005")),
+      new Card("Arcane Explosion", 30, 3, 500, 1, "CS2_025", cardInfo = dataBase.cardIDMap("CS2_025")),
+      new Card("Arcane Intellect", 26, 4, 500, 1, "CS2_023", cardInfo = dataBase.cardIDMap("CS2_023")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Oasis Snapjaw", 28, 500, 1, 1, "CS2_119"),
-      new Card("River Crocolisk", 12, 500, 2, 1, "CS2_120"),
-      new Card("Raid Leader", 11, 500, 3, 1, "CS2_122"))
+      new Card("Oasis Snapjaw", 28, 500, 1, 1, "CS2_119", cardInfo = dataBase.cardIDMap("CS2_119")),
+      new Card("River Crocolisk", 12, 500, 2, 1, "CS2_120", cardInfo = dataBase.cardIDMap("CS2_120")),
+      new Card("Raid Leader", 11, 500, 3, 1, "CS2_122", cardInfo = dataBase.cardIDMap("CS2_122")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 37, 1, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 40, 2, 500, 2, "Constant Uninitialized"),
@@ -601,7 +608,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 59, 7, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 44, 8, 500, 2, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Blood Imp", 72, 500, 1, 2, "CS2_059"))
+      new Card("Blood Imp", 72, 500, 1, 2, "CS2_059", cardInfo = dataBase.cardIDMap("CS2_059")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/Jaraxxus.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, 0, 3)
@@ -612,22 +619,22 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   it should "Detect Evolve " in {
 
     val expectedFriendlyHand = List[Card](
-      new Card("The Coin", 68, 2, 500, 2, "GAME_005"),
-      new Card("Arcane Missiles", 39, 1, 500, 2, "EX1_277"),
-      new Card("Sen'jin Shieldmasta", 43, 3, 500, 2, "CS2_179"),
-      new Card("Nightblade", 54, 4, 500, 2, "EX1_593"),
-      new Card("River Crocolisk", 63, 5, 500, 2, "CS2_120"),
-      new Card("Oasis Snapjaw", 52, 6, 500, 2, "CS2_119"))
+      new Card("The Coin", 68, 2, 500, 2, "GAME_005", cardInfo = dataBase.cardIDMap("GAME_005")),
+      new Card("Arcane Missiles", 39, 1, 500, 2, "EX1_277", cardInfo = dataBase.cardIDMap("EX1_277")),
+      new Card("Sen'jin Shieldmasta", 43, 3, 500, 2, "CS2_179", cardInfo = dataBase.cardIDMap("CS2_179")),
+      new Card("Nightblade", 54, 4, 500, 2, "EX1_593", cardInfo = dataBase.cardIDMap("EX1_593")),
+      new Card("River Crocolisk", 63, 5, 500, 2, "CS2_120", cardInfo = dataBase.cardIDMap("CS2_120")),
+      new Card("Oasis Snapjaw", 52, 6, 500, 2, "CS2_119", cardInfo = dataBase.cardIDMap("CS2_119")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Novice Engineer", 50, 500, 1, 2, "EX1_015"))
+      new Card("Novice Engineer", 50, 500, 1, 2, "EX1_015", cardInfo = dataBase.cardIDMap("EX1_015")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 28, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 4, 2, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 8, 3, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 19, 4, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Tunnel Trogg", 70, 500, 2, 1, "LOE_018"),
-      new Card("Damaged Golem", 72, 500, 1, 1, "skele21"))
+      new Card("Tunnel Trogg", 70, 500, 2, 1, "LOE_018", cardInfo = dataBase.cardIDMap("LOE_018")),
+      new Card("Damaged Golem", 72, 500, 1, 1, "skele21", cardInfo = dataBase.cardIDMap("skele21")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/Evolve.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
@@ -635,21 +642,21 @@ class LogFileReaderTests extends FlatSpec with Matchers {
 
   it should "Detect Renounce Darkness" in {
     val expectedFriendlyHand = List[Card](
-      new Card("Arcane Intellect", 13, 1, 500, 1, "CS2_023"),
-      new Card("Polymorph", 33, 2, 500, 1, "CS2_022"),
-      new Card("Boulderfist Ogre", 6, 3, 500, 1, "CS2_200"),
-      new Card("River Crocolisk", 5, 4, 500, 1, "CS2_120"),
-      new Card("Fireball", 8, 5, 500, 1, "CS2_029"),
-      new Card("Murloc Raider", 24, 6, 500, 1, "CS2_168"))
+      new Card("Arcane Intellect", 13, 1, 500, 1, "CS2_023", cardInfo = dataBase.cardIDMap("CS2_023")),
+      new Card("Polymorph", 33, 2, 500, 1, "CS2_022", cardInfo = dataBase.cardIDMap("CS2_022")),
+      new Card("Boulderfist Ogre", 6, 3, 500, 1, "CS2_200", cardInfo = dataBase.cardIDMap("CS2_200")),
+      new Card("River Crocolisk", 5, 4, 500, 1, "CS2_120", cardInfo = dataBase.cardIDMap("CS2_120")),
+      new Card("Fireball", 8, 5, 500, 1, "CS2_029", cardInfo = dataBase.cardIDMap("CS2_029")),
+      new Card("Murloc Raider", 24, 6, 500, 1, "CS2_168", cardInfo = dataBase.cardIDMap("CS2_168")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Novice Engineer", 23, 500, 1, 1, "EX1_015"))
+      new Card("Novice Engineer", 23, 500, 1, 1, "EX1_015", cardInfo = dataBase.cardIDMap("EX1_015")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 60, 1, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 62, 2, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 70, 3, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 56, 4, 500, 2, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Shattered Sun Cleric", 63, 500, 1, 2, "EX1_019"))
+      new Card("Shattered Sun Cleric", 63, 500, 1, 2, "EX1_019", cardInfo = dataBase.cardIDMap("EX1_019")))
 
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/RenounceDarkness.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)

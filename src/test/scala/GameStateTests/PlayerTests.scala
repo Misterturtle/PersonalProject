@@ -1,5 +1,7 @@
 package GameStateTests
 
+import FileReaders.CardInfo
+import net.liftweb.json.JsonAST.JObject
 import org.scalatest.{FlatSpec, Matchers}
 import tph._
 
@@ -123,12 +125,12 @@ class PlayerTests extends FlatSpec with Matchers {
     gameState.enemyPlayer = new Player(2,hand = startingEnemyHand)
 
 
-    val part1FriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition("Friendly Card 4", 4, Constants.STRING_UNINIT)
-    val newFriendlyPlayer = part1FriendlyPlayer.AddCardToNextHandPosition("Friendly Card 5", 5, Constants.STRING_UNINIT)
+    val part1FriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition("Friendly Card 4", 4, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
+    val newFriendlyPlayer = part1FriendlyPlayer.AddCardToNextHandPosition("Friendly Card 5", 5, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
 
 
-    val part1EnemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition("Enemy Card 4", 24, Constants.STRING_UNINIT)
-    val newEnemyPlayer = part1EnemyPlayer.AddCardToNextHandPosition("Enemy Card 5", 25, Constants.STRING_UNINIT)
+    val part1EnemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition("Enemy Card 4", 24, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
+    val newEnemyPlayer = part1EnemyPlayer.AddCardToNextHandPosition("Enemy Card 5", 25, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
 
     val actualFriendlyHand = newFriendlyPlayer.hand
     val expectedFriendlyHand = List(

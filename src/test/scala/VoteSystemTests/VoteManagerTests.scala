@@ -4,6 +4,7 @@ import VoteSystem._
 import org.scalatest.{FlatSpec, Matchers}
 import tph.Constants.ActionVotes.{NormalAttack, CardPlay, ActionUninit}
 import tph.Constants.EmojiVotes.EmojiUninit
+import tph.GameState
 
 /**
   * Created by Harambe on 2/23/2017.
@@ -24,7 +25,7 @@ class VoteManagerTests extends FlatSpec with Matchers {
 
 
   "A Vote Manager" should "tell a voter to store a vote" in {
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     val vote = new CardPlay(1)
     var voteEntered = false
     val mockVoter = new Voter(sender) {
@@ -40,13 +41,13 @@ class VoteManagerTests extends FlatSpec with Matchers {
 
   it should "add a voter to the voter list when entering a vote from an unknown voter" in {
     val vote = new CardPlay(1)
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     vm.voteEntry(sender, vote)
     vm.voterMap.isDefinedAt(sender) shouldBe true
   }
 
   it should "be able to tell voters to adjust votes with any given GameState updateMap" in {
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     var votesUpdated = false
     val mockVoter = new Voter(sender) {override def updateVotes(updateMap: Map[Int, Int]): Unit ={
       votesUpdated = true
@@ -57,7 +58,7 @@ class VoteManagerTests extends FlatSpec with Matchers {
   }
 
   it should "collect base vote values from voter" in {
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     vm.voterMap = Map(sender -> new Voter(sender){
       override def baseVoteValues():Map[Vote, Double] = Map(new CardPlay(1) -> 10)
     })
@@ -65,7 +66,7 @@ class VoteManagerTests extends FlatSpec with Matchers {
   }
 
   it should "collect base vote values from multiple voters" in {
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     vm.voterMap = Map[String, Voter](
       sender -> new Voter(sender){override def baseVoteValues():Map[Vote, Double] = {Map(new CardPlay(1) -> 10)}},
       "tester2" -> new Voter("tester2"){override def baseVoteValues():Map[Vote, Double] = {Map(new NormalAttack(1,2) -> 10)}}
@@ -74,7 +75,7 @@ class VoteManagerTests extends FlatSpec with Matchers {
   }
 
   it should "collect and combine vote values from multiple voters" in {
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     vm.voterMap = Map[String, Voter](
       sender -> new Voter(sender,Nil){override def baseVoteValues():Map[Vote, Double] = {Map(new CardPlay(1) -> 10)}},
       "tester2" -> new Voter("tester2"){override def baseVoteValues():Map[Vote, Double] = {Map(new NormalAttack(1,2) -> 10)}},
@@ -84,7 +85,7 @@ class VoteManagerTests extends FlatSpec with Matchers {
   }
 
   it should "collect and modify vote values with a condition function and effect function" in {
-    val vm = new VoteManager()
+    val vm = new VoteManager(new GameState())
     vm.voterMap = Map[String, Voter](
       sender -> new Voter(sender){override def baseVoteValues():Map[Vote, Double] = {Map(new CardPlay(1) -> 10)}})
     def influenceCondition(v:Vote): Boolean = {v == CardPlay(1)}

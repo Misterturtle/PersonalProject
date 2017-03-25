@@ -20,7 +20,7 @@ class TwitchUser extends FreeSpec with Matchers {
   "As a Twitch User, I want to" - {
 
     "be able to type the commands 'c1-10' to refer to my hand, so that I can quickly send votes" in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       for(a<- 1 to 10)
       ircBot.onMessage("None", "A Twitch User", "None", "None", s"!c$a")
@@ -38,7 +38,7 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "be able to type the command 'f0-10' to refer to my hero and board, so that I can quickly send votes" in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       for(a<- 0 to 10)
         ircBot.onMessage("None", "A Twitch User", "None", "None", s"!c1 > f$a")
@@ -57,7 +57,7 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "be able to type the command 'e0-10' to refer to the enemy hero and board, so that I can quickly send votes" in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       for(a<- 0 to 10)
         ircBot.onMessage("None", "A Twitch User", "None", "None", s"!c1 > e$a")
@@ -75,7 +75,7 @@ class TwitchUser extends FreeSpec with Matchers {
         CardPlayWithEnemyTarget(1,10))}
 
     "be able to type the command 'hp' to refer to my hero power, so that I can quickly send votes " in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
         ircBot.onMessage("None", "A Twitch User", "None", "None", "!hp")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
@@ -84,7 +84,7 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "be able to type the command '>' when I want some card to target another card, so that I quickly send votes." in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c1 > f1")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
@@ -92,21 +92,21 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "be able to type the command '>>' when I want to specify what position to play the card at, so that I can quickly send votes." in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c1 >> f1")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
         CardPlayWithPosition(1,1))}
 
     "be able to type the command '>>' and '>' when I want to specify what position to play the card at AND target, so that I can quickly send votes." in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c1 >> f1 > f1")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
         CardPlayWithFriendlyTargetWithPosition(1,1,1))}
 
     "be able to send all my commands in one line, so that I can quickly send votes." in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c1 > f1, c2 > f2, f1 > e1")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
@@ -116,7 +116,7 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "be able to send my votes with multiple messages, so that I can be more intuitive with my commands." in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c1 > f1")
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c2 > f2")
@@ -128,7 +128,7 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "be able to type the command 'end turn' when I am finished with my commands for that turn, so that I don't have to wait the full length every time." in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!c1 > f1, end turn")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
@@ -137,7 +137,7 @@ class TwitchUser extends FreeSpec with Matchers {
 
 
     "not have to worry about case sensitivity, so that I don't make easy mistakes" in {
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       val ircBot = new IRCBot(vm)
       ircBot.onMessage("None", "A Twitch User", "None", "None", "!C1 > F1, eNd tUrn")
       vm.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
@@ -170,7 +170,7 @@ class TwitchUser extends FreeSpec with Matchers {
       val vote2 = CardPlay(2)
       voter.voteEntry(vote)
       voter.voteEntry(vote2)
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       vm.voterMap = vm.voterMap + ("A Twitch User" -> voter)
 
       voter.actionVoteList shouldBe List[ActionVote](CardPlay(1), CardPlay(2))
@@ -188,7 +188,7 @@ class TwitchUser extends FreeSpec with Matchers {
       voter.voteEntry(vote)
       voter.voteEntry(vote2)
       voter.voteEntry(vote3)
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       vm.voterMap = vm.voterMap + ("A Twitch User" -> voter)
 
       voter.actionVoteList shouldBe List[ActionVote](CardPlay(1), CardPlay(2), CardPlay(3))
@@ -203,7 +203,7 @@ class TwitchUser extends FreeSpec with Matchers {
       val vote2 = CardPlay(2)
       voter.voteEntry(vote)
       voter.voteEntry(vote2)
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       vm.voterMap = vm.voterMap + ("A Twitch User" -> voter)
 
       voter.actionVoteList shouldBe List[ActionVote](CardPlay(1), CardPlay(2))
@@ -221,7 +221,7 @@ class TwitchUser extends FreeSpec with Matchers {
       voter.voteEntry(vote)
       voter.voteEntry(vote2)
       voter.voteEntry(vote3)
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       vm.voterMap = vm.voterMap + ("A Twitch User" -> voter)
 
       voter.actionVoteList shouldBe List[ActionVote](CardPlay(1), CardPlay(2), CardPlay(3))
@@ -233,7 +233,7 @@ class TwitchUser extends FreeSpec with Matchers {
     "be able to see my vote list, so that I can easily modify my commands" taggedAs Slow in {
       val config = ConfigFactory.load()
       val voter = new Voter("A Twitch User")
-      val vm = new VoteManager()
+      val vm = new VoteManager(new GameState())
       vm.voterMap = vm.voterMap + ("A Twitch User" -> voter)
       val twitchUserBot = new PircBot {
         override def onPrivateMessage(sender: String, login: String, hostname: String, message: String): Unit ={

@@ -46,10 +46,6 @@ class VoteParser extends LazyLogging {
         //-----------Misc Votes----------//
       case END_TURN =>
         new EndTurn()
-      case BIND =>
-        new Bind()
-      case FUTURE =>
-        new Future()
 
 
         //------------Action Votes----------//
