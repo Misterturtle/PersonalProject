@@ -8,9 +8,9 @@ import scala.Option
 /**
   * Created by Harambe on 2/20/2017.
   */
-case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0, hand: List[Card] = Nil, board: List[Card] = Nil, heroPower:Option[Card] = None, secretsInPlay:Int = 0, isWeaponEquipped:Boolean = false, isComboActive:Boolean = false, manaAvailable: Int = Constants.INT_UNINIT) extends LazyLogging {
+case class Player(playerNumber: Int = Constants.INT_UNINIT, hand: List[Card] = Nil, board: List[Card] = Nil, hero:Option[Card] = None, heroPower:Option[Card] = None, secretsInPlay:Int = 0, isWeaponEquipped:Boolean = false, isComboActive:Boolean = false, manaAvailable: Int = Constants.INT_UNINIT, elementalPlayedThisTurn:Boolean = false, elementalPlayedLastTurn:Boolean = false) extends LazyLogging {
 
-  def AddCard(card: Card, isHand: Boolean): Player = {
+  def addCard(card: Card, isHand: Boolean): Player = {
     if (isHand && board.contains(card))
       println("Safety check to make sure the added card is not in both the hand and board")
 
@@ -54,7 +54,7 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0
   }
 
 
-  def RemoveCard(card: Card): Player = {
+  def removeCard(card: Card): Player = {
 
     val isHand = hand.contains(card)
 
@@ -107,11 +107,11 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, weaponValue: Int = 0
       }
   }
 
-  def AddCardToNextHandPosition(name:String, id:Int, cardID:String, cardInfo:CardInfo): Player ={
-    val newHand = hand ::: List(new Card(name, id, GetNextHandPosition(), Constants.INT_UNINIT, playerNumber, cardID, cardInfo = cardInfo))
+  def addCardToNextHandPosition(name:String, id:Int, cardID:String, cardInfo:CardInfo): Player ={
+    val newHand = hand ::: List(new Card(name, id, getNextHandPosition(), Constants.INT_UNINIT, playerNumber, cardID, cardInfo = cardInfo))
     this.copy(hand = newHand)}
 
-  def GetNextHandPosition(): Int ={
+  def getNextHandPosition(): Int ={
     for(a<-1 to 20){
       if(hand.exists(x => x.handPosition == a)){
       }

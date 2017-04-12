@@ -5,11 +5,23 @@ import tph.GameState
 /**
   * Created by Harambe on 3/18/2017.
   */
-class Overlay(gamestate:GameState) {
-  def display() = ???
+class Display(){
+  def display() = {}
 
-  def displayEndTurnWarning():Unit = ???
+  def displayHurryWarning(): Unit = {}
 
-  def displayTimeRemaining(): Unit = ???
+  def cancelHurryWarning():Unit = {}
+
+  def cancelEndTurnWarning():Unit = {}
+
+  def displayEndTurnWarning():Unit = {}
+
+  def displayTimeRemaining(): Unit = {}
+
+  def displayDiscoverTimer(): Unit = {}
+
+  def displayChooseOneTimer(): Unit = {}
+
+  def displayMulliganTimer(): Unit = {}
 
 }

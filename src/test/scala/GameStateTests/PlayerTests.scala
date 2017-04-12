@@ -22,7 +22,7 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Friendly Card 5", 5, 6, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 6", 6, 7, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 7", 7, 3, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
-    val actualFriendlyHand = defaultGameState.friendlyPlayer.AddCard(newFriendlyHandCard, true).hand
+    val actualFriendlyHand = defaultGameState.friendlyPlayer.addCard(newFriendlyHandCard, true).hand
 
     val newFriendlyBoardCard = new Card("Friendly Minion 5", 15, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT)
     val expectedFriendlyBoard = List(
@@ -31,7 +31,7 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Friendly Minion 3", 13, Constants.INT_UNINIT, 4, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 5, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 5", 15, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT))
-    val actualFriendlyBoard = defaultGameState.friendlyPlayer.AddCard(newFriendlyBoardCard, false).board
+    val actualFriendlyBoard = defaultGameState.friendlyPlayer.addCard(newFriendlyBoardCard, false).board
 
     val newEnemyHandCard = new Card("Enemy Card 7", 27, 3, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT)
     val expectedEnemyHandCard = List(
@@ -42,7 +42,7 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Enemy Card 5", 25, 6, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 6", 26, 7, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 7", 27, 3, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
-    val actualEnemyHand = defaultGameState.enemyPlayer.AddCard(newEnemyHandCard, true).hand
+    val actualEnemyHand = defaultGameState.enemyPlayer.addCard(newEnemyHandCard, true).hand
 
     val newEnemyBoardCard = new Card("Enemy Minion 5", 35, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT)
     val expectedEnemyBoard = List(
@@ -51,7 +51,7 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Enemy Minion 3", 33, Constants.INT_UNINIT, 4, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 4", 34, Constants.INT_UNINIT, 5, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 5", 35, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT))
-    val actualEnemyBoard = defaultGameState.enemyPlayer.AddCard(newEnemyBoardCard, false).board
+    val actualEnemyBoard = defaultGameState.enemyPlayer.addCard(newEnemyBoardCard, false).board
 
     actualFriendlyHand shouldEqual expectedFriendlyHand
     actualFriendlyBoard shouldEqual expectedFriendlyBoard
@@ -69,14 +69,14 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Friendly Card 4", 4, 3, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 5", 5, 4, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 6", 6, 5, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
-    val actualFriendlyHand = defaultGameState.friendlyPlayer.RemoveCard(newFriendlyHandCard).hand
+    val actualFriendlyHand = defaultGameState.friendlyPlayer.removeCard(newFriendlyHandCard).hand
 
     val newFriendlyBoardCard = new Card("Friendly Minion 2", 12, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT)
     val expectedFriendlyBoard = List(
       new Card("Friendly Minion 1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 3", 13, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 3, 1, Constants.STRING_UNINIT))
-    val actualFriendlyBoard = defaultGameState.friendlyPlayer.RemoveCard(newFriendlyBoardCard).board
+    val actualFriendlyBoard = defaultGameState.friendlyPlayer.removeCard(newFriendlyBoardCard).board
 
     val newEnemyHandCard = new Card("Enemy Card 3", 23, 3, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT)
     val expectedEnemyHandCard = List(
@@ -85,14 +85,14 @@ class PlayerTests extends FlatSpec with Matchers {
       new Card("Enemy Card 4", 24, 3, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 5", 25, 4, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 6", 26, 5, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
-    val actualEnemyHand = defaultGameState.enemyPlayer.RemoveCard(newEnemyHandCard).hand
+    val actualEnemyHand = defaultGameState.enemyPlayer.removeCard(newEnemyHandCard).hand
 
     val newEnemyBoardCard = new Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT)
     val expectedEnemyBoard = List(
       new Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 3", 33, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 4", 34, Constants.INT_UNINIT, 3, 2, Constants.STRING_UNINIT))
-    val actualEnemyBoard = defaultGameState.enemyPlayer.RemoveCard(newEnemyBoardCard).board
+    val actualEnemyBoard = defaultGameState.enemyPlayer.removeCard(newEnemyBoardCard).board
 
     actualFriendlyHand shouldEqual expectedFriendlyHand
     actualFriendlyBoard shouldEqual expectedFriendlyBoard
@@ -125,12 +125,12 @@ class PlayerTests extends FlatSpec with Matchers {
     gameState.enemyPlayer = new Player(2,hand = startingEnemyHand)
 
 
-    val part1FriendlyPlayer = gameState.friendlyPlayer.AddCardToNextHandPosition("Friendly Card 4", 4, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
-    val newFriendlyPlayer = part1FriendlyPlayer.AddCardToNextHandPosition("Friendly Card 5", 5, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
+    val part1FriendlyPlayer = gameState.friendlyPlayer.addCardToNextHandPosition("Friendly Card 4", 4, Constants.STRING_UNINIT, Constants.emptyCardInfo)
+    val newFriendlyPlayer = part1FriendlyPlayer.addCardToNextHandPosition("Friendly Card 5", 5, Constants.STRING_UNINIT, Constants.emptyCardInfo)
 
 
-    val part1EnemyPlayer = gameState.enemyPlayer.AddCardToNextHandPosition("Enemy Card 4", 24, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
-    val newEnemyPlayer = part1EnemyPlayer.AddCardToNextHandPosition("Enemy Card 5", 25, Constants.STRING_UNINIT, new CardInfo(Some(Constants.STRING_UNINIT), Some(Constants.STRING_UNINIT), Some(Constants.INT_UNINIT), Some(Nil), Some(Constants.INT_UNINIT), Some(Constants.STRING_UNINIT), Some(new JObject(Nil))))
+    val part1EnemyPlayer = gameState.enemyPlayer.addCardToNextHandPosition("Enemy Card 4", 24, Constants.STRING_UNINIT, Constants.emptyCardInfo)
+    val newEnemyPlayer = part1EnemyPlayer.addCardToNextHandPosition("Enemy Card 5", 25, Constants.STRING_UNINIT, Constants.emptyCardInfo)
 
     val actualFriendlyHand = newFriendlyPlayer.hand
     val expectedFriendlyHand = List(

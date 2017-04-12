@@ -1,8 +1,10 @@
 package VoteSystemTests
 
-import VoteSystem.{VoteParser, Vote, VoteManager}
-import org.scalatest.{FlatSpec, Matchers}
+import Logic.IRCState
+import VoteSystem._
+import org.scalatest.{FreeSpec, FlatSpec, Matchers}
 import tph.Constants.ActionVotes.{CardPlay, ActionUninit}
+import tph.Constants.Vote
 import tph.{GameState, IRCBot}
 import org.scalatest.tagobjects.Slow
 
@@ -13,85 +15,99 @@ import scala.collection.mutable.ListBuffer
   */
 
 
-class IRCBotTests extends FlatSpec with Matchers {
+class IRCBotTests extends FreeSpec with Matchers {
 
 
   val sender = "IRCBotTests"
-  val baseIRCBot = new IRCBot(new VoteManager(new GameState()))
 
-  "The IRCBot" should "identify twitch input" in {
-    val mockParser = new VoteParser() {
-      override def createVote(sender: String, command: String): Vote = {
-        // TODO assert parameters
-        CardPlay(1)
-      }
-    }
-    val ircBot = new IRCBot(new VoteManager(new GameState()))
-    ircBot.identifyTwitchInput(sender, "!Any string", mockParser) shouldBe new CardPlay(1)
-  }
+  "The IRCBot should" - {
 
-  it should "pass a vote into VoteManager to be entered when receiving a message" in {
-    var voteEntered = false
-    val mockVM = new VoteManager(new GameState()) {
-      override def voteEntry(voterName: String, vote: Vote): Unit = {
-        voteEntered = true
-      }
-    }
-    val ircBot = new IRCBot(mockVM){
-      // TODO
-      override def identifyTwitchInput(sender:String, message:String, voteParser: VoteParser): Vote = {
-        new CardPlay(1)
-      }
-    }
-    ircBot.onMessage("None", sender, "None", "None", "!Any String")
-    voteEntered shouldBe true
-  }
+     "pass a vote into VoteManager to be entered when receiving a message" in {
 
-  it should "not try to identify a string that doesn't start with a bang" in {
-    var voteIdentified = false
-
-    val ircBot = new IRCBot(new VoteManager(new GameState())) {
-      override def identifyTwitchInput(sender: String, message: String, voteParser: VoteParser): Vote = {
-        voteIdentified = true
-        new CardPlay(2)
+      var voteEntered = false
+       val gs = new GameState()
+       val vs = new VoteState()
+       val ai = new VoteAI(vs,gs)
+       val ircState = new IRCState()
+       val validator = new VoteValidator(gs)
+      val mockVM = new VoteManager(gs,vs,ai, ircState, validator) {
+        override def voteEntry(voterName: String, vote: Vote): Unit = {
+          voteEntered = true
+        }
       }
-    }
-    ircBot.onMessage("None", sender, "None", "None", "Any String")
-    voteIdentified shouldBe false
-  }
-
-  it should "not pass an ActionUninit to voteManager" in {
-    var voteEntered = false
-    val mockVM = new VoteManager(new GameState()) {
-      override def voteEntry(voterName: String, vote: Vote): Unit = {
-        voteEntered = true
-      }
+      val ircBot = new IRCBot(mockVM)
+      ircBot.onMessage("None", sender, "None", "None", "!c1")
+      voteEntered shouldBe true
     }
 
-    val bot = new IRCBot(mockVM) {
-      override def identifyTwitchInput(sender: String, message: String, voteParser: VoteParser): Vote = {
-        ActionUninit()
+     "not try to identify a string that doesn't start with a bang" in {
+      var voteIdentified = false
+       val gs = new GameState()
+       val vs = new VoteState()
+       val ai = new VoteAI(vs,gs)
+       val ircState = new IRCState()
+       val validator = new VoteValidator(gs)
+       val mockVM = new VoteManager(gs,vs,ai, ircState, validator) {
+        override def voteEntry(voterName:String, vote:Vote):Unit = {
+          voteIdentified = true
+        }
+        
       }
+      val ircBot = new IRCBot(mockVM)
+      ircBot.onMessage("None", sender, "None", "None", "Any String")
+      voteIdentified shouldBe false
     }
-    bot.onMessage("None", sender, "None", "None", "!Any string")
-    voteEntered shouldBe false
-  }
 
-  it should "parse apart multiple commands from one input" in {
-    val vm = new VoteManager(new GameState())
-    val bot = new IRCBot(vm)
-    bot.parseMultipleCommands("c1, f1>e4, f3  > e1, any string, ") shouldBe List[String]("c1", " f1>e4", " f3  > e1", " any string", " ")
-  }
-
-  it should "split multiple votes and pass multiple votes to VoteManager to be entered" in {
-    var voteCounter = 0
-    val mockVM = new VoteManager(new GameState()){
-      override def voteEntry(voterName:String, vote:Vote): Unit = {
-        voteCounter += 1
+     "not pass an ActionUninit to voteManager" in {
+      var voteEntered = false
+       val gs = new GameState()
+       val vs = new VoteState()
+       val ai = new VoteAI(vs,gs)
+       val ircState = new IRCState()
+       val validator = new VoteValidator(gs)
+       val mockVM = new VoteManager(gs,vs,ai, ircState, validator) {
+        override def voteEntry(voterName: String, vote: Vote): Unit = {
+          voteEntered = true
+        }
       }
+      val bot = new IRCBot(mockVM)
+      bot.onMessage("None", sender, "None", "None", "!Any string")
+      voteEntered shouldBe false
     }
-    val ircBot = new IRCBot(mockVM)
-    ircBot.onMessage("None", sender, "None", "None", "!c1, f1>e4, f3  > e1, any string, ")
-    voteCounter shouldBe 3
+
+     "parse apart multiple commands from one input" in {
+      var voteCounter = 0
+       val gs = new GameState()
+       val vs = new VoteState()
+       val ai = new VoteAI(vs,gs)
+       val ircState = new IRCState()
+       val validator = new VoteValidator(gs)
+       val mockVM = new VoteManager(gs,vs,ai, ircState, validator) {
+        override def voteEntry(voterName: String, vote: Vote): Unit = {
+          voteCounter += 1
+        }
+      }
+      val bot = new IRCBot(mockVM)
+      bot.onMessage("None", sender, "None", "None", "!c1, f1>e4, f3  > e1, any string, ")
+      voteCounter shouldBe 3
+
+    }
+
+     "split multiple votes and pass multiple votes to VoteManager to be entered" in {
+      var voteCounter = 0
+       val gs = new GameState()
+       val vs = new VoteState()
+       val ai = new VoteAI(vs,gs)
+       val ircState = new IRCState()
+       val validator = new VoteValidator(gs)
+       val mockVM = new VoteManager(gs,vs,ai, ircState, validator) {
+        override def voteEntry(voterName: String, vote: Vote): Unit = {
+          voteCounter += 1
+        }
+      }
+      val ircBot = new IRCBot(mockVM)
+      ircBot.onMessage("None", sender, "None", "None", "!c1, f1>e4, f3  > e1, any string, ")
+      voteCounter shouldBe 3
+    }
   }
 }

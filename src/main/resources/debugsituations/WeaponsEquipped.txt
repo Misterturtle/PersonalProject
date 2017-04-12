@@ -5157,7 +5157,7 @@ FSM not Preprocessed: GameObject : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=Uther Lightbringer id=66 zone=PLAY zonePos=0 cardId=HERO_04 player=2] to FRIENDLY PLAY (Hero)
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - id=1 local=False [name=Uther Lightbringer id=66 zone=PLAY zonePos=0 cardId=HERO_04 player=2] zone from  -> FRIENDLY PLAY (Hero)

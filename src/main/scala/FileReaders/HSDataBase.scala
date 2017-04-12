@@ -19,6 +19,6 @@ class HSDataBase {
 
 }
 
-case class CardInfo(id: Option[String], name:Option[String], cost:Option[Int], mechanics:Option[List[String]], attack:Option[Int], race:Option[String], playRequirements:Option[JObject]){
+case class CardInfo(id: Option[String], name: Option[String], cost: Option[Int], attack: Option[Int], rarity: Option[String], cardType: Option[String], mechanics: Option[List[String]], race: Option[String], entourage: Option[List[String]] , playRequirements: Option[JObject]) {
   val playReqMap = playRequirements.getOrElse(new JObject(Nil)).obj.foldLeft(Map[String,Int]()){(r,c) => r + (c.values._1 -> c.values._2.toString.toInt)}
 }

@@ -29991,6 +29991,7 @@ FSM not Preprocessed: Card_Play_Ally_Spawn_Minion_Opponent(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=Blood Imp id=72 zone=PLAY zonePos=2 cardId=CS2_059 player=2] tag=CANT_BE_ATTACKED value=1
+
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
@@ -40387,7 +40388,7 @@ FSM not Preprocessed: Card_Play_Ally_SummonIn_Opponent(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() - BLOCK_START BlockType=POWER Entity=[name=Lord Jaraxxus id=34 zone=PLAY zonePos=1 cardId=EX1_323 player=2] EffectCardId= EffectIndex=-1 Target=0
- 
+
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Lord Jaraxxus id=78 zone=PLAY zonePos=0 cardId=EX1_323h player=2] CardID=EX1_323h
@@ -40430,10 +40431,12 @@ FSM not Preprocessed: Card_Play_Ally_SummonIn_Opponent(Clone) : FSM
 
 
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=Lord Jaraxxus id=78 zone=PLAY zonePos=0 cardId=EX1_323h player=2] tag=LINKED_ENTITY value=66
+\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] tag=LINKED_ENTITY value=(\d+)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=Auris tag=HERO_ENTITY value=78
+\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=(.+) tag=HERO_ENTITY value=(\d+)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
@@ -40554,6 +40557,7 @@ FSM not Preprocessed: Card_Play_Ally_SummonIn_Opponent(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=Lord Jaraxxus id=34 zone=PLAY zonePos=1 cardId=EX1_323 player=2] tag=ZONE_POSITION value=0
+\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)\] tag=ZONE_POSITION value=(\d+)
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
@@ -40769,6 +40773,7 @@ FSM not Preprocessed: Card_Play_HeroPower_SummonIn(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] PowerTaskList.DebugPrintPower() -     TAG_CHANGE Entity=[name=Lord Jaraxxus id=78 zone=PLAY zonePos=0 cardId=EX1_323h player=2] tag=ATK value=3
+\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\].+
 
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 

@@ -30,10 +30,13 @@ Loading C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\PlayMaker.dl
 - Completed reload, in  0.072 seconds
 Platform assembly: C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\System.dll (this message is harmless)
-<RI> Initializing input.
-<RI> Input initialized.
+<RI> Initializing input.
+
+<RI> Input initialized.
+
 desktop: 1920x1080 60Hz; virtual: 3600x1080 at 0,0
-<RI> Initialized touch support.
+<RI> Initialized touch support.
+
 UnloadTime: 0.717575 ms
 Error loading config file client.config
  
@@ -16547,6 +16550,9 @@ FSM not Preprocessed: Holy_Impact_01(Clone) : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Zone] ZoneChangeList.ProcessChanges() - id=15 local=False [name=Arcanite Reaper id=33 zone=PLAY zonePos=1 cardId=CS2_112 player=1] zone from OPPOSING HAND -> OPPOSING PLAY (Weapon)
+
+
+
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 

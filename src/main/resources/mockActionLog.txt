@@ -1,5 +1,5 @@
 //Define Players
-[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=some zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)
+[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=100 zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)
 
 //Setup Friendly Card
 

@@ -1,16 +1,20 @@
 package GUI
 
-import java.beans.EventHandler
 import java.io.{FileWriter, PrintWriter, File}
 import java.util.concurrent.{TimeUnit, ScheduledThreadPoolExecutor}
-import javafx.beans.property.SimpleStringProperty
+import javafx.event
+import javafx.event.{ActionEvent, EventHandler}
 
-import FileReaders.LogParser
+import FileReaders.{LogFileReader, LogParser}
+import Logic.IRCState
+import VoteSystem.{VoteManager, VoteAI, VoteState}
 import com.typesafe.config.ConfigFactory
-import tph.{Card, GameState}
+import com.typesafe.scalalogging.LazyLogging
+import tph._
 
 import scala.collection.mutable.ListBuffer
-import scalafx.event.ActionEvent
+import scalafx.animation.PauseTransition
+
 import scalafx.geometry.Pos
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.{Node, Scene}
@@ -24,19 +28,21 @@ import scalafx.stage.{Stage, FileChooser}
   */
 
 
-class Controller(){
-
+class Controller(gs:GameState, logFileReader:LogFileReader, ircBot:IRCBot, hs:Hearthstone, ircState:IRCState, vm:VoteManager, tb:TheBrain) extends LazyLogging{
 
   val root = new AnchorPane()
   val config = ConfigFactory.load()
   var defaultReaderFile = new File(config.getString("tph.writerFiles.actionLog"))
   var defaultWriterFile = new File(config.getString("tph.writerFiles.guiPrintFile"))
 
-  val vboxContainer = new VBox()
-  vboxContainer.setAlignment(Pos.Center)
-  vboxContainer.setMinSize(800,600)
-  vboxContainer.setFillWidth(true)
-  vboxContainer.prefWidthProperty().bind(root.width)
+
+
+
+  val backgroundContainer = new VBox()
+  backgroundContainer.setAlignment(Pos.Center)
+  backgroundContainer.setMinSize(800,600)
+  backgroundContainer.setFillWidth(true)
+  backgroundContainer.prefWidthProperty().bind(root.width)
 
 
 
@@ -64,7 +70,7 @@ class Controller(){
   )
   friendlyHandPane.children = friendlyHandCards
   friendlyHandVbox.setFillWidth(true)
-  friendlyHandVbox.prefWidthProperty().bind(vboxContainer.width)
+  friendlyHandVbox.prefWidthProperty().bind(backgroundContainer.width)
   friendlyHandVbox.children.addAll(friendlyHandSeparator, friendlyHandLabel, friendlyHandPane)
 
 
@@ -154,14 +160,13 @@ class Controller(){
   val menuList = Iterable[Menu](saveMenu,loadMenu)
   val defaultSaveItem = new MenuItem("Print to file")
   defaultSaveItem.onAction = {
-    e: ActionEvent =>
-      val gameState = new LogParser().constructGameState(defaultReaderFile)
-      PrintGameState(gameState, defaultWriterFile)
+    e: scalafx.event.ActionEvent =>
+      printGameState(gs, defaultWriterFile)
 
   }
   val setReaderFileItem = new MenuItem("Set file to read GameState")
   setReaderFileItem.onAction = {
-    e: ActionEvent =>
+    e: scalafx.event.ActionEvent =>
       defaultReaderFile = new FileChooser().showOpenDialog(root.getScene.getWindow())
   }
   val saveMenuItems = Iterable(defaultSaveItem)
@@ -173,11 +178,11 @@ class Controller(){
   menuBar.menus = menuList
   menuBar.setVisible(true)
 
-  root.children.addAll(vboxContainer)
-  vboxContainer.children.addAll(menuBar,enemyHandVBox,enemyBoardVBox, friendlyBoardVBox, friendlyHandVbox)
+  root.children.addAll(backgroundContainer)
+  backgroundContainer.children.addAll(menuBar,enemyHandVBox,enemyBoardVBox, friendlyBoardVBox, friendlyHandVbox)
 
 
-  def PrintGameState(gameState: GameState, writerFile:File): Unit ={
+  def printGameState(gameState: GameState, writerFile:File): Unit ={
 
     val writer = new PrintWriter(new FileWriter(writerFile))
     val friendlyHand = gameState.friendlyPlayer.hand
@@ -227,7 +232,7 @@ class Controller(){
   }
 
 
-  def UpdateFriendlyHand(gameState:GameState): Unit = {
+  def updateFriendlyHand(gameState:GameState): Unit = {
 
     if(gameState.friendlyPlayer.hand.nonEmpty) {
       for (a <- 0 until 10){
@@ -243,7 +248,7 @@ class Controller(){
     }
   }
 
-  def UpdateFriendlyBoard(gameState:GameState): Unit = {
+  def updateFriendlyBoard(gameState:GameState): Unit = {
 
     if(gameState.friendlyPlayer.board.nonEmpty) {
       for (a <- 0 until 10){
@@ -259,7 +264,7 @@ class Controller(){
     }
   }
 
-  def UpdateEnemyHand(gameState: GameState): Unit = {
+  def updateEnemyHand(gameState: GameState): Unit = {
     if(gameState.enemyPlayer.hand.nonEmpty) {
       for (a <- 0 until 10){
         if(gameState.enemyPlayer.hand.isDefinedAt(a)){
@@ -274,7 +279,7 @@ class Controller(){
     }
   }
 
-  def UpdateEnemyBoard(gameState:GameState): Unit = {
+  def updateEnemyBoard(gameState:GameState): Unit = {
     if(gameState.enemyPlayer.board.nonEmpty) {
       for (a <- 0 until 10){
         if(gameState.enemyPlayer.board.isDefinedAt(a)){
@@ -290,16 +295,12 @@ class Controller(){
     }
   }
 
-  def UpdateGUIWindow():Unit ={
-    val gameState = new LogParser().constructGameState(defaultReaderFile)
-    UpdateFriendlyHand(gameState)
-    UpdateFriendlyBoard(gameState)
-    UpdateEnemyHand(gameState)
-    UpdateEnemyBoard(gameState)
+  def updateGUIWindow():Unit ={
+    logger.debug("Updating GameState")
+    updateFriendlyHand(gs)
+    updateFriendlyBoard(gs)
+    updateEnemyHand(gs)
+    updateEnemyBoard(gs)
   }
-
-
-
-
 
 }

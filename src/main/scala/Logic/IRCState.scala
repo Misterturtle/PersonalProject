@@ -1,78 +1,87 @@
 package Logic
 
+import java.util.concurrent.{TimeUnit, Executors, ScheduledExecutorService, ScheduledFuture}
+
 import FileReaders.HSAction.HSAction
-import GUI.Overlay
-import VoteSystem.{VoteManager, Vote, ActionVote}
-import tph.{HearthStone, GameState, Constants}
+import GUI.Display
+import VoteSystem.VoteManager
+import tph.Constants.Vote
+import tph.{HSCard, GameState, Constants}
 import tph.Constants.ActionVotes._
+
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by Harambe on 2/23/2017.
   */
 
-class IRCState(ircAI:IRCAI, hearthstone: HearthStone, overlay: Overlay) {
-  var currentPhaseClock = 0
-  var currentTurnClock = 0
+
+
+class IRCState() {
+
+  var mulliganOptions = 0
+
+  var isChooseOne = false
+  var isDiscover = false
+  var isMulligan = false
+  var mulliganComplete = false
+
   var myTurn = false
 
+  var turnStartTimeStamp = 0.0
+  var mulliganStartTimeStamp = 0.0
+  var discoverStartTimeStamp = 0.0
+  var chooseOneStartTimeStamp = 0.0
 
+  var voteExecutionList = ListBuffer[(ActionVote, (HSCard, HSCard))]()
+  var lastVoteCheck = System.currentTimeMillis()
 
-  def startTurn(): Unit = ???
-
-  def isValidDecision(gs: GameState, decision: Vote): Option[Vote] = ???
-
-
-  def getBaseResults(listOfVotes: List[ActionVote]): Map[ActionVote, Double] ={
-
-    val results = listOfVotes.foldLeft(Map[ActionVote, Double](new CardPlay(0) -> 0)){
-      (resultsMap: Map[ActionVote, Double], currentVote:ActionVote) =>
-
-        if(resultsMap.contains(currentVote)) {
-          resultsMap.map {
-            case (vote, tally) =>
-              if (vote == currentVote)
-                (vote, tally + 1)
-              else
-                (vote, tally)
-          }
-        }
-        else
-          resultsMap ++ Map[ActionVote, Double](currentVote -> 1)
-    }
-    results
+  def startMulligan(): Unit = {
+    isMulligan = true
+    mulliganStartTimeStamp = System.currentTimeMillis()
+    mulliganOptions = 0
   }
 
-  def endTurnWarning:Unit = ???
-
-  def hurryExecutionWarning:Unit = ???
-
- // def InfluenceWithPreviousDecision(results: Map[ActionVote, Double], previousDecision: ActionVote, influenceFactor: Double = Constants.InfluenceFactors.previousDecisionBonus): Map[ActionVote, Int] ={
-
-    //Go through results map and find the previous decision
-    //Add value to the next vote
-    //Return a map with only the added values, so Map[ActionVote, Int](voteAfterPrevious, valueToAdd)
-
-//    results.foldLeft(Map[ActionVote, Double](), false) { (voteMapAndActive, currentMapElement) =>
-//      if(voteMapAndActive._2)
-//
-//
-//      if (currentMapElement._1 == previousDecision)
-//        voteMap ++ Map[ActionVote, Double](currentMapElement._1, influenceFactor)
-//      else
-//        voteMap
-//
-    //}
+  def startTurn(): Unit ={
+    myTurn = true
+    turnStartTimeStamp = System.currentTimeMillis()
+  }
 
 
+  def startDiscover(): Unit = {
+    isDiscover = true
+    discoverStartTimeStamp = System.currentTimeMillis()
+  }
+
+  def startChooseOne(): Unit = {
+    isChooseOne = true
+    chooseOneStartTimeStamp = System.currentTimeMillis()
+  }
 
 
+  def gameOver(): Unit = {
+    isDiscover = false
+    isChooseOne = false
+    isMulligan = false
+    myTurn = false
+    mulliganComplete = false
+    mulliganOptions = 0
+    turnStartTimeStamp = 0.0
+    mulliganStartTimeStamp = 0.0
+    discoverStartTimeStamp = 0.0
+    chooseOneStartTimeStamp = 0.0
+  }
 
-
-
-
-
-
-
-
+  def endTurn(): Unit = {
+    isChooseOne = false
+    isDiscover = false
+    isMulligan = false
+    myTurn = false
+    turnStartTimeStamp = 0.0
+    chooseOneStartTimeStamp = 0.0
+    discoverStartTimeStamp = 0.0
+    mulliganStartTimeStamp = 0.0
+  }
 
 }

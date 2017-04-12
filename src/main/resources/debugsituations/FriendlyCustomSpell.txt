@@ -30,10 +30,13 @@ Loading C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\PlayMaker.dl
 - Completed reload, in  0.071 seconds
 Platform assembly: C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Program Files (x86)\Hearthstone\Hearthstone_Data\Managed\System.dll (this message is harmless)
-<RI> Initializing input.
-<RI> Input initialized.
+<RI> Initializing input.
+
+<RI> Input initialized.
+
 desktop: 1920x1080 60Hz; virtual: 3600x1080 at 0,0
-<RI> Initialized touch support.
+<RI> Initialized touch support.
+
 UnloadTime: 0.739744 ms
 Error loading config file client.config
  
@@ -57124,6 +57127,7 @@ FSM not Preprocessed: Button_FloatyButton : FSM
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 
 [Power] GameState.SendChoices() -   m_chosenEntities[0]=[name=Heart of Fire id=82 zone=SETASIDE zonePos=0 cardId=CFM_621t25 player=1]
+
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
 

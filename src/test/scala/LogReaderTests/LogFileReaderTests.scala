@@ -3,6 +3,8 @@ package LogReaderTests
 import java.io._
 
 import FileReaders.{HSDataBase, LogFileReader, LogParser}
+import Logic.IRCState
+import VoteSystem.{VoteValidator, VoteAI, VoteState, VoteManager}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{FlatSpec, Matchers}
 import tph._
@@ -62,13 +64,7 @@ Misc:
 
  */
 
-//todo - Detect when a secret is destroyed in order to update player's secretsInPlay
-//todo - Detect when a minion is damaged AND no longer damaged in order to update the card's isDamaged property
-//todo - Detect when a minion is frozen AND unfrozen in order to update the card's isFrozen property
-//todo - Detect when a player equips and destoys a weapon (not just has face attack value) in order to update the card's isWeaponEquipped property
-//todo - Activate player's property isComboActive upon card play and deactivate upon end turn
-//todo - Update a player's heroPower property
-//todo - Update a player's heroPower cost
+
 
 /**
   * Created by Harambe on 2/22/2017.
@@ -79,17 +75,27 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   val hearthstoneLogFile = new File(config.getString("tph.readerFiles.outputLog"))
   val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
   val dataBase = new HSDataBase()
+  val dummyGS = new GameState()
+  val dummyIRCState = new IRCState()
+  val dummyVS = new VoteState()
+  val dummyAI = new VoteAI(dummyVS, dummyGS)
+  val dummyValidator = new VoteValidator(dummyGS)
+  val dummyVM = new VoteManager(dummyGS,dummyVS, dummyAI, dummyIRCState, dummyValidator)
+  val dummyHS = new Hearthstone(dummyGS)
 
-  def compareActualToExpected(file:File, friendlyHand: List[Card] = Nil, friendlyBoard: List[Card] = Nil, enemyHand: List[Card] = Nil, enemyBoard: List[Card] = Nil, friendlyWeaponValue: Int = 0, enemyWeaponValue: Int = 0): Unit = {
 
-    val playerNumbers = new LogParser().getPlayerNumbers(file)
-    val actualGameState = new LogParser().constructGameState(file)
+  def compareActualToExpected(file:File, friendlyHand: List[Card] = Nil, friendlyBoard: List[Card] = Nil, enemyHand: List[Card] = Nil, enemyBoard: List[Card] = Nil, friendlyWeaponValue: Option[Int] = None, enemyWeaponValue: Option[Int] = None): Unit = {
+
+    val actualGameState = new GameState()
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
     val actualFriendlyHand = actualGameState.friendlyPlayer.hand
     val actualFriendlyBoard = actualGameState.friendlyPlayer.board
     val actualEnemyHand = actualGameState.enemyPlayer.hand
     val actualEnemyBoard = actualGameState.enemyPlayer.board
-    val actualFriendlyWeaponValue = actualGameState.friendlyPlayer.weaponValue
-    val actualEnemyWeaponValue = actualGameState.enemyPlayer.weaponValue
+    val actualFriendlyWeaponValue = actualGameState.friendlyPlayer.hero.getOrElse(NoCard()).attack
+    val actualEnemyWeaponValue = actualGameState.enemyPlayer.hero.getOrElse(NoCard()).attack
 
     actualFriendlyHand shouldEqual friendlyHand
     actualFriendlyBoard shouldEqual friendlyBoard
@@ -99,75 +105,6 @@ class LogFileReaderTests extends FlatSpec with Matchers {
     actualEnemyWeaponValue shouldEqual enemyWeaponValue
   }
 
-  "LogFileReader" should "monitor changes in Hearthstone output log and print to actionLog" in {
-
-
-    val writer = new PrintWriter(new FileWriter(hearthstoneLogFile))
-    val reader = new BufferedReader(new FileReader(actionLogFile))
-
-    new LogFileReader().poll()
-
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=some zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)")
-    writer.flush()
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 1 id=1 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1")
-    writer.flush()
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 2 id=2 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2")
-    writer.flush()
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 3 id=3 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3")
-    writer.flush()
-
-    writer.println("Some other text that isnt a HSAction")
-    writer.flush()
-
-    writer.println("[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Board 1 id=11 zone=PLAY zonePos=1 cardId=someCardID player=1] CardID=some")
-    writer.flush()
-
-    writer.println("[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Board 2 id=12 zone=PLAY zonePos=2 cardId=someCardID player=1] CardID=some")
-    writer.flush()
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1")
-    writer.flush()
-
-    writer.println("Someother text that isnt a heartstone action")
-    writer.flush()
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2")
-    writer.flush()
-
-    writer.println("[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3")
-    writer.flush()
-
-    writer.println("[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 cardId=someCardID player=2] CardID=some")
-    writer.flush()
-
-    writer.println("[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Board 2 id=32 zone=PLAY zonePos=2 cardId=someCardID player=2] CardID=some")
-    writer.flush()
-
-    Thread.sleep(1000)
-
-
-
-
-    val actualActionLogStrings = Stream.continually(reader.readLine()).takeWhile(_ != null).toList
-    val expectedActionLogStrings = List(
-      "[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=some zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)",
-      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 1 id=1 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1",
-      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 2 id=2 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2",
-      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Hand 3 id=3 zone=HAND zonePos=0 cardId=some player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3",
-      "[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Board 1 id=11 zone=PLAY zonePos=1 cardId=someCardID player=1] CardID=some",
-      "[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Board 2 id=12 zone=PLAY zonePos=2 cardId=someCardID player=1] CardID=some",
-      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1",
-      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=22 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2",
-      "[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=23 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3",
-      "[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Board 1 id=31 zone=PLAY zonePos=1 cardId=someCardID player=2] CardID=some",
-      "[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Board 2 id=32 zone=PLAY zonePos=2 cardId=someCardID player=2] CardID=some")
-
-    actualActionLogStrings shouldEqual expectedActionLogStrings
-  }
 
   "LogFileReader scenarios" should "detect and define player" in {
 
@@ -208,7 +145,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 25, 4, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 32, 5, 500, 1, "Constant Uninitialized"))
 
-      compareActualToExpected(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand)
+      compareActualToExpected(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, enemyWeaponValue = Some(0))
   }
 
   it should "Detect CardPlayed" in {
@@ -228,7 +165,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 25, 4, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 32, 5, 500, 1, "Constant Uninitialized"))
 
-      compareActualToExpected(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand)
+      compareActualToExpected(new File(getClass.getResource("/debugsituations/Mulligan.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, enemyWeaponValue = Some(0))
   }
 
   it should "Detect Card Death" in {
@@ -376,19 +313,23 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 5, 7, 500, 1, "Constant Uninitialized"))
 
 
-    val expectedFriendlyWeaponValue = 0
-    val expectedEnemyWeaponValue = 5
+    val expectedFriendlyWeaponValue = Some(0)
+    val expectedEnemyWeaponValue = Some(5)
 
     compareActualToExpected(new File(getClass.getResource("/debugsituations/WeaponsEquipped.txt").getPath), expectedFriendlyHand, enemyHand = expectedEnemyHand, friendlyWeaponValue = expectedFriendlyWeaponValue, enemyWeaponValue = expectedEnemyWeaponValue)
   }
 
   it should "Detect weapon destroyed" in {
-    val actualGameState = new LogParser().constructGameState(new File(getClass.getResource("/debugsituations/WeaponsDestroyed.txt").getPath))
-    val actualFriendlyWeaponValue = actualGameState.friendlyPlayer.weaponValue
-    val actualEnemyWeaponValue = actualGameState.enemyPlayer.weaponValue
 
-    actualFriendlyWeaponValue shouldEqual 0
-    actualEnemyWeaponValue shouldEqual 0
+    val actualGameState = new GameState
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(new File(getClass.getResource("/debugsituations/WeaponsDestroyed.txt").getPath))
+    val actualFriendlyWeaponValue = actualGameState.friendlyPlayer.hero.get.attack
+    val actualEnemyWeaponValue = actualGameState.enemyPlayer.hero.get.attack
+
+    actualFriendlyWeaponValue shouldEqual Some(0)
+    actualEnemyWeaponValue shouldEqual Some(0)
   }
 
   it should "Detect when a game is over" in {
@@ -483,7 +424,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Loot Hoarder", 46, 500, 1, 2, "EX1_096", cardInfo = dataBase.cardIDMap("EX1_096")))
 
 
-    compareActualToExpected(new File(getClass.getResource("/debugsituations/FriendlyCustomSpell.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
+    compareActualToExpected(new File(getClass.getResource("/debugsituations/FriendlyCustomSpell.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, Some(1), Some(0))
 
   }
 
@@ -494,9 +435,9 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Call of the Wild", 38, 2, 500, 2, "OG_211", cardInfo = dataBase.cardIDMap("OG_211")),
       new Card("Houndmaster", 52, 3, 500, 2, "DS1_070", cardInfo = dataBase.cardIDMap("DS1_070")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Savannah Highmane", 34, 500, 1, 2, "EX1_534", cardInfo = dataBase.cardIDMap("EX1_534")),
+      new Card("Injured Kvaldir", 60, 500, 3, 2, "AT_105", cardInfo = dataBase.cardIDMap("AT_105"), isDamaged = true),
+      new Card("Savannah Highmane", 34, 500, 1, 2, "EX1_534", cardInfo = dataBase.cardIDMap("EX1_534"), isDamaged = true),
       new Card("Desert Camel", 59, 500, 2, 2, "LOE_020", cardInfo = dataBase.cardIDMap("LOE_020")),
-      new Card("Injured Kvaldir", 60, 500, 3, 2, "AT_105", cardInfo = dataBase.cardIDMap("AT_105")),
       new Card("Injured Kvaldir", 54, 500, 4, 2, "AT_105", cardInfo = dataBase.cardIDMap("AT_105")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 12, 2, 500, 1, "Constant Uninitialized"),
@@ -512,7 +453,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Desert Camel", 6, 500, 4, 1, "LOE_020", cardInfo = dataBase.cardIDMap("LOE_020")))
 
 
-    compareActualToExpected(new File(getClass.getResource("/debugsituations/DesertCamel.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard)
+    compareActualToExpected(new File(getClass.getResource("/debugsituations/DesertCamel.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, Some(3))
   }
 
   it should "Detect Joust Draw" in {
@@ -539,7 +480,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Emperor Thaurissan", 18, 500, 1, 1, "BRM_028", cardInfo = dataBase.cardIDMap("BRM_028")))
 
 
-    compareActualToExpected(new File(getClass.getResource("/debugsituations/KingElekkDraw.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, 3)
+    compareActualToExpected(new File(getClass.getResource("/debugsituations/KingElekkDraw.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, Some(3))
   }
 
   it should "Detect discard" in {
@@ -570,8 +511,8 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Assassin's Blade", 39, 8, 500, 2, "CS2_080", cardInfo = dataBase.cardIDMap("CS2_080")),
       new Card("Acolyte of Pain", 70, 9, 500, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Acolyte of Pain", 56, 500, 1, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007")),
-      new Card("Undercity Valiant", 48, 500, 2, 2, "AT_030", cardInfo = dataBase.cardIDMap("AT_030")))
+      new Card("Acolyte of Pain", 56, 500, 1, 2, "EX1_007", cardInfo = dataBase.cardIDMap("EX1_007"), isDamaged = true),
+      new Card("Undercity Valiant", 48, 500, 2, 2, "AT_030", cardInfo = dataBase.cardIDMap("AT_030"), isDamaged = true))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 7, 1, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 24, 2, 500, 1, "Constant Uninitialized"),
@@ -585,7 +526,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Flame Juggler", 19, 500, 1, 1, "AT_094", cardInfo = dataBase.cardIDMap("AT_094")))
 
 
-    compareActualToExpected(new File(getClass.getResource("/debugsituations/GangUp.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, 3)
+    compareActualToExpected(new File(getClass.getResource("/debugsituations/GangUp.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, Some(3))
   }
 
   it should "Detect Jaraxxus" in {
@@ -595,8 +536,8 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Arcane Explosion", 30, 3, 500, 1, "CS2_025", cardInfo = dataBase.cardIDMap("CS2_025")),
       new Card("Arcane Intellect", 26, 4, 500, 1, "CS2_023", cardInfo = dataBase.cardIDMap("CS2_023")))
     val expectedFriendlyBoard = List[Card](
-      new Card("Oasis Snapjaw", 28, 500, 1, 1, "CS2_119", cardInfo = dataBase.cardIDMap("CS2_119")),
-      new Card("River Crocolisk", 12, 500, 2, 1, "CS2_120", cardInfo = dataBase.cardIDMap("CS2_120")),
+      new Card("River Crocolisk", 12, 500, 2, 1, "CS2_120", cardInfo = dataBase.cardIDMap("CS2_120"), attack = Some(3)),
+      new Card("Oasis Snapjaw", 28, 500, 1, 1, "CS2_119", cardInfo = dataBase.cardIDMap("CS2_119"), isDamaged = true, attack = Some(3)),
       new Card("Raid Leader", 11, 500, 3, 1, "CS2_122", cardInfo = dataBase.cardIDMap("CS2_122")))
     val expectedEnemyHand = List[Card](
       new Card("Constant Uninitialized", 37, 1, 500, 2, "Constant Uninitialized"),
@@ -608,10 +549,10 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 59, 7, 500, 2, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 44, 8, 500, 2, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Blood Imp", 72, 500, 1, 2, "CS2_059", cardInfo = dataBase.cardIDMap("CS2_059")))
+      new Card("Blood Imp", 72, 500, 1, 2, "CS2_059", cardInfo = dataBase.cardIDMap("CS2_059"), isStealthed = true))
 
 
-    compareActualToExpected(new File(getClass.getResource("/debugsituations/Jaraxxus.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, 0, 3)
+    compareActualToExpected(new File(getClass.getResource("/debugsituations/Jaraxxus.txt").getPath), expectedFriendlyHand, expectedFriendlyBoard, expectedEnemyHand, expectedEnemyBoard, enemyWeaponValue = Some(3))
 
 
   }
@@ -633,7 +574,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
       new Card("Constant Uninitialized", 8, 3, 500, 1, "Constant Uninitialized"),
       new Card("Constant Uninitialized", 19, 4, 500, 1, "Constant Uninitialized"))
     val expectedEnemyBoard = List[Card](
-      new Card("Tunnel Trogg", 70, 500, 2, 1, "LOE_018", cardInfo = dataBase.cardIDMap("LOE_018")),
+      new Card("Tunnel Trogg", 70, 500, 2, 1, "LOE_018", cardInfo = dataBase.cardIDMap("LOE_018"), isDamaged = true, attack = Some(2)),
       new Card("Damaged Golem", 72, 500, 1, 1, "skele21", cardInfo = dataBase.cardIDMap("skele21")))
 
 
@@ -663,6 +604,134 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   }
 
 
+  it should "Detect Frozen and Unfrozen Minions" in {
+    val actualGameState = new GameState()
+
+    val file = new File(getClass.getResource("/debugsituations/Freeze.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    val frozenCard = actualGameState.getCardByID(37).get
+    val nonfrozenCard = actualGameState.getCardByID(58).get
+
+    frozenCard.isFrozen shouldBe true
+    nonfrozenCard.isFrozen shouldBe false
+  }
+
+
+  it should "Detect when a secret is destroyed" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/SecretDestroyed.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    actualGameState.friendlyPlayer.secretsInPlay shouldBe 1
+    actualGameState.enemyPlayer.secretsInPlay shouldBe 0
+  }
+
+
+  it should "Detect when a minion is damaged" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/SecretDestroyed.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    val damagedCard = actualGameState.getCardByID(4).get
+    val undamagedCard = actualGameState.getCardByID(25).get
+
+    damagedCard.isDamaged shouldBe true
+    undamagedCard.isDamaged shouldBe false
+  }
+
+
+  it should "Detect when a minion is stealthed" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/Stealth.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    val stealthedMinion = actualGameState.getCardByID(26).get
+    val nonstealthedMinion = actualGameState.getCardByID(16).get
+
+    stealthedMinion.isStealthed shouldBe true
+    nonstealthedMinion.isStealthed shouldBe false
+  }
+
+  it should "Detect when a minion is taunted" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/Taunt.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+    val nontauntedMinion = actualGameState.getCardByID(21).get
+    nontauntedMinion.isTaunt.get shouldBe false
+  }
+
+  it should "Detect when a minion is deathrattle" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/Deathrattle.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+    val deathrattleMinion = actualGameState.getCardByID(12).get
+    val deathrattleMinion2 = actualGameState.getCardByID(33).get
+    deathrattleMinion.isDeathrattle.get shouldBe true
+    deathrattleMinion2.isDeathrattle.isEmpty shouldBe true
+    deathrattleMinion2.cardInfo.mechanics.get.contains("DEATHRATTLE") shouldBe true
+  }
+
+  it should "Detect when a player has a weapon equipped" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/weapons.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    actualGameState.friendlyPlayer.isWeaponEquipped shouldBe true
+    actualGameState.enemyPlayer.isWeaponEquipped shouldBe false
+  }
+
+  it should "Detect when a player has an active combo" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/Combo.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    actualGameState.friendlyPlayer.isComboActive shouldBe true
+    actualGameState.enemyPlayer.isComboActive shouldBe false
+  }
+
+  it should "Detect when a new Hero Power is assigned" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/HeroPower.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    val friendlyHP = Card("Friendly Hero Power", 74, Constants.INT_UNINIT, Constants.INT_UNINIT, 1,"AT_132_PRIEST")
+    val enemyHP = Card("Enemy Hero Power", 67, Constants.INT_UNINIT, Constants.INT_UNINIT, 2,"CS2_017")
+
+    actualGameState.friendlyPlayer.heroPower shouldBe Some(friendlyHP)
+    actualGameState.enemyPlayer.heroPower shouldBe Some(enemyHP)
+  }
+
+
+  it should "Detect when a cards attack value changes" in {
+    val actualGameState = new GameState()
+    val file = new File(getClass.getResource("/debugsituations/ChangeAttack.txt").getPath)
+    val lp = new LogParser(actualGameState)
+    val logFileReader = new LogFileReader(lp, actualGameState)
+    logFileReader.parseFile(file)
+
+    val changedAttMinion = actualGameState.getCardByID(19).get
+
+    changedAttMinion.attack shouldBe Some(3)
+  }
 
 
 

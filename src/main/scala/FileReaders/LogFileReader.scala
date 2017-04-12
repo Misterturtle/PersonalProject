@@ -4,35 +4,71 @@ import java.io._
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
 import com.typesafe.config.ConfigFactory
-import HSAction.HSActionUninit
+import FileReaders.HSAction._
+import tph.GameState
+
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by Harambe on 2/22/2017.
   */
-class LogFileReader() {
+class LogFileReader(lp: LogParser, gs: GameState) {
 
   val config = ConfigFactory.load()
   val defaultFile = new File(config.getString("tph.readerFiles.outputLog"))
-  val scheduler = new ScheduledThreadPoolExecutor(1)
   val reader = new BufferedReader(new FileReader(defaultFile))
 
   val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
   val writer = new PrintWriter(new FileWriter(actionLogFile))
 
-  val pollRunnable = new Runnable {
-    def run() = poll()
+  val gameStateActions = ListBuffer[GameStateAction]()
+  val ircActions = ListBuffer[IRCAction]()
+
+  var lastTimeActive = System.currentTimeMillis()
+
+  def init() = {
+    while (reader.ready()) {
+      reader.readLine()
+    }
   }
 
 
-  def poll(): Unit = {
-
+  def update(): Unit = {
     while (reader.ready()) {
+      lastTimeActive = System.currentTimeMillis()
       val line = reader.readLine()
-      if (new LogParser().identifyHSAction(line) != HSActionUninit()) {
-        writer.println(line)
-        writer.flush()
+      val hsAction = lp.identifyHSAction(line)
+      hsAction match {
+        case action: GameStateAction =>
+          gameStateActions.append(action)
+
+        case action: IRCAction =>
+          ircActions.append(action)
+
+        case _ =>
       }
     }
-    scheduler.schedule(pollRunnable, 100, TimeUnit.MILLISECONDS)
   }
+
+
+  def parseFile(file: File): Unit = {
+    val fileReader = new BufferedReader(new FileReader(file))
+
+    while (fileReader.ready()) {
+      lastTimeActive = System.currentTimeMillis()
+      val line = fileReader.readLine()
+      val hsAction = lp.identifyHSAction(line)
+      hsAction match {
+        case action: GameStateAction =>
+          action.updateGameState(gs)
+
+        case action: IRCAction =>
+          ircActions.append(action)
+
+        case _ =>
+      }
+    }
+  }
+
 }
+

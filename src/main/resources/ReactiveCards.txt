@@ -1,0 +1,233 @@
+------------Choose One:------------
+Raven Idol - Choose One
+Druid of the Saber - Choose One (Kind of)
+Wrath - Choose One and Card Draw
+Druid of the Flame - Choose One
+Mark of Nature - Choose One
+Keeper of the Grove - Choose One
+Mire Keeper - Choose One
+Druid of the Claw - Choose One
+Nourish - Choose One
+Starfall - Choose One
+Ancient of Lore - Choose One and Card Draw
+Ancient of War - Choose One
+Wisps of the Old Gods - Choose One
+Cenarius - Choose One
+Kun the Forgotten King - Choose One
+
+
+--------------------Unique--------------------
+Lock and Load - Chaos mode needs activated
+Windfury - Gives a minion windfury
+Nozdormu - Chaos mode needs activated while active
+
+
+
+------------------Joust--------------------------
+King's Elekk
+Healing Wave
+***Paladin heal joust
+Gadgetzan Jouster
+Armored Warhorse
+Master Jouster
+
+
+
+-------------------Discover----------------------
+Tracking - Discover
+Ethereal Conjurer - Discover
+A Light In The Darkness - Discover
+Ivory Knight - Discover
+Museum Curator - Discover
+***Drakonid Operative - Discover
+Journey Below - Discover
+Finders Keepers - Discover
+Dark Peddler - Discover
+I Know a Guy - Discover
+Sir Finley Mrrgglton - Discover
+Drimestreet Informant - Discover
+Jeweled Scarab - Discover
+Netherspite Historian - Discover
+Kabal Courier - Discover
+Gorillabot A-3 - Discover
+Tomb Spider - Discover
+Lotus Agents - Discover
+Arch-Thief Rafaam - Discover
+
+
+
+
+--------------------Card Draw:-----------------
+Mark of Y'Shaarj - Card Draw
+Wrath - Choose One and Card Draw
+Lunar Visions - Card Draw
+Starfire - Card Draw
+Ancient of Lore - Choose One and Card Draw
+Quick Shot - Card Draw
+Starving Buzzard - Card Draw while active
+Babbling Book - Random Spell Creation
+Arcane Intellect - Card Draw
+Spellslinger - Random Spell Creation
+Cabalist's Tome - Random Spell Creation
+Blessing of Wisdom - Card draw while active
+Divine Favor - Card Draw
+Small-Time Recruits - Card Draw
+Hammer of Wrath - Card Draw
+Holy Wrath - Card Draw
+Solemn Vigil - Card Draw
+Lay on Hands - Card Draw
+Mind Vision - Card Creation
+Northshire Cleric - Card Draw
+Power Word: Shield - Card Draw
+Purify - Card Draw
+Thoughtsteal - Card Creation
+Mass Dispel - Card Draw
+Swashburglar - Card Draw
+Shiv - Card Draw
+Burgle - Card Draw
+Fan of Knives - Card Draw
+Shaku, the Collector - Card Draw while active
+Xaril, Poisoned Mind - Card Draw
+Thistle Tea - Card Draw
+Sprint - Card Draw
+Ancestral Knowledge - Card Draw
+Far Sight - Card Draw
+Malchezaar's Imp - Card Draw while active
+Mortal Coil - Card Draw
+Soulfire - Random Discard
+Darkshire Librarian - Random Discard
+Renounce Darkness - Card Draws
+Succubus - Random Discard
+Sense Demons - Card Draw
+Doomguard - Random Discard
+Dark Bargain - Random Discard
+DOOM! - Card Draw
+Battle Rage - Card Draw
+Commanding Shout - Card Draw
+Slam - Card Draw
+Shield Block - Card Draw
+Varian Wrynn - Card Draw
+Novice Engineer - Card Draw
+***Acolyte of Pain - Card Draw while active
+Coldlight Oracle - Card Draw
+Cult Master - Card Draw while active and if condition
+Genzo, the Shark - Card Draw while active and if condition
+Gnomish inventor - Card Draw
+Kabal Chemist - Card Draw
+Kazakus - Card Draw
+Azure Drake - Card Draw
+Harrison Jones- Card Draw
+Nexus-Champion Saraad- Card Creation on HP
+Fight Promoter - Card Draw
+Gadgetzan Auctioneer - Card Draw while active
+Grand Crusader - Card Draw
+Wind-Up BurgleBot - Card Draw while active
+Wrathion - Card Draw
+The Curator - Card Draw
+Nefarian - Card Draw
+
+
+------------------Summon Unknown Minion-----------------
+Moonglade Portal - Summons Unknown Minion
+Animal Companion - Summons Unknown Minion
+?Desert Camel - Summons Unknown Minion
+Ram Wrangler - Summons Unknown Minion
+Call of the Wild - Summons Unknown Minion
+Faceless Summoner - Summons Unknown Minion
+Firelands Portal - Summons Unknown Minion
+Murloc Knight - HP Summons Unknown Minion while active
+Silvermoon Portal - Summons Unknown Minion
+Anyfin Can Happen - Summons Unknown Minions
+Forbidden Shaping - Summons Unknown Minions
+Resurrect - Summons Unknown Minion
+Mindgames - Summons Unknown Minion
+Onyx Bishop - Summons Unknown Minion
+Confessor Paletress - HP Summons Unknown Minion 
+Evolve - Summons Unknown minions
+Devolve - Summons Random Enemy Minions
+Maelstrom Portal - Summons Random minion
+Tuskarr Totemic - Summons Random minion
+Lotus Illusionist - Summons Random Minion
+Master of Evolution - Summons Random Minion
+Wicked Witchdoctor - Summons Random Minion while active
+Bane of Doom - Summons Random Minion
+Ironforge Portal - Summons Random Minion
+Malkorok - Summons Random Weapon
+Dirty Rat - Summons Random Enemy Minion
+Mind Control Tech - Summons Random Minion
+Tinkmaster overspark - Summons Random minion
+Barnes - Summons random minion
+Hungry Dragon - Summons random minion
+Finja, the Flying Star - Summons random minion while acitve
+Summoning Stone- Summons random minion while active
+N'Zoth, the Corruptor - Summons random minions
+
+
+-------------------Random Target-------------------------
+Deadly Shot - Random Enemy Target
+Multi-Shot - Random Enemy Target
+Arcane Missles - Random Enemy Target
+Flamewaker - Random Enemy Targets while active
+Demented Frostcaller - Freezes random enemy while active
+Servant of Yogg-Saron - Random enemy target
+Greater Arcane Missles - Random Enemy Targets
+Avenging Wrath - Random Enemy Targets
+Enter the Coliseum - Random Enemy Targets
+Forked Lightning - Random Enemy Targets
+Rumbling Elemental - Random Enemy Target
+Spreading Madness - Random Enemy Target
+Fist of Jaraxxus - Random Enemy Target
+Dark Bargain - Random Discard
+Void Crusher - Random Enemy Target on HP
+Cleave - Random Enemy Target
+Axe Flinger - Random Enemy Target while active and if condition
+Brawl - Random Targets
+Knife Juggler - Random target while active
+Mad Bomber - Random target
+Eydis Darkbane - Random target while active
+Stampeding Kodo - Random target
+Mogor's Champion - Random target on attack
+Mayor Noggenfogger - Random targets while active
+C'Thun - Random target
+Yogg-Saron, Hope's End - Random targets
+
+
+-------------------Deathrattle Dependency-------------------
+Fiery Bat - Deathrattle Dependency
+***Infest - Gonna need to revisit this one
+***Princess Huhuran - Deathrattle Depenency on target card
+Shaky Zipgunner - Deathrattle Dependency
+Meanstreet Marshal - Deathrattle Dependency
+Selfless Hero - Deathrattle Dependency
+Shifting Shade - Deathrattle Dependency
+Undercity Huckster - Deathrattle Dependency
+Deadly Fork - Deathrattle Dependency
+Xaril, Poisoned Mind - Deathrattle Dependency
+Darkshire Librarian - Deathrattle Dependency
+Runic Egg - Deathrattle Dependency
+Bloodmage Thalnos - Deathrattle Dependency
+Huge Toad - Deathrattle Dependency
+Loot Hoarder - Deathrattle Dependency
+Polluted Hoarder - Deathrattle Dependency
+Anubisath Sentinel - Deathrattle Dependency
+Sylvanas Windrunner - Deathrattle Dependency
+The Skeleton Knight - Deathrattle Dependency
+
+
+
+---------------------Random Buff---------------------------
+Smuggler's Crate - Random Hand Buff
+Trogg Beastrager - Random Hand Buff
+Grimscale Chum - Random Hand Buff
+Stolen Goods - Random Hand Buff
+Grimestreet Pawnbroker - Random Hand Buff
+Brass Knockels - Random Hand Buff while active
+Zoobot - Random Minion Buff
+Menagerie Magician - Random Buff
+Don Han'Cho - Random Hand Buff
+
+
+
+
+
+

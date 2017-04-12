@@ -1,11 +1,11 @@
 package AcceptanceTests
 
 import FileReaders.HSDataBase
-import Logic.{IRCAI, IRCPatternDetector}
-import VoteSystem.{ActionVote, Vote, Voter, VoteManager}
+import Logic.IRCState
+import VoteSystem._
 import org.scalatest.{FreeSpec, FlatSpec, Matchers}
 import tph.Constants.ActionVotes._
-import tph.{Constants, Card, Player, GameState}
+import tph._
 
 import scala.util.Random
 
@@ -35,10 +35,10 @@ class PatternDetector extends FreeSpec with Matchers {
   //todo As the AI, I need to know when the dragon card that reduces time is played, so that I can behave quite differently.
 
 
-  def multipleVotersCastVote(startVoterNumber: Int, endVoterNumber: Int, vote: ActionVote, voteManager: VoteManager): Unit = {
+  def multipleVotersCastVote(startVoterNumber: Int, endVoterNumber: Int, messageVote: String, iRCBot: IRCBot): Unit = {
     for (a <- startVoterNumber to endVoterNumber) {
       val name = s"Twitch User $a"
-      voteManager.voteEntry(name, vote)
+      iRCBot.onMessage("None", s"Twitch User $a", "None", "None", messageVote)
     }
   }
 
@@ -104,116 +104,193 @@ class PatternDetector extends FreeSpec with Matchers {
   }
 
 
+  // a -40
+  // abf - 15
+  // acf - 15
+  // adf - 15
+  // fae - 15
+
+
   //todo As the AI, I need to be able to only give vote power to the second vote if the first was already used, because you almost never use a windfury once.
   "As the pattern detector, I need to be able to" - {
+    "Decide the correct vote sequence with these steps." - {
 
-    "identify windfury patterns, because you almost never use a windfury minion once" - {
+      //      1.) Find the most popular individual vote (e - 172)
+      //      2.) Find the most popular next order vote containing the lower order vote (e, f - 86)
+      //      3.) If the higher order vote is 50% or more than the lower order vote, repeat steps 2 and 3 (True)
+      //      ------2-2.)  Find the most popular next order vote containing the lower order vote (e, f, b - 40)
+      //      ------3.2) If the higher order vote is 50% or more than the lower order vote, repeat steps 2 and 3 (False)
+      //      **Logically at this point, we have the most popular pattern.
+      //      **That pattern should now be considered a unique vote that is different from the parts that make it up (See "Votes with EF:" section)
+      //      4.) Out of all votes that contain the deduced pattern, find the most popular individual vote(b - 72)
+      //      5.) Out of all the votes that contain the deduced pattern, find the most popular next order vote containing the lower order vote (b, h - 21)
+      //      6.) If the higher order vote is 50% or more than the lower order vote, repeat steps 4 and 5 (False)
+      //      **Logically at this point, we have the two most popular patterns.
+      //        **Now we need to figure out how to combine them, or even if we should.
+      //      7.)If the 2nd pattern is 50% or more than the first pattern, continue, else the first pattern is the final vote.
+      //      8.)Combine the two patterns based on the most popular offset relative to their starting index's.
+      //      9.)Repeat 4-6 with this new deduced vote order
+      //      ------4.2) (h-21)
+      //      ------5.2) (Nothing)
+      //      ------6.2) (False)
 
-      "windfury detected when previous decision minion source is not the windfury minion" in {
+      val gs = new GameState()
+      val vs = new VoteState()
+      val ai = new VoteAI(vs,gs)
+      val ircState = new IRCState()
+      val validator = new VoteValidator(gs)
+      val vm = new VoteManager(gs, vs, ai, ircState, validator)
+      val ircBot = new IRCBot(vm)
 
+      multipleVotersCastVote(1, 19, "!c4, c5, f1>e0, f0 > e0", ircBot)
+      multipleVotersCastVote(20, 38, "!f1>e0, c4, c5, f0 > e0", ircBot)
+      multipleVotersCastVote(39, 55, "!f1> e0, c4, c5", ircBot)
+      multipleVotersCastVote(56, 72, "!c4, c5, f1 > e0", ircBot)
+      multipleVotersCastVote(73, 82, "!c4, c1, f1>e0", ircBot)
+      multipleVotersCastVote(83, 92, "!c4, f1>e0, c1", ircBot)
+      multipleVotersCastVote(93, 102, "!f1 > e0, c4, c1", ircBot)
+      multipleVotersCastVote(103, 115, "!c1, f1 > e0, c4", ircBot)
+      multipleVotersCastVote(116, 128, "!f1 > e0, c1, c4", ircBot)
+      multipleVotersCastVote(129, 150, "!c1, c4", ircBot)
+      multipleVotersCastVote(151, 159, "!c1, f1 > e0", ircBot)
+      multipleVotersCastVote(160, 168, "!f1 > e0, c1", ircBot)
+      multipleVotersCastVote(169, 175, "!f1> e1, c4, c5", ircBot)
+      multipleVotersCastVote(176, 182, "!f1>e2, c4, c5", ircBot)
+      multipleVotersCastVote(183, 184, "!c1", ircBot)
+      multipleVotersCastVote(185, 186, "!f1 > e1, c1", ircBot)
+      multipleVotersCastVote(187, 188, "!c1, f1> e1", ircBot)
+      multipleVotersCastVote(189, 190, "!f1 > e2, c1", ircBot)
+      multipleVotersCastVote(191, 192, "!c1, f1 > e2", ircBot)
+      multipleVotersCastVote(193, 194, "!f1 > e2, c4, c1", ircBot)
+      multipleVotersCastVote(195, 196, "!f1 > e1, c4, c1", ircBot)
+      multipleVotersCastVote(197, 198, "!c4, c1", ircBot)
+      multipleVotersCastVote(199, 199, "!f1 > e1, c1, c4", ircBot)
+      multipleVotersCastVote(200, 200, "!c1, f1 > e2, c4", ircBot)
 
-        val windfuryMinion = new Card("Young Dragonhawk", 1, Constants.INT_UNINIT, 1, 1, "CS2_169")
-        val wisp = new Card("Wisp", 21, Constants.INT_UNINIT, 1, 2, "CS2_231")
-        val friendly = new Player(1, board = List(windfuryMinion))
-        val enemy = new Player(2, board = List(wisp))
-        val gs = new GameState()
-        gs.friendlyPlayer = friendly
-        gs.enemyPlayer = enemy
-        val vm = new VoteManager(gs)
-        val hsDataBase = new HSDataBase()
-        val pd = new IRCPatternDetector(gs, vm, hsDataBase)
-        val voter1 = new Voter("Twitch User 1", List(NormalAttack(1, 1), NormalAttack(1, 1)))
-        val voter2 = new Voter("Twitch User 2", List(NormalAttack(1, 1), NormalAttack(1, 1)))
-        val voter3 = new Voter("Twitch User 3", List(NormalAttack(1, 1), NormalAttack(1, 1)))
-        val voter4 = new Voter("Twitch User 4", List(NormalAttack(1, 1), NormalAttack(1, 1)))
-        val voter5 = new Voter("Twitch User 5", List(NormalAttack(1, 1), NormalAttack(1, 1)))
-        //pd.detectWindfuryPatterns()
-
-
-        vm.voterMap = Map()
-
-
-      }
-    }
-
-
-    "Decide the correct votes in these scenarios" - {
-
-      "Scenario 1: Simple single vote" in {
-        val gs = new GameState()
-        gs.friendlyPlayer = new Player(1, hand = List(Card("Friendly Card1", 1, 1, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT)))
-        val vm = new VoteManager(gs)
-        val ai = new IRCAI(vm, gs)
-
-        //100 votes total
-        //c1
-        multipleVotersCastVote(1, 100, CardPlay(1), vm)
-        ai.makeDecision() shouldBe List(CardPlay(1))
-      }
-
-
-
-
-
-
-      "Scenario 2: Simple Order" in {
-        val gs = new GameState()
-        val friendlyHand = List(Card("Friendly Card1", 1, 1, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
-        val friendlyBoard = List(Card("Friendly Minion1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT))
-        val friendly = new Player(1, hand = friendlyHand, board = friendlyBoard)
-        gs.friendlyPlayer = friendly
-        val enemyBoard = List(Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT), Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT))
-        val enemy = new Player(2, board = enemyBoard)
-        gs.enemyPlayer = enemy
-        val vm = new VoteManager(gs)
-        val ai = new IRCAI(vm, gs)
-
-        //100 votes total
-        // 60 - f1 > e1, c1 > f1
-        // 40 - f1 > e2, c1 > f1
-
-        multipleVotersCastVote(1, 60, NormalAttack(1, 1), vm)
-        multipleVotersCastVote(1, 60, CardPlayWithFriendlyTarget(1, 1), vm)
-        multipleVotersCastVote(61, 100, NormalAttack(1, 2), vm)
-        multipleVotersCastVote(61, 100, CardPlayWithFriendlyTarget(1, 1), vm)
-
-        ai.makeDecision() shouldBe List(NormalAttack(1, 1), CardPlayWithFriendlyTarget(1, 1))
-      }
-
-
-      "Scenario 3: Simple mana pattern" in {
-        val gs = new GameState()
-        val friendlyHand = List(
-          Card("Emperor Thaurissan", 1, 1, Constants.INT_UNINIT, 1, "BRM_028"),
-          Card("Eaglehorn Bow", 2, 2, Constants.INT_UNINIT, 1, "EX1_536"),
-          Card("Eaglehorn Bow", 3, 3, Constants.INT_UNINIT, 1, "EX1_536"))
-        val friendly = new Player(1, hand = friendlyHand)
-        gs.friendlyPlayer = friendly
-        val vm = new VoteManager(gs)
-        val ai = new IRCAI(vm, gs)
 /*
+Contains c4,c5:
+After f1>e0:
 
-        Votes:
-        40 - c1
-        25 - c2, c3
-        35 - c3, c2
+f0>e0 = 19
 
-        Decision Explanation:
-        c1 has the highest amount of votes
-        however, more people think that 5 mana is better spent on c2, c3 OR on c3,c2
+Before f1>e0:
 
-         */
-        multipleVotersCastVote(1, 40, CardPlay(1), vm)
-        multipleVotersCastVote(41, 65, CardPlay(2), vm)
-        multipleVotersCastVote(41, 65, CardPlay(3), vm)
-        multipleVotersCastVote(66, 100, CardPlay(3), vm)
-        multipleVotersCastVote(66, 100, CardPlay(2), vm)
 
-        ai.makeDecision() shouldBe List(CardPlay(3), CardPlay(2))
+
+-c4, c5, f1>e0, f0>e0 (19)
+-f1>e0, c4, c5, f0>e0  (19)
+-f1>e0, c4, c5 (17)
+-c4, c5, f1>e0 (17)
+-c4, c1, f1>e0 (10)
+-c4, f1>e0, c1 (10)
+-f1>e0, c4, c1 (10)
+-c1, f1>e0, c4 (13)
+-f1>e0, c1, c4 (13)
+-c1, c4 (22)
+-c1, f1>e0 (9)
+-f1>e0, c1 (9)
+-f1>e1, c4, c5 (7)
+-f1>e2, c4, c5 (7)
+-c1 (2)
+- f1>e1, c1 (2)
+-c1, f1>e1,(2)
+-f1>e2, c1 (2)
+-c1, f1>e2 (2)
+-f1>e2, c4, c1 (2)
+-f1>e1, c4, c1 (2)
+-c4, c1 (2)
+-f1>e1, c1, c4 (1)
+-c1, f1>e2, c4 (1)
+       */
+
+
+
+
+
+
+      "Step 1: Find the most popular individual vote" in {
+
+        /*
+      c1 = 10 + 10 + 10 + 13 + 13 + 22 + 9 + 9 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 2 + 1 + 1 = 114
+      c4 = 19 + 19 + 17 + 17 + 10 + 10 + 10 + 13 + 13 + 22 + 7 + 7 + 2 + 2 + 2 + 1 + 1 = 172
+      c5 = 19 + 19 + 17 + 17 + 7 + 7 = 86
+      f1>e0 = 19 + 19 + 17 + 17 + 10 + 10 + 10 + 13 + 13 + 9 + 9 = 146
+      f1>e1 = 7  + 2 + 2 + 2 + 1 = 14
+      f1>e2 = 7 + 2 + 2 + 2 + 1 = 14
+      f0>e0 = 19 + 19 = 38
+
+
+       */
+
+        ai.findIndividualVotes(Pattern(Nil)) shouldBe List(
+          (CardPlay(4), 172.0),
+          (NormalAttack(0,0), 38.0),
+          (CardPlay(1), 114.0),
+          (NormalAttack(1,1), 14.0),
+          (CardPlay(5), 86.0),
+          (NormalAttack(1,2), 14.0),
+          (NormalAttack(1,0), 146.0)
+        )
+
+        ai.findHighestValue(ai.findIndividualVotes(Pattern(Nil))) shouldBe CardPlay(4)
+      }
+
+      "Step 2: Find the most popular next order vote containing the lower order vote" in{
+
+
+
+        //makes a base pattern from the most popular individual vote
+        val mostPopularFirstOrderVote = ai.findHighestValue(ai.findIndividualVotes(Pattern(Nil)))
+        val firstOrderPattern = Pattern(List((mostPopularFirstOrderVote, 0)))
+        ai.findNextOrder(firstOrderPattern, Pattern(Nil)) shouldBe Pattern(List((CardPlay(4), 0), (CardPlay(5), 1)))
+
 
 
       }
 
+
+      "Step 3: If the higher order vote is 50% or more than the lower order vote, repeat steps 2 and 3 (True)" in {
+
+        ai.buildPattern(Pattern(Nil)) shouldBe Pattern(List((CardPlay(4), 0), (CardPlay(5), 1)))
+      }
+
+
+      "Step 4: Out of all votes that contain the deduced pattern, find the most popular individual vote" in {
+
+        val firstPattern = ai.buildPattern(Pattern(Nil))
+        ai.findHighestValue(ai.findIndividualVotes(firstPattern)) shouldBe NormalAttack(1,0)
+      }
+
+      "Step 5: Out of all the votes that contain the deduced pattern, find the most popular next order vote containing the lower order vote" in {
+
+        val firstPattern = ai.buildPattern(Pattern(Nil))
+        val firstOrderPattern = Pattern(List((ai.findHighestValue(ai.findIndividualVotes(firstPattern)),0)))
+        ai.findNextOrder(firstOrderPattern, firstPattern) shouldBe Pattern(List((NormalAttack(1,0),0), (NormalAttack(0,0),1)))
+      }
+
+      "Step 6: If the higher order vote is 50% or more than the lower order vote, repeat steps 4 and 5" in {
+
+        ai.buildPattern(Pattern(List((CardPlay(4), 0), (CardPlay(5), 1)))) shouldBe Pattern(List((NormalAttack(1,0),0)))
+      }
+
+      "Step 7: If the 2nd pattern is 50% or more than the first pattern, continue, else the first pattern is the final vote." in {
+
+        val decision = ai.buildDecision()
+        decision shouldBe Pattern(List((CardPlay(4), 0), (CardPlay(5), 1), (NormalAttack(1,0), 2), (NormalAttack(0,0), 3)))
+      }
+
+
+      "Step 8: Find the most popular position of the 2nd pattern compared to the first" in {
+
+        val firstPattern = Pattern(List((CardPlay(4), 0), (CardPlay(5), 1)))
+        val secondPattern = Pattern(List((NormalAttack(1,0), 0)))
+        ai.combinePatterns(firstPattern, secondPattern) shouldBe Pattern(List((CardPlay(4), 0), (CardPlay(5), 1), (NormalAttack(1,0),2)))
+      }
+
+      "IT IS FINISHED! COMPLETE TEST:" in {
+        ai.buildDecision() shouldBe Pattern(List((CardPlay(4), 0), (CardPlay(5), 1), (NormalAttack(1,0),2), (NormalAttack(0,0),3)))
+
+      }
 
 
 
@@ -221,6 +298,4 @@ class PatternDetector extends FreeSpec with Matchers {
 
     }
   }
-
-
 }

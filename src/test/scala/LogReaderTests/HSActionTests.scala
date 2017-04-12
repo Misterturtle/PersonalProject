@@ -17,55 +17,52 @@ class HSActionTests extends FlatSpec with Matchers {
 
 
   "HSAction FriendlyCardDrawn" should "ExecuteAction" in {
-
-
-    val friendlyHSAction = new CardDrawn("Friendly Card 7", 7, Constants.STRING_UNINIT, 7, 1)
-
+    val gs = defaultGameState
     val newFriendlyHand = defaultGameState.friendlyPlayer.hand ::: List(new Card("Friendly Card 7", 7, 7, tph.Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
-
-    val testFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
-
+    CardDrawn("Friendly Card 7", 7, Constants.STRING_UNINIT, 7, 1).updateGameState(gs)
+    val testFriendlyHand = gs.friendlyPlayer.hand
     newFriendlyHand shouldEqual testFriendlyHand
   }
 
   "HSAction CardDeath" should "ExecuteAction" in {
-    val friendlyHandCardDeath = new CardDeath("Friendly Card 4", 4, 1)
-    val friendlyBoardCardDeath = new CardDeath("Friendly Minion 2", 12, 1)
-    val enemyHandCardDeath = new CardDeath("Enemy Card 4", 24, 2)
-    val enemyBoardCardDeath = new CardDeath("Enemy Minion 2", 32, 2)
+    val gs = defaultGameState
+    CardDeath("Friendly Card 4", 4, 1).updateGameState(gs)
+    CardDeath("Friendly Minion 2", 12, 1).updateGameState(gs)
+    CardDeath("Enemy Card 4", 24, 2).updateGameState(gs)
+    CardDeath("Enemy Minion 2", 32, 2).updateGameState(gs)
 
 
     val expectedFriendlyHand = List(
       Constants.TestConstants.createFriendlyHandCard(1),
       Constants.TestConstants.createFriendlyHandCard(2),
       Constants.TestConstants.createFriendlyHandCard(3),
-      new Card("Friendly Card 5", 5, 4, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
-      new Card("Friendly Card 6", 6, 5, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
+      Card("Friendly Card 5", 5, 4, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
+      Card("Friendly Card 6", 6, 5, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
 
     val expectedFriendlyBoard = List(
       Constants.TestConstants.createFriendlyBoardCard(1),
-      new Card("Friendly Minion 3", 13, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
-      new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 3, 1, Constants.STRING_UNINIT))
+      Card("Friendly Minion 3", 13, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
+      Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 3, 1, Constants.STRING_UNINIT))
 
     val expectedEnemyHand =
       List(
         Constants.TestConstants.createEnemyHandCard(1),
         Constants.TestConstants.createEnemyHandCard(2),
         Constants.TestConstants.createEnemyHandCard(3),
-        new Card("Enemy Card 5", 25, 4, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
-        new Card("Enemy Card 6", 26, 5, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
+        Card("Enemy Card 5", 25, 4, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
+        Card("Enemy Card 6", 26, 5, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
 
     val expectedEnemyBoard =
       List(
         Constants.TestConstants.createEnemyBoardCard(1),
-        new Card("Enemy Minion 3", 33, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
-        new Card("Enemy Minion 4", 34, Constants.INT_UNINIT, 3, 2, Constants.STRING_UNINIT))
+        Card("Enemy Minion 3", 33, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
+        Card("Enemy Minion 4", 34, Constants.INT_UNINIT, 3, 2, Constants.STRING_UNINIT))
 
 
-    val actualFriendlyHand = friendlyHandCardDeath.ExecuteAction(defaultGameState).friendlyPlayer.hand
-    val actualFriendlyBoard = friendlyBoardCardDeath.ExecuteAction(defaultGameState).friendlyPlayer.board
-    val actualEnemyHand = enemyHandCardDeath.ExecuteAction(defaultGameState).enemyPlayer.hand
-    val actualEnemyBoard = enemyBoardCardDeath.ExecuteAction(defaultGameState).enemyPlayer.board
+    val actualFriendlyHand = gs.friendlyPlayer.hand
+    val actualFriendlyBoard = gs.friendlyPlayer.board
+    val actualEnemyHand = gs.enemyPlayer.hand
+    val actualEnemyBoard = gs.enemyPlayer.board
 
     actualFriendlyHand shouldEqual expectedFriendlyHand
     actualFriendlyBoard shouldEqual expectedFriendlyBoard
@@ -76,17 +73,18 @@ class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction FriendlyMinionControlled" should "ExecuteAction" in {
 
-    val hsAction = new FriendlyMinionControlled("Friendly Minion 2", 12, 2)
+    val gs = defaultGameState
+    FriendlyMinionControlled("Friendly Minion 2", 12, 2).updateGameState(gs)
     
 
-    val actualFriendlyBoard = hsAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val actualFriendlyBoard = gs.friendlyPlayer.board
     val expectedFriendlyBoard = List(
       new Card("Friendly Minion 1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 3", 13, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 3, 1, Constants.STRING_UNINIT))
 
 
-    val actualEnemyBoard = hsAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val actualEnemyBoard = gs.enemyPlayer.board
     val expectedEnemyBoard = List(
       new Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
@@ -103,9 +101,10 @@ class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction EnemyCardDrawn" should "ExectueAction" in{
 
-    val hsAction = new CardDrawn(Constants.STRING_UNINIT,27, Constants.STRING_UNINIT, 2, 7)
+    val gs = defaultGameState
+    CardDrawn(Constants.STRING_UNINIT,27, Constants.STRING_UNINIT, 2, 7).updateGameState(gs)
 
-    val actualEnemyHand = hsAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+    val actualEnemyHand = gs.enemyPlayer.hand
     val expectedEnemyHand =  List(
       new Card("Enemy Card 1", 21, 1, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 2", 22, 2, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
@@ -120,9 +119,10 @@ class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction EnemyMinionControlled" should "ExecuteAction" in{
 
-    val hsAction = new EnemyMinionControlled("Enemy Minion 2", 32, 2)
+    val gs = defaultGameState
+    EnemyMinionControlled("Enemy Minion 2", 32, 2).updateGameState(gs)
 
-    val actualFriendlyBoard = hsAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val actualFriendlyBoard = gs.friendlyPlayer.board
     val expectedFriendlyBoard = List(
       new Card("Friendly Minion 1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 2", 12, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
@@ -131,7 +131,7 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 5, 1, Constants.STRING_UNINIT))
 
 
-    val actualEnemyBoard = hsAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val actualEnemyBoard = gs.enemyPlayer.board
     val expectedEnemyBoard = List(
       new Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 3", 33, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
@@ -148,39 +148,35 @@ class HSActionTests extends FlatSpec with Matchers {
 
   "HSAction WeaponPlayed" should "ExecuteAction" in{
 
-    val friendlyHSAction = new WeaponPlayed(3, 1)
-    val enemyHSAction = new WeaponPlayed(23, 2)
+    val gs = defaultGameState
+    WeaponChange(3, 1, true).updateGameState(gs)
+    WeaponChange(23, 2, false).updateGameState(gs)
 
-    val actualFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
-    val expectedFriendlyHand = List(
-      new Card("Friendly Card 1", 1, 1, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
-      new Card("Friendly Card 2", 2, 2, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
-      new Card("Friendly Card 4", 4, 3, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
-      new Card("Friendly Card 5", 5, 4, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
-      new Card("Friendly Card 6", 6, 5, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
+    val actualFriendly = gs.friendlyPlayer
 
-    val actualEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
-    val expectedEnemyHand =  List(
-      new Card("Enemy Card 1", 21, 1, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
-      new Card("Enemy Card 2", 22, 2, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
-      new Card("Enemy Card 4", 24, 3, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
-      new Card("Enemy Card 5", 25, 4, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
-      new Card("Enemy Card 6", 26, 5, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
+    val actualEnemy = gs.enemyPlayer
 
-    actualFriendlyHand shouldEqual expectedFriendlyHand
-    actualEnemyHand shouldEqual expectedEnemyHand
+    actualFriendly.isWeaponEquipped shouldEqual true
+    actualEnemy.isWeaponEquipped shouldEqual false
   }
 
 
   "HSAction ChangeFaceAttackValue" should "ExecuteAction" in{
-    val friendlyHSAction = new ChangeFaceAttackValue(1, 5)
-    val enemyHSAction = new ChangeFaceAttackValue(2, 5)
+    val gs = new GameState()
+    val friendlyHero = Card("FriendlyHero", 100, Constants.INT_UNINIT, 0, 1, "Some")
+    val enemyHero = Card("EnemyHero", 200, Constants.INT_UNINIT, 0, 2, "Some")
+    gs.friendlyPlayer = gs.friendlyPlayer.copy(hero = Some(friendlyHero))
+    gs.enemyPlayer = gs.enemyPlayer.copy(hero = Some(enemyHero))
+    gs.friendlyPlayer = gs.friendlyPlayer.copy(playerNumber = 1)
+    gs.enemyPlayer = gs.enemyPlayer.copy(playerNumber = 2)
+    ChangeAttackValue(1, 5, 100, 0).updateGameState(gs)
+    ChangeAttackValue(2, 6, 200, 0).updateGameState(gs)
 
-    val actualFriendlyFaceValue = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.weaponValue
-    val expectedFriendlyFaceValue = 5
+    val actualFriendlyFaceValue = gs.friendlyPlayer.hero.get.attack
+    val expectedFriendlyFaceValue = Some(5)
 
-    val actualyEnemyFaceValue = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.weaponValue
-    val expectedEnemyFaceValue = 5
+    val actualyEnemyFaceValue = gs.enemyPlayer.hero.get.attack
+    val expectedEnemyFaceValue = Some(6)
 
     actualFriendlyFaceValue shouldEqual expectedFriendlyFaceValue
     actualyEnemyFaceValue shouldEqual expectedEnemyFaceValue
@@ -188,10 +184,11 @@ class HSActionTests extends FlatSpec with Matchers {
 
 
   "HSAction SecretPlayed" should "ExecuteAction" in {
-    val friendlyHSAction = new SecretPlayed(5, 1)
-    val enemyHSAction = new SecretPlayed(25, 2)
+    val gs = defaultGameState
+    SecretPlayed(5, 1).updateGameState(gs)
+    SecretPlayed(25, 2).updateGameState(gs)
 
-    val actualFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
+    val actualFriendlyHand = gs.friendlyPlayer.hand
     val expectedFriendlyHand = List(
       new Card("Friendly Card 1", 1, 1, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 2", 2, 2, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
@@ -199,7 +196,7 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card("Friendly Card 4", 4, 4, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 6", 6, 5, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
 
-    val actualEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+    val actualEnemyHand = gs.enemyPlayer.hand
     val expectedEnemyHand = List(
       new Card("Enemy Card 1", 21, 1, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 2", 22, 2, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
@@ -213,10 +210,11 @@ class HSActionTests extends FlatSpec with Matchers {
 
 
     "HSAction CardPlayed" should "ExecuteAction" in{
-      val friendlyHSAction = new CardPlayed("Friendly Card 1", 1,  5,Constants.STRING_UNINIT, 1)
-      val enemyHSAction = new CardPlayed("Enemy Card 1", 21,5,Constants.STRING_UNINIT, 2)
+      val gs = defaultGameState
+      CardPlayed("Enemy Card 1", 21,5,Constants.STRING_UNINIT, 2).updateGameState(gs)
+      CardPlayed("Friendly Card 1", 1,  5,Constants.STRING_UNINIT, 1).updateGameState(gs)
 
-      val actualFriendlyHand = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
+      val actualFriendlyHand = gs.friendlyPlayer.hand
       val expectedFriendlyHand = List(
         new Card("Friendly Card 2", 2, 1, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
         new Card("Friendly Card 3", 3, 2, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
@@ -224,7 +222,7 @@ class HSActionTests extends FlatSpec with Matchers {
         new Card("Friendly Card 5", 5, 4, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
         new Card("Friendly Card 6", 6, 5, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
 
-      val actualFriendlyBoard = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+      val actualFriendlyBoard = gs.friendlyPlayer.board
       val expectedFriendlyBoard = List(
         new Card("Friendly Minion 1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT),
         new Card("Friendly Minion 2", 12, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
@@ -232,7 +230,7 @@ class HSActionTests extends FlatSpec with Matchers {
         new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 4, 1, Constants.STRING_UNINIT),
         new Card("Friendly Card 1", 1, Constants.INT_UNINIT, 5, 1, Constants.STRING_UNINIT))
 
-      val actualEnemyHand = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+      val actualEnemyHand = gs.enemyPlayer.hand
       val expectedEnemyHand = List(
         new Card("Enemy Card 2", 22, 1, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
         new Card("Enemy Card 3", 23, 2, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
@@ -240,7 +238,7 @@ class HSActionTests extends FlatSpec with Matchers {
         new Card("Enemy Card 5", 25, 4, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
         new Card("Enemy Card 6", 26, 5, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
 
-      val actualEnemyBoard = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
+      val actualEnemyBoard = gs.enemyPlayer.board
       val expectedEnemyBoard = List(
         new Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT),
         new Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
@@ -258,10 +256,11 @@ class HSActionTests extends FlatSpec with Matchers {
 
 
   "HSAction MinionSummoned" should "Execute Action" in {
-    val friendlyHSAction = new MinionSummoned("Summoned Friendly Minion", 15, 5,Constants.STRING_UNINIT, 1)
-    val enemyHSAction = new MinionSummoned("Summoned Enemy Minion", 35, 5,Constants.STRING_UNINIT, 2)
+    val gs = defaultGameState
+    MinionSummoned("Summoned Friendly Minion", 15, 5,Constants.STRING_UNINIT, 1).updateGameState(gs)
+    MinionSummoned("Summoned Enemy Minion", 35, 5,Constants.STRING_UNINIT, 2).updateGameState(gs)
 
-    val actualFriendlyBoard = friendlyHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val actualFriendlyBoard = gs.friendlyPlayer.board
     val expectedFriendlyBoard = List(
       new Card("Friendly Minion 1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 2", 12, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT),
@@ -269,7 +268,7 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 4, 1, Constants.STRING_UNINIT),
       new Card("Summoned Friendly Minion", 15, Constants.INT_UNINIT, 5, 1, Constants.STRING_UNINIT))
 
-    val actualEnemyBoard = enemyHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val actualEnemyBoard = gs.enemyPlayer.board
     val expectedEnemyBoard = List(
       new Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
@@ -282,12 +281,13 @@ class HSActionTests extends FlatSpec with Matchers {
   }
 
   "HSAction Transform" should "ExecuteAction" in{
-    val friendlyHandHSAction = new Transform("Transformed Friendly Card",3, 3, Constants.STRING_UNINIT, 100)
-    val friendlyBoardHSAction = new Transform("Transformed Friendly Minion",12, 2, Constants.STRING_UNINIT, 101)
-    val enemyHandHSAction = new Transform("Transformed Enemy Card",21, 1, Constants.STRING_UNINIT, 102)
-    val enemyBoardHSAction = new Transform("Transformed Enemy Minion",33, 3, Constants.STRING_UNINIT, 103)
+    val gs = defaultGameState
+    Transform("Transformed Friendly Card",3, 3, Constants.STRING_UNINIT, 100).updateGameState(gs)
+    Transform("Transformed Friendly Minion",12, 2, Constants.STRING_UNINIT, 101).updateGameState(gs)
+    Transform("Transformed Enemy Card",21, 1, Constants.STRING_UNINIT, 102).updateGameState(gs)
+    Transform("Transformed Enemy Minion",33, 3, Constants.STRING_UNINIT, 103).updateGameState(gs)
 
-    val actualFriendlyHand = friendlyHandHSAction.ExecuteAction(defaultGameState).friendlyPlayer.hand
+    val actualFriendlyHand = gs.friendlyPlayer.hand
     val expectedFriendHand = List(
       new Card("Friendly Card 1", 1, 1, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Friendly Card 2", 2, 2, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
@@ -296,14 +296,14 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card("Friendly Card 6", 6, 6, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT),
       new Card("Transformed Friendly Card", 100, 3, Constants.INT_UNINIT, 1, Constants.STRING_UNINIT))
 
-    val actualFriendlyBoard = friendlyBoardHSAction.ExecuteAction(defaultGameState).friendlyPlayer.board
+    val actualFriendlyBoard = gs.friendlyPlayer.board
     val expectedFriendlyBoard = List(
       new Card("Friendly Minion 1", 11, Constants.INT_UNINIT, 1, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 3", 13, Constants.INT_UNINIT, 3, 1, Constants.STRING_UNINIT),
       new Card("Friendly Minion 4", 14, Constants.INT_UNINIT, 4, 1, Constants.STRING_UNINIT),
       new Card("Transformed Friendly Minion", 101, Constants.INT_UNINIT, 2, 1, Constants.STRING_UNINIT))
 
-    val actualEnemyHand = enemyHandHSAction.ExecuteAction(defaultGameState).enemyPlayer.hand
+    val actualEnemyHand = gs.enemyPlayer.hand
     val expectedEnemyHand = List(
       new Card("Enemy Card 2", 22, 2, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Enemy Card 3", 23, 3, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
@@ -312,7 +312,7 @@ class HSActionTests extends FlatSpec with Matchers {
       new Card("Enemy Card 6", 26, 6, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT),
       new Card("Transformed Enemy Card", 102, 1, Constants.INT_UNINIT, 2, Constants.STRING_UNINIT))
 
-    val actualEnemyBoard = enemyBoardHSAction.ExecuteAction(defaultGameState).enemyPlayer.board
+    val actualEnemyBoard = gs.enemyPlayer.board
     val expectedEnemyBoard = List(
       new Card("Enemy Minion 1", 31, Constants.INT_UNINIT, 1, 2, Constants.STRING_UNINIT),
       new Card("Enemy Minion 2", 32, Constants.INT_UNINIT, 2, 2, Constants.STRING_UNINIT),
@@ -328,19 +328,34 @@ class HSActionTests extends FlatSpec with Matchers {
 
 
   "HSAction Define Players" should "Execute Action" in{
-    val hsAction = new DefinePlayers(2)
+    val hsAction = new DefinePlayers(Constants.INT_UNINIT, "some", 2)
     val actualGameState = new GameState
-    hsAction.ExecuteAction(actualGameState)
+    hsAction.updateGameState(actualGameState)
     val expectedGameState = new GameState()
     expectedGameState.setPlayerNumbers(2)
+    expectedGameState.friendlyPlayer = expectedGameState.friendlyPlayer.copy(hero = Some(Card("Friendly Hero", 500, 500, 0, 2, "some")))
 
     actualGameState.friendlyPlayer shouldBe expectedGameState.friendlyPlayer
     actualGameState.enemyPlayer shouldBe expectedGameState.enemyPlayer
   }
 
+  "Problem situation with MinionDamaged after Weapon equipped" should "work" in{
+    val gs = new GameState()
+    val friendlyHero = Card("Alleria Windrunner", 100, Constants.INT_UNINIT,0,1,"HERO_05a")
+
+    gs.friendlyPlayer = gs.friendlyPlayer.copy(playerNumber = 1, hero = Some(friendlyHero))
+
+    WeaponChange(100,1,true).updateGameState(gs)
+    ChangeAttackValue(1,4,100,0).updateGameState(gs)
+    MinionDamaged(100,1,2).updateGameState(gs)
+
+    gs.friendlyPlayer.hero.get shouldBe Card("Alleria Windrunner", 100, Constants.INT_UNINIT,0,1,"HERO_05a", attack = Some(4), isDamaged = true)
+    gs.friendlyPlayer.isWeaponEquipped shouldBe true
 
 
 
+
+  }
 
 
 }
