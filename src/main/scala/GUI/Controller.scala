@@ -28,7 +28,7 @@ import scalafx.stage.{Stage, FileChooser}
   */
 
 
-class Controller(gs:GameState, logFileReader:LogFileReader, ircBot:IRCBot, hs:Hearthstone, ircState:IRCState, vm:VoteManager, tb:TheBrain) extends LazyLogging{
+class Controller(gs:GameState, logFileReader:LogFileReader, ircBot:IRCBot, hs:HearthStone, ircState:IRCState, vm:VoteManager, tb:TheBrain) extends LazyLogging{
 
   val root = new AnchorPane()
   val config = ConfigFactory.load()

@@ -10,7 +10,7 @@ import javafx.util.Duration
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteManager, VoteAI, VoteState}
 import com.typesafe.config.ConfigFactory
-import tph.{IRCBot, Hearthstone, GameState, TheBrain}
+import tph.{IRCBot, HearthStone, GameState, TheBrain}
 import FileReaders.{LogFileReader, LogParser}
 
 import scalafx.application.{Platform, JFXApp}
@@ -35,7 +35,7 @@ object MainDebug extends JFXApp {
   val ai = new VoteAI(vs, gs)
   val validator = new VoteValidator(gs)
   val vm = new VoteManager(gs, vs, ai, ircState, validator)
-  val hs = new Hearthstone(gs)
+  val hs = new HearthStone(gs)
   val display = new Display()
   val ircBot = new IRCBot(vm)
   val logParser = new LogParser(gs)

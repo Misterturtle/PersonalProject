@@ -6,7 +6,7 @@ import FileReaders.{LogFileReader, HSAction, LogParser}
 import Logic.IRCState
 import VoteSystem.{VoteManager, VoteAI, VoteState}
 import org.scalatest.{FlatSpec, Matchers}
-import tph.{Hearthstone, GameState, Card, Constants}
+import tph.{HearthStone, GameState, Card, Constants}
 
 /**
   * Created by Harambe on 2/21/2017.

@@ -32,7 +32,7 @@ class TheBrain extends LazyLogging {
   var behindScheduleAmount = 0.0
 
 
-  def init(logFileReader: LogFileReader, ircBot: IRCBot, hs: Hearthstone): Unit = {
+  def init(logFileReader: LogFileReader, ircBot: IRCBot, hs: HearthStone): Unit = {
     logFileReader.init()
     ircBot.init()
     logFileReader.update()
@@ -40,7 +40,7 @@ class TheBrain extends LazyLogging {
   }
 
 
-  def startDebug(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: Hearthstone, controller: Controller, validator:VoteValidator): Unit = {
+  def startDebug(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: HearthStone, controller: Controller, validator:VoteValidator): Unit = {
     threadLoopStartTimeStamp = System.currentTimeMillis()
     logFileReader.update()
     updateGameState(logFileReader.gameStateActions, gs)
@@ -76,17 +76,17 @@ class TheBrain extends LazyLogging {
   }
 
 
-  def start(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: Hearthstone, validator:VoteValidator): Unit = {
+  def start(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: HearthStone, validator:VoteValidator): Unit = {
     threadLoopStartTimeStamp = System.currentTimeMillis()
     logFileReader.update()
     updateGameState(logFileReader.gameStateActions, gs)
     updateIRCState(logFileReader.ircActions, ircState, vm)
     checkDecision(ircState, vm)
     checkExecution(ircState, hs, logFileReader.lastTimeActive, vm, gs, validator)
-    scheduleLoop(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: Hearthstone, validator)
+    scheduleLoop(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: HearthStone, validator)
   }
 
-  def scheduleLoop(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: Hearthstone, validator:VoteValidator): Unit = {
+  def scheduleLoop(logFileReader: LogFileReader, gs: GameState, ircState: IRCState, vm: VoteManager, hs: HearthStone, validator:VoteValidator): Unit = {
     val expectedNextThreadStartTime = threadLoopStartTimeStamp + threadLoopDelay
     val timeRemaining = expectedNextThreadStartTime - System.currentTimeMillis()
 
@@ -323,7 +323,7 @@ class TheBrain extends LazyLogging {
     }
   }
 
-  def checkExecution(ircState: IRCState, hs: Hearthstone, idleTimer: Long, vm: VoteManager, gs: GameState, validator:VoteValidator): Unit = {
+  def checkExecution(ircState: IRCState, hs: HearthStone, idleTimer: Long, vm: VoteManager, gs: GameState, validator:VoteValidator): Unit = {
     if (ircState.voteExecutionList.nonEmpty && (idleTimer + 2000) < System.currentTimeMillis()) {
       logger.debug("Detect valid time to execute next vote")
       ircState.voteExecutionList.head match {

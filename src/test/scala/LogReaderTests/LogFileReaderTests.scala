@@ -81,7 +81,7 @@ class LogFileReaderTests extends FlatSpec with Matchers {
   val dummyAI = new VoteAI(dummyVS, dummyGS)
   val dummyValidator = new VoteValidator(dummyGS)
   val dummyVM = new VoteManager(dummyGS,dummyVS, dummyAI, dummyIRCState, dummyValidator)
-  val dummyHS = new Hearthstone(dummyGS)
+  val dummyHS = new HearthStone(dummyGS)
 
 
   def compareActualToExpected(file:File, friendlyHand: List[Card] = Nil, friendlyBoard: List[Card] = Nil, enemyHand: List[Card] = Nil, enemyBoard: List[Card] = Nil, friendlyWeaponValue: Option[Int] = None, enemyWeaponValue: Option[Int] = None): Unit = {
