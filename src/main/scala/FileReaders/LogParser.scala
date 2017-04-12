@@ -151,10 +151,12 @@ class LogParser(gs: GameState) {
         //Option Creations
 
       case OPTION_CHOICE(choiceNum, choiceType, mainEntity, error, errorParam) =>
-        OptionChoice(choiceNum, choiceType, Entity(mainEntity), error, errorParam)
+        OptionChoice(choiceNum.toInt, choiceType, Entity(mainEntity), error, errorParam)
 
 
       case OPTION_TARGET(targetNum, mainEntity, error, errorParam)=>
+        OptionTarget(targetNum.toInt, Entity(mainEntity), error, errorParam)
+
 
 
       case MULLIGAN_START =>

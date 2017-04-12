@@ -1,6 +1,7 @@
 package FileReaders
 
 import Logic.IRCState
+import VoteSystem.VoteState
 import net.liftweb.json.JsonAST.JObject
 import tph._
 
@@ -22,25 +23,34 @@ object HSAction {
     def updateGameState(gameState:GameState): Unit = {}
   }
 
+  trait VoteAction extends HSAction{
+    def updateIRC(ircState: IRCState): Unit = {}
+    def updateGameState(gameState:GameState): Unit = {}
+    def updateVoteState(voteState:VoteState): Unit
+
+
+  }
+
+
   case class Entity(rawString:String){
-    val parseUnknownRegex = """\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=(.+) zonePos=(\d+) cardID= player=(\d+)\]""".r
-    val parseKnownRegex = """\[name=(.+) id=(.+) zone=(.+) zonePos=(\d+) cardID=(.+) player=(\d+)\]""".r
-    val controllerRegex = """(.+)""".r
-
-
-    val name:String = rawString match{
-      case parseUnknownRegex(id,zone,zonePos,player)=>
-
-
-    }
-
-
-    rawString match{
-
-
-
-
-    }
+//    val parseUnknownRegex = """\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=(.+) zonePos=(\d+) cardID= player=(\d+)\]""".r
+//    val parseKnownRegex = """\[name=(.+) id=(.+) zone=(.+) zonePos=(\d+) cardID=(.+) player=(\d+)\]""".r
+//    val controllerRegex = """(.+)""".r
+//
+//
+//    val name:String = rawString match{
+//      case parseUnknownRegex(id,zone,zonePos,player)=>
+//
+//
+//    }
+//
+//
+//    rawString match{
+//
+//
+//
+//
+//    }
 
 
   }
@@ -563,7 +573,24 @@ object HSAction {
 
 
 
-  case class OptionChoice(choiceNum:Int, choiceType:String, mainEntity:Entity, error, errorParam)
+  case class OptionChoice(choiceNum:Int, choiceType:String, mainEntity:Entity, error:String, errorParam:String) extends VoteAction{
+    override def updateVoteState(voteState: VoteState): Unit = {
+
+
+    }
+  }
+
+
+  case class OptionTarget(choiceNum:Int, entity:Entity, error:String, errorParam:String) extends VoteAction{
+    override def updateVoteState(voteState: VoteState): Unit = {
+
+
+    }
+  }
+
+  case class SubOption(entity:Entity, error:String, errorParam: String) extends VoteAction{
+    override def updateVoteState(voteState: VoteState): Unit =
+  }
 
 
 

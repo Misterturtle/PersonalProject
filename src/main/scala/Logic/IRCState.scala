@@ -34,8 +34,8 @@ class IRCState() {
   var discoverStartTimeStamp = 0.0
   var chooseOneStartTimeStamp = 0.0
 
-  var voteExecutionList = ListBuffer[(ActionVote, (HSCard, HSCard))]()
-  var lastVoteCheck = System.currentTimeMillis()
+  var voteExecutionList:ListBuffer[(ActionVote, (HSCard,HSCard))] = ListBuffer[(ActionVote, (HSCard, HSCard))]()
+  var lastVoteCheck:Long = System.currentTimeMillis()
 
   def startMulligan(): Unit = {
     isMulligan = true
