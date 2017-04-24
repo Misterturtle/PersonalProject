@@ -11,31 +11,6 @@ import tph._
 
 import scala.collection.mutable.ListBuffer
 
-
-
-
-
-/*
-
-
-
-
-
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
 class VoteManager(gs: GameState, vs: VoteState, ai: VoteAI, ircState: IRCState, voteValidator: VoteValidator) extends LazyLogging {
   def makeDiscoverDecision(): ActionVote = {
     val discoverTally = vs.voterMap.foldLeft(Map[Discover, Double]()) { case (accTally, voterMapElement) =>

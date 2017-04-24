@@ -69,7 +69,6 @@ class VoteParser extends LazyLogging {
     val DISCOVER = """discover(\d)""".r
     val END_TURN = """endturn""".r
     val END_TURN_SHORTHAND = """et""".r
-    val REMOVE_VOTE = """remove(.+)""".r
     val HURRY = "hurry"
 
 
@@ -161,13 +160,6 @@ class VoteParser extends LazyLogging {
 
       case "all" =>
         RemoveAllVotes()
-
-      case REMOVE_VOTE(vote) =>
-        val voteToRemove = createActionVote(sender, vote)
-        if (voteToRemove != ActionUninit())
-          RemoveVote(voteToRemove)
-        else
-          ActionUninit()
 
       case _ =>
         new ActionUninit()

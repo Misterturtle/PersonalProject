@@ -7,7 +7,6 @@ import net.liftweb.json.JsonAST.JObject
 import tph.Constants.ActionVotes._
 
 
-
 class GameState() extends LazyLogging {
   val config = ConfigFactory.load()
   val accountName = config.getString("tph.hearthstone.accountName")
@@ -26,7 +25,7 @@ class GameState() extends LazyLogging {
     (friendlyPlayer.hand ::: friendlyPlayer.board ::: List(friendlyPlayer.hero.getOrElse(Constants.emptyCard), friendlyPlayer.heroPower.getOrElse(Constants.emptyCard)) ::: enemyPlayer.hand ::: enemyPlayer.board ::: List(enemyPlayer.hero.getOrElse(Constants.emptyCard), enemyPlayer.heroPower.getOrElse(Constants.emptyCard))).find(_.id == cardID)
   }
 
-  def isChooseOne(vote: ActionVote, st: (HSCard, HSCard)) : Boolean = {
+  def isChooseOne(vote: ActionVote, st: (HSCard, HSCard)): Boolean = {
     //cardID "OG_044" is the legendary that plays both chooseone effects. Therefore we act as if it is not a chooseone
     if (friendlyPlayer.board.exists(_.cardID == "OG_044")) {
       false
@@ -46,32 +45,6 @@ class GameState() extends LazyLogging {
     }
   }
 
-
-
-  def getCard(friendly: Boolean, hand: Boolean, number: Int): HSCard = {
-    if (friendly) {
-      if (hand) {
-        friendlyPlayer.hand.find(_.handPosition == number).getOrElse(NoCard())
-      }
-      else {
-        if(number == 0)
-          friendlyPlayer.hero.getOrElse(NoCard())
-        else
-          friendlyPlayer.board.find(_.boardPosition == number).getOrElse(NoCard())
-      }
-    }
-    else {
-      if (hand) {
-        enemyPlayer.hand.find(_.handPosition == number).getOrElse(NoCard())
-      }
-      else {
-        if(number == 0)
-          enemyPlayer.hero.getOrElse(NoCard())
-        else
-          enemyPlayer.board.find(_.boardPosition == number).getOrElse(NoCard())
-      }
-    }
-  }
 
   def getSourceAndTarget(vote: ActionVote): (HSCard, HSCard) = {
 
@@ -219,15 +192,29 @@ class GameState() extends LazyLogging {
     (NoCard(), NoCard())
   }
 
-  def setPlayerNumbers(friendlyPlayerNumber: Int): Unit = {
-    val enemyPlayerNumber =
-      friendlyPlayerNumber match {
-        case 1 => 2
-        case 2 => 1
-        case _ => Constants.INT_UNINIT
+  private def getCard(friendly: Boolean, hand: Boolean, number: Int): HSCard = {
+    if (friendly) {
+      if (hand) {
+        friendlyPlayer.hand.find(_.handPosition == number).getOrElse(NoCard())
       }
-    friendlyPlayer = friendlyPlayer.copy(playerNumber = friendlyPlayerNumber)
-    enemyPlayer = enemyPlayer.copy(playerNumber = enemyPlayerNumber)
+      else {
+        if (number == 0)
+          friendlyPlayer.hero.getOrElse(NoCard())
+        else
+          friendlyPlayer.board.find(_.boardPosition == number).getOrElse(NoCard())
+      }
+    }
+    else {
+      if (hand) {
+        enemyPlayer.hand.find(_.handPosition == number).getOrElse(NoCard())
+      }
+      else {
+        if (number == 0)
+          enemyPlayer.hero.getOrElse(NoCard())
+        else
+          enemyPlayer.board.find(_.boardPosition == number).getOrElse(NoCard())
+      }
+    }
   }
 
   def gameOver(): Unit = {
@@ -243,11 +230,4 @@ class GameState() extends LazyLogging {
     else
       Constants.emptyCardInfo
   }
-
-  def update(newGS:GameState) = {
-    friendlyPlayer = newGS.friendlyPlayer
-    enemyPlayer = newGS.enemyPlayer
-  }
-
-
 }

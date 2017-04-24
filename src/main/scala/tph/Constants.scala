@@ -38,6 +38,7 @@ object Constants {
     def createEnemyBoardCard(position: Int): Card = new Card(s"Enemy Minion $position", 30 + position, Constants.INT_UNINIT, position, 2, Constants.STRING_UNINIT)
 
 
+
     def defaultGameState: GameState = {
       val gs = new GameState()
       gs.friendlyPlayer = new Player(1, hand = List(
@@ -448,16 +449,14 @@ object Constants {
     object HSActionStrings {
 
       //Friendly HSActions
-      val FRIENDLY_MINION_CONTROLLED =
-        """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from FRIENDLY PLAY -> OPPOSING PLAY""".r
+      val FRIENDLY_MINION_CONTROLLED ="""^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from FRIENDLY PLAY -> OPPOSING PLAY""".r
       val FRIENDLY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val FRIENDLY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from FRIENDLY PLAY -> FRIENDLY HAND""".r
       val FRIENDLY_MULLIGAN_REDRAW = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     HIDE_ENTITY - Entity=\[name=(.+) id=(\d+) zone=HAND zonePos=(\d+) cardId=.+ player=(\d+)] tag=ZONE value=DECK""".r
       val FRIENDLY_CARD_CREATED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=FULL_ENTITY entity=\[id=\d+ cardId=.+ name=.+\] tags=System.Collections.Generic.List\`1\[Network\+Entity\+Tag\]\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=HAND dstPos=(\d+)""".r
 
       //Enemy HSActions
-      val ENEMY_MINION_CONTROLLED =
-        """^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from OPPOSING PLAY -> FRIENDLY PLAY""".r
+      val ENEMY_MINION_CONTROLLED ="""^.+\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) .+ zone from OPPOSING PLAY -> FRIENDLY PLAY""".r
       val ENEMY_CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId= name=UNKNOWN ENTITY \[cardType=INVALID\]\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=HAND zonePos=\d+ cardId= player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val ENEMY_MULLIGAN_REDRAW = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=UNKNOWN ENTITY \[cardType=INVALID\] id=(\d+) zone=DECK zonePos=\d+ cardId= player=(\d+)\] zone from OPPOSING HAND -> OPPOSING DECK""".r
       val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=(.+) player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
@@ -466,21 +465,19 @@ object Constants {
 
 
       //Neutral HSActions
-      val CARD_DRAWN =
-        """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
+      val CARD_DRAWN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=HAND zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
       val SECRET_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card .+id=(\d+).+zone=SECRET zonePos=\d+.+player=(\d+)\] to .+ SECRET""".r
       val RETURNED_CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=COST value=\d+\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
       val CARD_PLAYED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=JUST_PLAYED value=1\] complete=False\] entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
       val CARD_DEATH = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=(.+) id=(\d+) zone=GRAVEYARD zonePos=\d+ cardId=.+ player=(\d+)] to .+ GRAVEYARD""".r
       val MINION_SUMMONED = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     FULL_ENTITY - Updating \[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=(\d+)] CardID=.+""".r
       val TRANSFORM ="""\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=(.+) id=(\d+) zone=PLAY zonePos=(\d+) cardId=(.+) player=\d+] tag=LINKED_ENTITY value=(\d+)""".r
-      val DEFINE_PLAYERS = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(.+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] to FRIENDLY PLAY \(Hero\)""".r
       val GAME_OVER = "[Power] GameState.DebugPrintPower() -     TAG_CHANGE Entity=GameEntity tag=NEXT_STEP value=FINAL_GAMEOVER"
       val DECK_TO_BOARD = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=(.+) id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] zone from .+ DECK -> .+ PLAY""".r
       val BOARD_SETASIDE_REMOVAL = """\[Power\] PowerProcessor.DoTaskListForCard\(\) - unhandled BlockType PLAY for sourceEntity \[name=(.+) id=(\d+) zone=SETASIDE zonePos=0 cardId=.+ player=(\d+)\]""".r
       val HAND_SETASIDE_REMOVAL = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False \[name=.+ id=(\d+) zone=SETASIDE zonePos=\d+ cardId= player=(\d+)] zone from .+ HAND -> """.r
       val FROZEN = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)\] tag=FROZEN value=(\d+)""".r
-      val SECRET_DESTROYED = """\[Power\] PowerTaskList.DebugPrintPower\(\) - BLOCK_START BlockType=TRIGGER Entity=\[name=.+ id=(\d+) zone=SECRET zonePos=\d+ cardId=.+ player=(\d+)\] EffectCardId= EffectIndex=\d+ Target=\d+""".r
+      val SECRET_DESTROYED = """\[Power\] PowerTaskList.DebugPrintPower\(\) - BLOCK_START BlockType=TRIGGER Entity=\[name=.+ id=\d+ zone=SECRET zonePos=\d+ cardId=.+ player=(\d+)\] EffectCardId= EffectIndex=\d+ Target=\d+""".r
       val MINION_DAMAGED = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)\] tag=DAMAGE value=(\d+)""".r
       val MINION_STEALTHED = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=CANT_BE_ATTACKED value=(\d+)\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)\] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=""".r
       val TAUNT_CHANGE = """\[Power\] GameState.DebugPrintPower\(\) -         TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)\] tag=TAUNT value=(\d+)""".r
@@ -490,13 +487,15 @@ object Constants {
       val COMBO_ACTIVE = """\[Power\] GameState.DebugPrintPower\(\) -     TAG_CHANGE Entity=(.+) tag=COMBO_ACTIVE value=(\d+)""".r
       val NEW_HERO_POWER = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] to .+ PLAY \(Hero Power\)""".r
       val CHANGE_ATTACK_VALUE = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(.+) zone=.+ zonePos=(\d+) cardId=.+ player=(\d+)\] tag=ATK value=(\d+)""".r
-      val NEW_HERO = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] to .+ PLAY \(Hero\)""".r
+      val NEW_HERO = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - TRANSITIONING card \[name=(.+) id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] to (.+) PLAY \(Hero\)""".r
       val REPLACE_HERO = """\[Power\] PowerTaskList.DebugPrintPower\(\) -     TAG_CHANGE Entity=\[name=.+ id=(\d+) zone=PLAY zonePos=0 cardId=(.+) player=(\d+)\] tag=LINKED_ENTITY value=(\d+)""".r
 
 
 
       val OPTION_CHOICE =  """\[Power\] GameState.DebugPrintOptions\(\) -   option (\d+) type=(.+) mainEntity=(.*) error=(.*) errorParam=(.*)""".r
       val OPTION_TARGET = """\[Power\] GameState.DebugPrintOptions\(\) -     target (\d+) entity=(.*) error=(.*) errorParam=(.*)""".r
+      val SUBOPTION = """\[Power\] GameState.DebugPrintOptions\(\) -     subOption (\d+) entity=(.*) error=(.*) errorParam=(.*)""".r
+
 
 
 
@@ -518,9 +517,6 @@ object Constants {
       val ENEMY_CARD_RETURN = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=.+ local=.+ \[name=(.+) id=(\d+) zone=HAND zonePos=.+ cardId=.+ player=(\d+)\] zone from OPPOSING PLAY -> OPPOSING HAND""".r
       val OLD_ZONE_CHANGE = """^\[Power\] PowerTaskList.+TAG_CHANGE Entity=.+id=(\d+).+zone=(.+) zonePos=.+ player=(\d+)\] tag=ZONE value=(.+)""".r
       val ZONE_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - id=\d+ local=False .+id=(\d+) zone=.+ zonePos=\d+ cardId=.+ player=(\d+)\] zone from (.+) -> (.+)$""".r
-      val BOARD_POSITION_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+ name=.+\] tag=ZONE_POSITION value=\d+\] complete=False\] entity=\[name=.+ id=(\d+) zone=PLAY zonePos=\d+ cardId=.+ player=(\d+)] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=(\d+)""".r
-      val HAND_POSITION_CHANGE = """\[Zone\] ZoneChangeList.ProcessChanges\(\) - processing index=\d+ change=powerTask=\[power=\[type=TAG_CHANGE entity=\[id=\d+ cardId=.+name=.+tag=ZONE_POSITION value=\d+\] complete=False\] entity=.+id=(\d+).+zone=HAND zonePos=(\d+).+player=(\d+).+dstPos=(\d+)""".r
-
     }
 
   }

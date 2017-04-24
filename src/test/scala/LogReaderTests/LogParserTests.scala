@@ -15,21 +15,13 @@ class LogParserTests extends FlatSpec with Matchers {
 
   val mockActionFile = new File(getClass.getResource("/mockActionLog.txt").getPath)
 
-  "A Log Parser" should "Get Player Numbers" in {
+  "A Log Parser" should "construct a GameState" in {
 
     val gs = new GameState()
     val lp = new LogParser(gs)
-    val actualPlayerNumbers = lp.getPlayerNumbers(mockActionFile)
-    val expectedPlayerNumbers = (1,2)
-    actualPlayerNumbers shouldEqual expectedPlayerNumbers
-  }
-
-  it should "construct a GameState" in {
-
-    val gs = new GameState()
-    val lp = new LogParser(gs)
-    val logFileReader = new LogFileReader(lp, gs)
-    logFileReader.parseFile(mockActionFile)
+    val logFileReader = new LogFileReader(lp, gs, mockActionFile)
+    logFileReader.read()
+    logFileReader.updateGameState()
     
 
     val actualFriendlyHand = gs.friendlyPlayer.hand

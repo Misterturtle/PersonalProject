@@ -119,6 +119,24 @@ class VoteManagerTests extends FreeSpec with Matchers {
   }
 
 
+  "When the makeMulliganDecision method is called, VoteManager shouldTally votes and return the max vote" in {
+    val gs = new GameState()
+    val vs = new VoteState()
+    val ai = new VoteAI(vs, gs)
+
+
+    val voter1 = Voter("A Twitch User", List(MulliganVote(true,false,true,false)))
+    val voter2 = Voter("Another Twitch User", List(MulliganVote(true,false,true,false)))
+    val voter3 = Voter("A Third Twitch User", List(MulliganVote(true,false,false,false)))
+    val ircState = new IRCState()
+    val validator = new VoteValidator(gs)
+    val vm = new VoteManager(gs, vs, ai, ircState, validator)
+
+    vs.voterMap = Map[String, Voter]("A Twitch User" -> voter1, "Another Twitch User" -> voter2, "A Third Twitch User" -> voter3)
+    vm.makeMulliganDecision() shouldBe MulliganVote(true,false,true,false)
+  }
+
+
 
   "When clearActionVotes method is ran, VoteManager should tell all voters to clear their actionVote lists" in {
 
@@ -149,6 +167,38 @@ class VoteManagerTests extends FreeSpec with Matchers {
     }
     vs.voterMap = Map("A Twitch User" -> voter1, "Another Twitch User" -> voter2, "A Third Twitch User" -> voter3)
     vm.clearActionVotes()
+    votersCleared shouldBe ListBuffer[String]("A Twitch User", "Another Twitch User", "A Third Twitch User")
+  }
+
+  "When clearAllVotes method is ran, VoteManager should tell all voters to clear all their votes" in {
+
+    val votersCleared = ListBuffer[String]()
+    val gs = new GameState()
+    val vs = new VoteState()
+    val ai = new VoteAI(vs,gs)
+    val ircState = new IRCState()
+    val validator = new VoteValidator(gs)
+    val vm = new VoteManager(gs, vs, ai, ircState, validator)
+    val voter1 = new Voter("A Twitch User"){
+      override def clearAllVotes():Voter = {
+        votersCleared.append(name)
+        copy()
+      }
+    }
+    val voter2 = new Voter("Another Twitch User"){
+      override def clearAllVotes():Voter = {
+        votersCleared.append(name)
+        copy()
+      }
+    }
+    val voter3 = new Voter("A Third Twitch User"){
+      override def clearAllVotes():Voter = {
+        votersCleared.append(name)
+        copy()
+      }
+    }
+    vs.voterMap = Map("A Twitch User" -> voter1, "Another Twitch User" -> voter2, "A Third Twitch User" -> voter3)
+    vm.clearAllVotes()
     votersCleared shouldBe ListBuffer[String]("A Twitch User", "Another Twitch User", "A Third Twitch User")
   }
 
@@ -1085,6 +1135,10 @@ class VoteManagerTests extends FreeSpec with Matchers {
         }
       }
     }
+
+
+
+  "Vote Manager should update "
 
 
   }

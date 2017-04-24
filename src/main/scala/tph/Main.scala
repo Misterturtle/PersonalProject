@@ -29,7 +29,7 @@ object Main extends App {
 
 
   tb.init(logFileReader, ircBot, hs)
-  tb.start(logFileReader, gs, ircState, vm, hs, validator)
+  tb.start(logFileReader, gs, ircState, vm, hs, validator, vs, tb.INDEFINITE)
 
 
 

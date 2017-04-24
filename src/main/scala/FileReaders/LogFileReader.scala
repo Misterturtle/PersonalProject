@@ -12,17 +12,14 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by Harambe on 2/22/2017.
   */
-class LogFileReader(lp: LogParser, gs: GameState) {
+class LogFileReader(lp: LogParser, gs: GameState, file:File = new File(ConfigFactory.load().getString("tph.readerFiles.outputLog"))) {
 
   val config = ConfigFactory.load()
-  val defaultFile = new File(config.getString("tph.readerFiles.outputLog"))
-  val reader = new BufferedReader(new FileReader(defaultFile))
-
-  val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
-  val writer = new PrintWriter(new FileWriter(actionLogFile))
+  val reader = new BufferedReader(new FileReader(file))
 
   val gameStateActions = ListBuffer[GameStateAction]()
   val ircActions = ListBuffer[IRCAction]()
+  val optionDumpList = ListBuffer[PowerOption]()
 
   var lastTimeActive = System.currentTimeMillis()
 
@@ -32,43 +29,32 @@ class LogFileReader(lp: LogParser, gs: GameState) {
     }
   }
 
-
-  def update(): Unit = {
+  def read(): Unit = {
     while (reader.ready()) {
       lastTimeActive = System.currentTimeMillis()
       val line = reader.readLine()
       val hsAction = lp.identifyHSAction(line)
-      hsAction match {
-        case action: GameStateAction =>
-          gameStateActions.append(action)
+      sort(hsAction)
+    }
+  }
 
-        case action: IRCAction =>
-          ircActions.append(action)
+  private def sort(hsAction: HSAction): Unit ={
+    hsAction match {
+      case action: GameStateAction =>
+        gameStateActions.append(action)
 
-        case _ =>
-      }
+      case action: IRCAction =>
+        ircActions.append(action)
+
+      case _ =>
     }
   }
 
 
-  def parseFile(file: File): Unit = {
-    val fileReader = new BufferedReader(new FileReader(file))
-
-    while (fileReader.ready()) {
-      lastTimeActive = System.currentTimeMillis()
-      val line = fileReader.readLine()
-      val hsAction = lp.identifyHSAction(line)
-      hsAction match {
-        case action: GameStateAction =>
-          action.updateGameState(gs)
-
-        case action: IRCAction =>
-          ircActions.append(action)
-
-        case _ =>
-      }
-    }
+  def updateGameState(): Unit ={
+    gameStateActions.foreach(
+      x => x.updateGameState(gs)
+    )
   }
-
 }
 

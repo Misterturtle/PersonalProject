@@ -158,12 +158,12 @@ class VoteParserTests extends FreeSpec with Matchers {
     }
 
      "create a mulligan vote" in {
-      val command = " 1,2,3 "
+      val command = "1,2,3"
       vp.parseMulligan(sender, command) shouldBe new MulliganVote(true, true, true, false)
     }
 
      "create a mulligan vote in any order" in {
-      val command = "3, 1,4 "
+      val command = "3,1,4"
       vp.parseMulligan(sender, command) shouldBe new MulliganVote(true, false, true, true)
     }
 

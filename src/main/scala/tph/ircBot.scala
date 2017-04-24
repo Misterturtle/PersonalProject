@@ -46,10 +46,8 @@ class IRCBot(voteManager: VoteManager, voteParser: VoteParser = new VoteParser) 
             val vote = voteParser.createVote(sender, singleCommand)
             vote match {
               case ActionUninit() =>
-              case RemoveVote(nestedRemoveVote) =>
               case actionVote: ActionVote =>
                 voteManager.removeVote(sender, actionVote)
-              case _ =>
             }
         }
 
@@ -74,8 +72,6 @@ class IRCBot(voteManager: VoteManager, voteParser: VoteParser = new VoteParser) 
                 val vote = voteParser.createVote(sender, singleCommand)
                 vote match {
                   case ActionUninit() =>
-                  case RemoveVote(voteToRemove) =>
-                    voteManager.removeVote(sender, voteToRemove)
                   case _ =>
                     voteManager.voteEntry(sender, vote)
                 }

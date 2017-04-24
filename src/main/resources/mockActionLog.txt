@@ -1,20 +1,20 @@
 //Define Players
-[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=some id=100 zone=PLAY zonePos=0 cardId=some player=1] to FRIENDLY PLAY (Hero)
+[Zone] ZoneChangeList.ProcessChanges() - TRANSITIONING card [name=Constant Uninitialized id=100 zone=PLAY zonePos=0 cardId=Constant Uninitialized player=1] to FRIENDLY PLAY (Hero)
 
 //Setup Friendly Card
 
-[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 1 id=1 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
-[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 2 id=2 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
-[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 3 id=3 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
-[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 4 id=4 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
-[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 5 id=5 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
-[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=some name=some] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 6 id=6 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=Constant Uninitialized name=Constant Uninitialized] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 1 id=1 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=Constant Uninitialized name=Constant Uninitialized] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 2 id=2 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=2
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=Constant Uninitialized name=Constant Uninitialized] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 3 id=3 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=3
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=Constant Uninitialized name=Constant Uninitialized] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 4 id=4 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=4
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=Constant Uninitialized name=Constant Uninitialized] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 5 id=5 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=5
+[Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId=Constant Uninitialized name=Constant Uninitialized] tag=ZONE_POSITION value=55] complete=False] entity=[name=Friendly Card 6 id=6 zone=HAND zonePos=0 cardId=Constant Uninitialized player=1] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=6
 
 //Setup Friendly Minion
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 1 id=11 zone=PLAY zonePos=1 cardId=Constant Uninitialized player=1] CardID=some
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 2 id=12 zone=PLAY zonePos=2 cardId=Constant Uninitialized player=1] CardID=some
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 3 id=13 zone=PLAY zonePos=3 cardId=Constant Uninitialized player=1] CardID=some
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 4 id=14 zone=PLAY zonePos=4 cardId=Constant Uninitialized player=1] CardID=some
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 1 id=11 zone=PLAY zonePos=1 cardId=Constant Uninitialized player=1] CardID=Constant Uninitialized
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 2 id=12 zone=PLAY zonePos=2 cardId=Constant Uninitialized player=1] CardID=Constant Uninitialized
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 3 id=13 zone=PLAY zonePos=3 cardId=Constant Uninitialized player=1] CardID=Constant Uninitialized
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Friendly Minion 4 id=14 zone=PLAY zonePos=4 cardId=Constant Uninitialized player=1] CardID=Constant Uninitialized
 
 //Setup Enemy Card
 [Zone] ZoneChangeList.ProcessChanges() - processing index=55 change=powerTask=[power=[type=TAG_CHANGE entity=[id=55 cardId= name=UNKNOWN ENTITY [cardType=INVALID]] tag=ZONE_POSITION value=55] complete=False] entity=[name=UNKNOWN ENTITY [cardType=INVALID] id=21 zone=HAND zonePos=0 cardId= player=2] srcZoneTag=INVALID srcPos= dstZoneTag=INVALID dstPos=1
@@ -26,7 +26,7 @@
 
 //Setup Enemy Minion
 
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 1 id=31 zone=PLAY zonePos=1 cardId=Constant Uninitialized player=2] CardID=some
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 2 id=32 zone=PLAY zonePos=2 cardId=Constant Uninitialized player=2] CardID=some
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 3 id=33 zone=PLAY zonePos=3 cardId=Constant Uninitialized player=2] CardID=some
-[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 4 id=34 zone=PLAY zonePos=4 cardId=Constant Uninitialized player=2] CardID=some
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 1 id=31 zone=PLAY zonePos=1 cardId=Constant Uninitialized player=2] CardID=Constant Uninitialized
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 2 id=32 zone=PLAY zonePos=2 cardId=Constant Uninitialized player=2] CardID=Constant Uninitialized
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 3 id=33 zone=PLAY zonePos=3 cardId=Constant Uninitialized player=2] CardID=Constant Uninitialized
+[Power] PowerTaskList.DebugPrintPower() -     FULL_ENTITY - Updating [name=Enemy Minion 4 id=34 zone=PLAY zonePos=4 cardId=Constant Uninitialized player=2] CardID=Constant Uninitialized

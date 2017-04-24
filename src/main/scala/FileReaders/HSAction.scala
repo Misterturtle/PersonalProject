@@ -2,6 +2,7 @@ package FileReaders
 
 import Logic.IRCState
 import VoteSystem.VoteState
+import com.typesafe.config.ConfigFactory
 import net.liftweb.json.JsonAST.JObject
 import tph._
 
@@ -23,12 +24,9 @@ object HSAction {
     def updateGameState(gameState:GameState): Unit = {}
   }
 
-  trait VoteAction extends HSAction{
+  trait PowerOption extends HSAction{
     def updateIRC(ircState: IRCState): Unit = {}
     def updateGameState(gameState:GameState): Unit = {}
-    def updateVoteState(voteState:VoteState): Unit
-
-
   }
 
 
@@ -80,7 +78,7 @@ object HSAction {
     }
   }
 
-  case class MulliganRedraw(name: String, id: Int, position: Int, playerNumber: Int) extends GameStateAction {
+  case class FriendlyMulliganRedraw(name: String, id: Int, position: Int, playerNumber: Int) extends GameStateAction {
     override def updateGameState(gameState: GameState): Unit = {
       if (gameState.getCardByID(id).isDefined) {
         val card = gameState.getCardByID(id).get
@@ -124,8 +122,8 @@ object HSAction {
         val replacementCard = gameState.enemyPlayer.hand.last
         val discardCard = gameState.getCardByID(id).get
         val removeMulliganPlayer = gameState.enemyPlayer.removeCard(discardCard)
-        //Due to the log output order, the new card is drawn before the old card is removed.
-        //So we have to remove the last card and re-add it AFTER we removed the old mulligan card
+        //Due to the log output order, the new card is drawn before the EnemyMulliganRedraw appears in log.
+        //So we have to replace the discardedMulliganCard with the last card in the hand.
         gameState.enemyPlayer = removeMulliganPlayer.removeCard(removeMulliganPlayer.hand.last).addCard(replacementCard.copy(handPosition = discardCard.handPosition, boardPosition = Constants.INT_UNINIT, player = playerNumber), true)
       }
     }
@@ -133,7 +131,6 @@ object HSAction {
 
 
   //////////////////////////////////////////////////Neutral Events//////////////////////////////////////////////////////
-
 
   case class CardDrawn(name: String, id: Int, cardID: String, position: Int, player: Int) extends GameStateAction {
     def updateGameState(gameState: GameState): Unit = {
@@ -170,6 +167,23 @@ object HSAction {
     }
   }
 
+
+  case class NewHero(name:String, id:Int, cardID:String, player:Int, friendOrFoe:String) extends GameStateAction {
+    override def updateGameState(gameState: GameState): Unit = {
+      val cardInfo = gameState.getCardInfo(cardID)
+      if (friendOrFoe == "FRIENDLY") {
+        val newHero = Card(name, id, Constants.INT_UNINIT, 0, player, cardID, cardInfo = cardInfo)
+        gameState.friendlyPlayer = gameState.friendlyPlayer.copy(hero = Some(newHero), playerNumber = player)
+      }
+      else {
+        val newHero = Card(name, id, Constants.INT_UNINIT, 0, player, cardID, cardInfo = cardInfo)
+        gameState.enemyPlayer = gameState.enemyPlayer.copy(hero = Some(newHero), playerNumber = player)
+      }
+    }
+  }
+
+
+
   case class NewHeroPower(id: Int, cardID: String, player: Int) extends GameStateAction {
     def updateGameState(gameState: GameState): Unit = {
       val cardInfo = gameState.getCardInfo(cardID)
@@ -183,6 +197,26 @@ object HSAction {
         }
     }
   }
+
+
+  case class ReplaceHero(id:Int, cardID:String, player:Int, oldHeroID:Int) extends GameStateAction {
+    override def updateGameState(gameState: GameState): Unit = {
+      if (player == gameState.friendlyPlayer.playerNumber) {
+        if(oldHeroID == gameState.friendlyPlayer.hero.getOrElse(NoCard()).id) {
+          val newHeroCard = Card("Friendly Hero", id, Constants.INT_UNINIT, 0, player, cardID, cardInfo = gameState.getCardInfo(cardID))
+          gameState.friendlyPlayer = gameState.friendlyPlayer.copy(hero = Some(newHeroCard))
+        }
+      }
+      else {
+        if(oldHeroID == gameState.enemyPlayer.hero.getOrElse(NoCard()).id) {
+          val newHero = Card("Enemy Hero", id, Constants.INT_UNINIT, 0, player, cardID, cardInfo = gameState.getCardInfo(cardID))
+          gameState.enemyPlayer = gameState.enemyPlayer.copy(hero = Some(newHero))
+        }
+      }
+    }
+  }
+
+
 
 
   case class DeckToBoard(name: String, id: Int, cardID: String, player: Int) extends GameStateAction {
@@ -216,37 +250,6 @@ object HSAction {
       }
       else {
         gameState.enemyPlayer = gameState.enemyPlayer.copy(isComboActive = isCombo)
-      }
-    }
-  }
-
-  case class NewHero(id:Int, cardID:String, player:Int) extends GameStateAction {
-    override def updateGameState(gameState: GameState): Unit = {
-      val cardInfo = gameState.getCardInfo(cardID)
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val newHero = Card("Friendly Hero", id, Constants.INT_UNINIT, 0, player, cardID, cardInfo = cardInfo)
-        gameState.friendlyPlayer = gameState.friendlyPlayer.copy(hero = Some(newHero))
-      }
-      else {
-        val newHero = Card("Enemy Hero", id, Constants.INT_UNINIT, 0, player, cardID, cardInfo = cardInfo)
-        gameState.enemyPlayer = gameState.enemyPlayer.copy(hero = Some(newHero))
-      }
-    }
-  }
-
-  case class ReplaceHero(id:Int, cardID:String, player:Int, oldHeroID:Int) extends GameStateAction {
-    override def updateGameState(gameState: GameState): Unit = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        if(oldHeroID == gameState.friendlyPlayer.hero.getOrElse(NoCard()).id) {
-          val newHeroCard = Card("Friendly Hero", id, Constants.INT_UNINIT, 0, player, cardID)
-          gameState.friendlyPlayer = gameState.friendlyPlayer.copy(hero = Some(newHeroCard))
-        }
-      }
-      else {
-        if(oldHeroID == gameState.enemyPlayer.hero.getOrElse(NoCard()).id) {
-          val newHero = Card("Enemy Hero", id, Constants.INT_UNINIT, 0, player, cardID)
-          gameState.enemyPlayer = gameState.enemyPlayer.copy(hero = Some(newHero))
-        }
       }
     }
   }
@@ -291,10 +294,9 @@ object HSAction {
   case class CardPlayed(name: String, id: Int, dstPos: Int, cardID: String, player: Int) extends GameStateAction {
     override def updateGameState(gameState: GameState): Unit = {
       if (gameState.getCardByID(id).isDefined) {
-        val cardInfo = gameState.getCardInfo(cardID)
         if (player == gameState.friendlyPlayer.playerNumber) {
           val cardBeingPlayed = gameState.getCardByID(id).get
-          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player, cardID, cardInfo = cardInfo)
+          val convertedCard = cardBeingPlayed.copy(handPosition = Constants.INT_UNINIT, boardPosition = dstPos)
 
           gameState.friendlyPlayer = gameState.friendlyPlayer.removeCard(cardBeingPlayed)
           if (dstPos != 0)
@@ -305,7 +307,7 @@ object HSAction {
         }
         else {
           val cardBeingPlayed = gameState.getCardByID(id).get
-          val convertedCard = new Card(name, id, Constants.INT_UNINIT, dstPos, player, cardID, cardInfo = cardInfo)
+          val convertedCard = cardBeingPlayed.copy(name = name, handPosition = Constants.INT_UNINIT, boardPosition = dstPos, cardID = cardID, cardInfo = gameState.getCardInfo(cardID))
 
           gameState.enemyPlayer = gameState.enemyPlayer.removeCard(cardBeingPlayed)
           if (dstPos != 0)
@@ -317,6 +319,39 @@ object HSAction {
       }
     }
   }
+
+
+  case class SecretPlayed(id: Int, player: Int) extends GameStateAction {
+    override def updateGameState(gameState: GameState): Unit = {
+      if (gameState.getCardByID(id).isDefined) {
+        if (player == gameState.friendlyPlayer.playerNumber) {
+          val currentSecrets = gameState.friendlyPlayer.secretsInPlay
+          gameState.friendlyPlayer = gameState.friendlyPlayer.removeCard(gameState.getCardByID(id).get).copy(secretsInPlay = currentSecrets +1)
+        }
+        else {
+          val currentSecrets = gameState.enemyPlayer.secretsInPlay
+          gameState.enemyPlayer = gameState.enemyPlayer.removeCard(gameState.getCardByID(id).get).copy(secretsInPlay = currentSecrets +1)
+        }
+      }
+    }
+  }
+
+
+  case class SecretDestroyed(player: Int) extends GameStateAction {
+    override def updateGameState(gameState: GameState): Unit = {
+      if (player == gameState.friendlyPlayer.playerNumber) {
+        val currentSecrets = gameState.friendlyPlayer.secretsInPlay
+        gameState.friendlyPlayer = gameState.friendlyPlayer.copy(secretsInPlay = currentSecrets -1)
+      }
+      else {
+        val currentSecrets = gameState.enemyPlayer.secretsInPlay
+        gameState.enemyPlayer = gameState.enemyPlayer.copy(secretsInPlay = currentSecrets -1)
+      }
+    }
+  }
+
+
+
 
   case class MinionSummoned(name: String, id: Int, position: Int, cardID: String, player: Int) extends GameStateAction {
     override def updateGameState(gameState: GameState): Unit = {
@@ -334,28 +369,27 @@ object HSAction {
     override def updateGameState(gameState: GameState): Unit = {
       if (gameState.getCardByID(oldId).isDefined) {
         val card = gameState.getCardByID(oldId).get
-        val cardInfo = gameState.getCardInfo(cardID)
 
         if (card.player == gameState.friendlyPlayer.playerNumber) {
           if (card.handPosition != Constants.INT_UNINIT) {
-            val newCard = card.copy(name = name, id = newId, cardID = cardID, cardInfo = cardInfo)
+            val newCard = Card("Transformed Card", newId, position, Constants.INT_UNINIT, card.player, cardID = Constants.STRING_UNINIT)
             val removedCardFriendlyPlayer = gameState.friendlyPlayer.removeCard(card)
             gameState.friendlyPlayer = removedCardFriendlyPlayer.addCard(newCard, true)
           }
           else {
-            val newCard = card.copy(name = name, id = newId, cardID = cardID, cardInfo = cardInfo)
+            val newCard = Card("Transformed Minion", newId, Constants.INT_UNINIT, position, card.player, cardID = Constants.STRING_UNINIT)
             val removedCardFriendlyPlayer = gameState.friendlyPlayer.removeCard(card)
             gameState.friendlyPlayer = removedCardFriendlyPlayer.addCard(newCard, false)
           }
         }
         else {
           if (card.handPosition != Constants.INT_UNINIT) {
-            val newCard = card.copy(name = name, id = newId, cardID = cardID, cardInfo = cardInfo)
+            val newCard = Card("Transformed Card", newId, position, Constants.INT_UNINIT, card.player, cardID = Constants.STRING_UNINIT)
             val removedCardEnemyPlayer = gameState.enemyPlayer.removeCard(card)
             gameState.enemyPlayer = removedCardEnemyPlayer.addCard(newCard, true)
           }
           else {
-            val newCard = card.copy(name = name, id = newId, cardID = cardID, cardInfo = cardInfo)
+            val newCard = Card("Transformed Minion", newId, Constants.INT_UNINIT, position, card.player, cardID = Constants.STRING_UNINIT)
             val removedCardEnemyPlayer = gameState.enemyPlayer.removeCard(card)
             gameState.enemyPlayer = removedCardEnemyPlayer.addCard(newCard, false)
           }
@@ -392,20 +426,7 @@ object HSAction {
       }
     }
   }
-  case class SecretPlayed(id: Int, player: Int) extends GameStateAction {
-    override def updateGameState(gameState: GameState): Unit = {
-      if (gameState.getCardByID(id).isDefined) {
-        if (player == gameState.friendlyPlayer.playerNumber) {
-          val currentSecrets = gameState.friendlyPlayer.secretsInPlay
-          gameState.friendlyPlayer = gameState.friendlyPlayer.removeCard(gameState.getCardByID(id).get).copy(secretsInPlay = currentSecrets +1)
-        }
-        else {
-          val currentSecrets = gameState.enemyPlayer.secretsInPlay
-          gameState.enemyPlayer = gameState.enemyPlayer.removeCard(gameState.getCardByID(id).get).copy(secretsInPlay = currentSecrets +1)
-        }
-      }
-    }
-  }
+
 
   case class MinionDamaged(id:Int, player:Int, damage:Int) extends GameStateAction {
     override def updateGameState(gameState: GameState): Unit = {
@@ -438,7 +459,8 @@ object HSAction {
       }
     }
   }
-  case class MinionStealthed(isStealthed:Boolean, id:Int, player:Int) extends GameStateAction {
+
+  case class MinionStealthed(id: Int, player: Int, isStealthed: Boolean) extends GameStateAction {
     override def updateGameState(gameState: GameState): Unit = {
       val card = gameState.getCardByID(id)
       if (card.nonEmpty) {
@@ -493,21 +515,6 @@ object HSAction {
     }
   }
 
-
-  case class SecretDestroyed(id: Int, player: Int) extends GameStateAction {
-    override def updateGameState(gameState: GameState): Unit = {
-      if (player == gameState.friendlyPlayer.playerNumber) {
-        val currentSecrets = gameState.friendlyPlayer.secretsInPlay
-        gameState.friendlyPlayer = gameState.friendlyPlayer.copy(secretsInPlay = currentSecrets -1)
-      }
-      else {
-        val currentSecrets = gameState.enemyPlayer.secretsInPlay
-        gameState.enemyPlayer = gameState.enemyPlayer.copy(secretsInPlay = currentSecrets -1)
-      }
-    }
-  }
-
-
   case class MulliganStart() extends IRCAction {
     override def updateIRC(ircState:IRCState): Unit = {
         ircState.startMulligan()
@@ -528,13 +535,7 @@ object HSAction {
   }
 
 
-  case class DefinePlayers(id:Int, cardID:String, friendlyPlayerNumber: Int) extends GameStateAction {
-    override def updateGameState(gameState: GameState): Unit = {
-      gameState.setPlayerNumbers(friendlyPlayerNumber)
-      val newHero = Card("Friendly Hero", id, Constants.INT_UNINIT, 0, friendlyPlayerNumber, cardID)
-      gameState.friendlyPlayer = gameState.friendlyPlayer.copy(hero = Some(newHero))
-    }
-  }
+
 
   case class GameOver() extends GameStateAction with IRCAction {
     override def updateGameState(gameState: GameState): Unit = {
@@ -548,11 +549,15 @@ object HSAction {
 
   case class TurnStart(playerName:String) extends IRCAction{
     override def updateIRC(ircState:IRCState): Unit = {
-          ircState.startTurn()
+      val config = ConfigFactory.load()
+      val accountName = config.getString("tph.hearthstone.accountName")
+
+      if(playerName == accountName)
+        ircState.startMyTurn()
     }
   }
 
-  case class TurnEnd(playerName:String) extends GameStateAction with IRCAction{
+  case class TurnEnd(playerName:String) extends GameStateAction {
     override def updateGameState(gameState: GameState): Unit = {
       if(playerName == gameState.accountName) {
         gameState.friendlyPlayer = gameState.friendlyPlayer.copy(isComboActive = false)
@@ -567,33 +572,20 @@ object HSAction {
     }
 
     override def updateIRC(ircState:IRCState): Unit = {
-        ircState.endTurn()
+      val config = ConfigFactory.load()
+      val accountName = config.getString("tph.hearthstone.accountName")
+      if(playerName == accountName)
+        ircState.endMyTurn()
     }
   }
 
 
 
-  case class OptionChoice(choiceNum:Int, choiceType:String, mainEntity:Entity, error:String, errorParam:String) extends VoteAction{
-    override def updateVoteState(voteState: VoteState): Unit = {
+  case class PowerOptionChoice(choiceNum:Int, choiceType:String, mainEntity:Entity, error:String, errorParam:String, listOfTargets:List[PowerOptionTarget] = Nil, listOfSubOptions:List[PowerSubOption] = Nil) extends PowerOption
 
+  case class PowerOptionTarget(choiceNum:Int, entity:Entity, error:String, errorParam:String) extends PowerOption
 
-    }
-  }
-
-
-  case class OptionTarget(choiceNum:Int, entity:Entity, error:String, errorParam:String) extends VoteAction{
-    override def updateVoteState(voteState: VoteState): Unit = {
-
-
-    }
-  }
-
-  case class SubOption(entity:Entity, error:String, errorParam: String) extends VoteAction{
-    override def updateVoteState(voteState: VoteState): Unit =
-  }
-
-
-
+  case class PowerSubOption(subOptionNum:Int, entity:Entity, error:String, errorParam: String, listOfTargets:List[PowerOptionTarget] = Nil) extends PowerOption
 
 
   case class HSActionUninit() extends HSAction {

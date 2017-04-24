@@ -49,22 +49,4 @@ object MainDebug extends JFXApp {
     title = "TPH Debug"
     scene = new Scene(controller.root, 1000, 800)
   }
-
-
-  tb.init(logFileReader, ircBot, hs)
-
-
-  val task = new Runnable() {
-    @Override
-    def run() {
-
-      tb.startDebug(logFileReader, gs, ircState, vm, hs, controller,validator)
-    }
-  }
-
-
-  val thread = new Thread(task)
-
-  thread.start()
-
 }
