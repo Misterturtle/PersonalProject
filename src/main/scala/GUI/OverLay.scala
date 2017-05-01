@@ -1,6 +1,6 @@
 package GUI
 
-import tph.GameState
+import GameState.GameState
 
 /**
   * Created by Harambe on 3/18/2017.

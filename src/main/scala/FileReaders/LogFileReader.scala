@@ -3,9 +3,9 @@ package FileReaders
 import java.io._
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
+import GameState.GameState
 import com.typesafe.config.ConfigFactory
 import FileReaders.HSAction._
-import tph.GameState
 
 import scala.collection.mutable.ListBuffer
 

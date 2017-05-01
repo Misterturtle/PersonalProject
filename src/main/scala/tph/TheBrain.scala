@@ -3,6 +3,7 @@ package tph
 import FileReaders.HSAction._
 import FileReaders.{LogParser, LogFileReader}
 import GUI.{Controller, Display}
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteAI, VoteState, VoteManager}
 import com.typesafe.config.ConfigFactory

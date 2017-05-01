@@ -3,6 +3,7 @@ package AcceptanceTests
 import java.util.Scanner
 
 import GUI.{Display}
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem._
 import com.typesafe.config.ConfigFactory
@@ -88,29 +89,6 @@ class TwitchUser extends FreeSpec with Matchers {
         CardPlayWithFriendlyTarget(1,9),
         CardPlayWithFriendlyTarget(1,10))}
 
-    "be able to type the command '?f0-10' to refer to my future hero and board, so that I can vote to target minions that are not on my board yet" in {
-      val vs = new VoteState()
-      val gs = new GameState()
-      val ai = new VoteAI(vs,gs)
-      val ircState = new IRCState()
-      val validator = new VoteValidator(gs)
-      val vm = new VoteManager(gs, vs, ai, ircState, validator)
-      val ircBot = new IRCBot(vm)
-      for(a<- 0 to 10)
-        ircBot.onMessage("None", "A Twitch User", "None", "None", s"!c1 > ?f$a")
-      vs.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
-        FutureCardPlayWithFriendlyTarget(1,0, false , true),
-        FutureCardPlayWithFriendlyTarget(1,1, false, true),
-        FutureCardPlayWithFriendlyTarget(1,2, false, true),
-        FutureCardPlayWithFriendlyTarget(1,3, false, true),
-        FutureCardPlayWithFriendlyTarget(1,4, false, true),
-        FutureCardPlayWithFriendlyTarget(1,5, false, true),
-        FutureCardPlayWithFriendlyTarget(1,6, false, true),
-        FutureCardPlayWithFriendlyTarget(1,7, false, true),
-        FutureCardPlayWithFriendlyTarget(1,8, false, true),
-        FutureCardPlayWithFriendlyTarget(1,9, false, true),
-        FutureCardPlayWithFriendlyTarget(1,10, false, true))}
-
 
     "be able to type the command 'e0-10' to refer to the future enemy hero and board, so that I can quickly send votes" in {
       val vs = new VoteState()
@@ -134,32 +112,6 @@ class TwitchUser extends FreeSpec with Matchers {
         CardPlayWithEnemyTarget(1,8),
         CardPlayWithEnemyTarget(1,9),
         CardPlayWithEnemyTarget(1,10))}
-
-    "be able to type the command '?e0-10' to refer to the enemy hero and board, so that I can vote to target minions that are not on his board yet" in {
-      val vs = new VoteState()
-      val gs = new GameState()
-      val ai = new VoteAI(vs,gs)
-      val ircState = new IRCState()
-      val validator = new VoteValidator(gs)
-      val vm = new VoteManager(gs, vs, ai, ircState, validator)
-      val ircBot = new IRCBot(vm)
-      for(a<- 0 to 10)
-        ircBot.onMessage("None", "A Twitch User", "None", "None", s"!c1 > ?e$a")
-      vs.voterMap("A Twitch User").actionVoteList shouldBe List[ActionVote](
-        FutureCardPlayWithEnemyTarget(1,0, false, true),
-        FutureCardPlayWithEnemyTarget(1,1, false, true),
-        FutureCardPlayWithEnemyTarget(1,2, false, true),
-        FutureCardPlayWithEnemyTarget(1,3, false, true),
-        FutureCardPlayWithEnemyTarget(1,4, false, true),
-        FutureCardPlayWithEnemyTarget(1,5, false, true),
-        FutureCardPlayWithEnemyTarget(1,6, false, true),
-        FutureCardPlayWithEnemyTarget(1,7, false, true),
-        FutureCardPlayWithEnemyTarget(1,8, false, true),
-        FutureCardPlayWithEnemyTarget(1,9, false, true),
-        FutureCardPlayWithEnemyTarget(1,10, false, true))}
-
-
-
 
 
     "be able to type the command 'hp' to refer to my hero power, so that I can quickly send votes " in {

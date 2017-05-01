@@ -1,6 +1,7 @@
 package GameStateTests
 
 import FileReaders.CardInfo
+import GameState.{Player, GameState}
 import net.liftweb.json.JsonAST.JObject
 import org.scalatest.{FlatSpec, Matchers}
 import tph._

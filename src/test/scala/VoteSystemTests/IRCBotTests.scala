@@ -1,11 +1,12 @@
 package VoteSystemTests
 
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem._
 import org.scalatest.{FreeSpec, FlatSpec, Matchers}
 import tph.Constants.ActionVotes.{NormalAttack, ActionVote, CardPlay, ActionUninit}
 import tph.Constants.Vote
-import tph.{GameState, IRCBot}
+import tph.IRCBot
 import org.scalatest.tagobjects.Slow
 
 import scala.collection.mutable.ListBuffer

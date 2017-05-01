@@ -1,9 +1,8 @@
-package tph
+package GameState
 
 import FileReaders.CardInfo
 import com.typesafe.scalalogging.LazyLogging
-
-import scala.Option
+import tph.{Card, Constants}
 
 /**
   * Created by Harambe on 2/20/2017.

@@ -3,6 +3,7 @@ package AcceptanceTests
 import java.io.File
 
 import FileReaders.{LogFileReader, LogParser, HSDataBase}
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.{VoteManager, VoteValidator, VoteAI, VoteState}
 import com.typesafe.config.ConfigFactory

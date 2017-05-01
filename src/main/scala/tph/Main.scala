@@ -2,6 +2,7 @@ package tph
 
 import FileReaders.{LogParser, LogFileReader}
 import GUI.Display
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteState, VoteAI, VoteManager}
 

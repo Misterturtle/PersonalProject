@@ -1,10 +1,10 @@
-package tph
+package GameState
 
-import FileReaders.{LogParser, CardInfo, HSDataBase}
+import FileReaders.{CardInfo, HSDataBase}
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
-import net.liftweb.json.JsonAST.JObject
 import tph.Constants.ActionVotes._
+import tph._
 
 
 class GameState() extends LazyLogging {
@@ -12,7 +12,9 @@ class GameState() extends LazyLogging {
   val accountName = config.getString("tph.hearthstone.accountName")
 
 
+
   ///////////////////-----------------------------State Dependent Variables Below Here-----------------------///////////////////////////////
+  var currentGame = Constants.emptyGame
   var friendlyPlayer = new Player()
   var enemyPlayer = new Player()
 

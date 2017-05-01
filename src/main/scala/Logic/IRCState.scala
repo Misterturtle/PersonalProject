@@ -5,6 +5,7 @@ import java.util.concurrent.{TimeUnit, Executors, ScheduledExecutorService, Sche
 import FileReaders.HSAction._
 import FileReaders.LogFileReader
 import GUI.Display
+import GameState.GameState
 import VoteSystem.{VoteValidator, VoteManager}
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging

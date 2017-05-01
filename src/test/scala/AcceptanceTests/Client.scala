@@ -2,8 +2,9 @@ package AcceptanceTests
 
 import FileReaders.HSDataBase
 import GUI.Display
+import GameState.{Player, GameState}
 import Logic.IRCState
-import VoteSystem.{VoteAI, VoteState, Voter, VoteManager}
+import VoteSystem._
 import org.scalatest.tagobjects.Slow
 import org.scalatest.{FreeSpec, FlatSpec, Matchers}
 import tph.Constants.ActionVotes._
@@ -98,13 +99,13 @@ class Client extends FreeSpec with Matchers {
       //val tb = new TheBrain
       val battlecryCard = new Card("Lance Carrier", 1, 1, Constants.INT_UNINIT, 1, "AT_084")
       val nonbattlecryCard = new Card("Wisp", 2, 2, Constants.INT_UNINIT, 1, "CS2_231")
-      val friendly = new Player(1, hand = List(battlecryCard, nonbattlecryCard), board = List(Constants.TestConstants.createFriendlyBoardCard(1)))
-      val decisionWithBC = new CardPlayWithFriendlyTarget(1, 1)
-      val decisionWithoutBC = new CardPlayWithFriendlyTarget(2, 1)
-      val hsDataBase = new HSDataBase
+      val friendlyTarget = Constants.TestConstants.createFriendlyBoardCard(1)
+      val vs = new VoteState
+      val gs = new GameState
+      val ai = new VoteAI(vs,gs)
 
-      //todo: tb.ircLogic.isValidDecision(gs, decisionWithBC) shouldBe Some(CardPlayWithFriendlyTargetWithPosition(1, 1, 1))
-      //todo: tb.ircLogic.isValidDecision(gs, decisionWithoutBC) shouldBe Some(CardPlayWithFriendlyTarget(1, 1))
+      ai.checkForBattlecryTarget(List((CardPlayWithFriendlyTarget(1,1), (battlecryCard, friendlyTarget)))) shouldBe (CardPlayWithFriendlyTargetWithPosition(1, 1, 1), (battlecryCard, friendlyTarget))
+      ai.checkForBattlecryTarget(List((CardPlayWithFriendlyTarget(1,1), (nonbattlecryCard, friendlyTarget)))) shouldBe (CardPlayWithFriendlyTarget(1, 1), (nonbattlecryCard, friendlyTarget))
     }
 
 
@@ -157,31 +158,6 @@ class Client extends FreeSpec with Matchers {
       }
 
 
-
-
-
-      "to be able to record vote accuracy, so that I can identify trolls" in {
-        //For unit tests:
-        //Be able to divide by 0
-        //Do not record accuracy if both vote lists are 0
-        val gs = new GameState()
-        val vs = new VoteState()
-        val ai = new VoteAI(vs, gs)
-        val trollVoteList = List(
-          CardPlayWithFriendlyTarget(1, 1),
-          CardPlayWithFriendlyTarget(1, 2),
-          CardPlayWithFriendlyTarget(1, 3),
-          CardPlayWithFriendlyTarget(1, 4))
-
-        val validVoteList = List(
-          CardPlay(1))
-        val troll = new Voter("Troll", validVoteList, trollVoteList)
-        vs.voterMap = Map[String, Voter]("Troll" -> troll)
-
-        vs.voterMap("Troll").voteAccuracy shouldBe List(.25)
-      }
-
-
       "to be able to eliminate voting power for voters that has been declared a troll" in {
         val gs = new GameState()
         val vs = new VoteState()
@@ -192,19 +168,6 @@ class Client extends FreeSpec with Matchers {
         vs.voterMap = Map[String, Voter]("Troll" -> troll)
         vs.voterMap("Troll").getTotalVoteValues shouldBe Map[Vote, Double]()
       }
-
-      "to be able to influence vote power based on previous voter accuracy, so that I can reward thoughtful players and punish trolls" in {
-        val gs = new GameState()
-        val vs = new VoteState()
-        val ai = new VoteAI(vs, gs)
-        val mockVoteAccuracy = List(.8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8, .8)
-        val validVoteList = List(CardPlay(1))
-        val thoughtfulVoter = new Voter("Twitch User", validVoteList, voteAccuracy = mockVoteAccuracy)
-        vs.voterMap = Map[String, Voter]("Twitch User" -> thoughtfulVoter)
-        vs.voterMap("Twitch User").accuracyVoteValues shouldBe Map(CardPlay(1) -> .8)
-      }
-
-
     }
   }
 }

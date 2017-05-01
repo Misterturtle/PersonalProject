@@ -1,6 +1,7 @@
 package GameStateTests
 
 import FileReaders.HSDataBase
+import GameState.{Player, GameState}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{FreeSpec, FlatSpec, Matchers}
 import tph.Constants.ActionVotes.CardPlay

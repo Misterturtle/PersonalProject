@@ -3,10 +3,11 @@ package LogReaderTests
 import java.io._
 
 import FileReaders.{LogFileReader, HSAction, LogParser}
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.{VoteManager, VoteAI, VoteState}
 import org.scalatest.{FlatSpec, Matchers}
-import tph.{HearthStone, GameState, Card, Constants}
+import tph.{HearthStone, Card, Constants}
 
 /**
   * Created by Harambe on 2/21/2017.

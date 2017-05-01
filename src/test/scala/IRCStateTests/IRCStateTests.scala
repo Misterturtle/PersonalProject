@@ -4,6 +4,7 @@ import javax.xml.stream.events.StartDocument
 
 import FileReaders.HSAction._
 import FileReaders.{LogParser, LogFileReader}
+import GameState.{Player, GameState}
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteAI, VoteState, VoteManager}
 import com.typesafe.config.ConfigFactory

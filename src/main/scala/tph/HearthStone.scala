@@ -3,6 +3,7 @@ package tph
 import java.io.{File, InputStream}
 import java.util.concurrent.{Executors, TimeUnit}
 
+import GameState.GameState
 import autoitx4java.AutoItX
 import com.jacob.com.LibraryLoader
 import com.typesafe.config.ConfigFactory

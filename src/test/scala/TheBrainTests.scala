@@ -1,9 +1,10 @@
 import FileReaders.HSAction.IRCAction
 import FileReaders.{LogParser, LogFileReader}
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem._
 import org.scalatest.{Matchers, FreeSpec}
-import tph.{HearthStone, IRCBot, GameState, TheBrain}
+import tph.{HearthStone, IRCBot, TheBrain}
 
 import scala.collection.mutable.ListBuffer
 

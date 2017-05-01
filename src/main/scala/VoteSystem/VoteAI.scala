@@ -1,8 +1,9 @@
 package VoteSystem
 
+import GameState.GameState
 import com.typesafe.scalalogging.LazyLogging
 import tph.Constants.ActionVotes._
-import tph.{NoCard, HSCard, GameState}
+import tph.{NoCard, HSCard}
 
 import scala.collection.mutable.ListBuffer
 

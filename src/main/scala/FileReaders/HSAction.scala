@@ -1,5 +1,6 @@
 package FileReaders
 
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.VoteState
 import com.typesafe.config.ConfigFactory

@@ -2,6 +2,7 @@ package LogReaderTests
 
 import FileReaders.HSAction
 import FileReaders.HSAction._
+import GameState.{Player, GameState}
 import Logic.IRCState
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{FlatSpec, Matchers}

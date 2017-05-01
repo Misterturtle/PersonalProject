@@ -2,6 +2,7 @@ package tph
 
 
 import FileReaders.CardInfo
+import GameState._
 
 import scala.collection.mutable.ListBuffer
 
@@ -19,6 +20,7 @@ object Constants {
   val INT_UNINIT = 500
   val STRING_UNINIT = "Constant Uninitialized"
 
+  def emptyGame = Game(GameEntity(), Deck(), PlayerEntity(), PlayerEntity())
   def emptyCardInfo = CardInfo(None, None, None, None, None, None, None, None, None, None)
   def emptyCard = Card(Constants.STRING_UNINIT, Constants.INT_UNINIT, Constants.INT_UNINIT, Constants.INT_UNINIT, Constants.INT_UNINIT, Constants.STRING_UNINIT)
 

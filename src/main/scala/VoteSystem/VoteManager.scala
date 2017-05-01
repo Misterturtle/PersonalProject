@@ -2,6 +2,7 @@ package VoteSystem
 
 import javax.swing.ActionMap
 
+import GameState.GameState
 import Logic.IRCState
 import com.typesafe.scalalogging.LazyLogging
 import tph.Constants.ActionVotes._

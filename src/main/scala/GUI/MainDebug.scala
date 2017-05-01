@@ -7,10 +7,11 @@ import javafx.concurrent.Task
 import javafx.event.{ActionEvent, EventHandler}
 import javafx.util.Duration
 
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteManager, VoteAI, VoteState}
 import com.typesafe.config.ConfigFactory
-import tph.{IRCBot, HearthStone, GameState, TheBrain}
+import tph.{IRCBot, HearthStone, TheBrain}
 import FileReaders.{LogFileReader, LogParser}
 
 import scalafx.application.{Platform, JFXApp}

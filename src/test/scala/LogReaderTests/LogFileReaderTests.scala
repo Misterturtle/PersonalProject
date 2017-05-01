@@ -4,6 +4,7 @@ import java.io._
 
 import FileReaders.HSAction.{IRCAction, GameStateAction, CardDrawn, HSAction}
 import FileReaders.{HSDataBase, LogFileReader, LogParser}
+import GameState.{Player, GameState}
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteAI, VoteState, VoteManager}
 import com.typesafe.config.ConfigFactory

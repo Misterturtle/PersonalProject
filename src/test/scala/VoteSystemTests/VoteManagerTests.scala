@@ -1,5 +1,6 @@
 package VoteSystemTests
 
+import GameState.{Player, GameState}
 import Logic.IRCState
 import VoteSystem._
 import org.scalatest.{FreeSpec, FlatSpec, Matchers}
@@ -1135,10 +1136,4 @@ class VoteManagerTests extends FreeSpec with Matchers {
         }
       }
     }
-
-
-
-  "Vote Manager should update "
-
-
   }

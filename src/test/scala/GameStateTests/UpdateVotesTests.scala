@@ -1,6 +1,7 @@
 package GameStateTests
 
 import FileReaders.HSAction.CardPlayed
+import GameState.{Player, GameState}
 import Logic.IRCState
 import VoteSystem.{VoteValidator, VoteAI, VoteState, VoteManager}
 import org.scalatest.{FreeSpec, Matchers}

@@ -6,6 +6,7 @@ import javafx.event
 import javafx.event.{ActionEvent, EventHandler}
 
 import FileReaders.{LogFileReader, LogParser}
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem.{VoteManager, VoteAI, VoteState}
 import com.typesafe.config.ConfigFactory

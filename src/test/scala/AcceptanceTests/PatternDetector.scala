@@ -1,6 +1,7 @@
 package AcceptanceTests
 
 import FileReaders.HSDataBase
+import GameState.GameState
 import Logic.IRCState
 import VoteSystem._
 import org.scalatest.{FreeSpec, FlatSpec, Matchers}

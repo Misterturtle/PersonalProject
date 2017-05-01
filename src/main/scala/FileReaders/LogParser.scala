@@ -4,9 +4,10 @@ import java.io._
 import java.util.concurrent.{Executors, TimeUnit}
 
 
+import GameState.GameState
 import com.typesafe.config.ConfigFactory
 import HSAction._
-import tph.{Constants, GameState, Player}
+import tph.Constants
 
 /**
   * Created by Harambe on 2/15/2017.
