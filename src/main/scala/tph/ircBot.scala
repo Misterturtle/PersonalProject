@@ -21,7 +21,6 @@ class IRCBot(voteManager: VoteManager, voteParser: VoteParser = new VoteParser) 
   val hostName = config.getString("tph.irc.host")
   val channel = config.getString("tph.irc.channel")
   val nickname = "TPHBot"
-  val writer = new PrintWriter(new FileWriter(new File(config.getString("tph.writerFiles.voteLog"))))
   val GENERAL_COMMAND = """!(.+)""".r
   val REMOVE_COMMAND = """!remove(.+)""".r
   val VOTE_LIST_COMMAND = "votelist"

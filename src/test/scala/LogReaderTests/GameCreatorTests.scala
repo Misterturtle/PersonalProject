@@ -14,7 +14,7 @@ class GameCreatorTests extends FreeSpec with Matchers {
 
   "A Game should be created with" - {
 
-    "A GameEntity" in {
+    "A GameEntity" ignore {
 
       val gs = new GameState()
       val log = new File(getClass.getResource("/CreateGame.txt").getPath)

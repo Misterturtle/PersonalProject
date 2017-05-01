@@ -16,8 +16,6 @@ import tph._
 class LogFileReaderAcceptance extends FlatSpec with Matchers {
 
   val config = ConfigFactory.load()
-  val hearthstoneLogFile = new File(config.getString("tph.readerFiles.outputLog"))
-  val actionLogFile = new File(config.getString("tph.writerFiles.actionLog"))
   val dataBase = new HSDataBase()
 
   def compareActualToExpected(file:File, friendlyHand: List[Card] = Nil, friendlyBoard: List[Card] = Nil, enemyHand: List[Card] = Nil, enemyBoard: List[Card] = Nil, friendlyWeaponValue: Option[Int] = None, enemyWeaponValue: Option[Int] = None): Unit = {

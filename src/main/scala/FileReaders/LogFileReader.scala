@@ -15,6 +15,8 @@ import scala.collection.mutable.ListBuffer
 class LogFileReader(lp: LogParser, gs: GameState, file:File = new File(ConfigFactory.load().getString("tph.readerFiles.outputLog"))) {
 
   val config = ConfigFactory.load()
+  if(!file.exists())
+    file.createNewFile()
   val reader = new BufferedReader(new FileReader(file))
 
   val gameStateActions = ListBuffer[GameStateAction]()

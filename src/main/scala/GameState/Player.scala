@@ -20,14 +20,11 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, hand: List[Card] = N
         (changingHand, oldCard) =>
           val equalTo = oldCard.handPosition == card.handPosition
           val greaterThan = oldCard.handPosition > card.handPosition
-          val lessThan = oldCard.handPosition < card.handPosition
 
-          true match {
-            case `equalTo` | `greaterThan` =>
-              (changingHand diff List(oldCard)) ::: List(oldCard.copy(handPosition = oldCard.handPosition +1))
-            case `lessThan` =>
-              changingHand
-          }
+          if(equalTo || greaterThan)
+            (changingHand diff List(oldCard)) ::: List(oldCard.copy(handPosition = oldCard.handPosition +1))
+          else
+          changingHand
       }
 
       this.copy(hand = shiftedHand ::: List(card))
@@ -38,15 +35,13 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, hand: List[Card] = N
         (changingBoard, oldCard) =>
           val equalTo = oldCard.boardPosition == card.boardPosition
           val greaterThan = oldCard.boardPosition > card.boardPosition
-          val lessThan = oldCard.boardPosition < card.boardPosition
 
-          true match {
-            case `equalTo` | `greaterThan` =>
-              (changingBoard diff List(oldCard)) ::: List(oldCard.copy(boardPosition = oldCard.boardPosition +1))
+          if(equalTo || greaterThan)
+            (changingBoard diff List(oldCard)) ::: List(oldCard.copy(boardPosition = oldCard.boardPosition +1))
+          else
+            changingBoard
 
-            case `lessThan` =>
-              changingBoard
-          }
+
       }
       this.copy(board = shiftedBoard ::: List(card))
     }
@@ -70,16 +65,12 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, hand: List[Card] = N
           val greaterThan = oldCard.handPosition > card.handPosition
           val lessThan = oldCard.handPosition < card.handPosition
 
-          true match {
-            case `equalTo` =>
-              changingHand diff List(oldCard)
-
-            case `greaterThan` =>
-              (changingHand diff List(oldCard)) ::: List(oldCard.copy(handPosition = oldCard.handPosition-1))
-
-            case `lessThan` =>
-              changingHand
-          }
+          if(equalTo)
+            changingHand diff List(oldCard)
+          else if (greaterThan)
+            (changingHand diff List(oldCard)) ::: List(oldCard.copy(handPosition = oldCard.handPosition-1))
+          else
+          changingHand
       }
         this.copy(hand = shiftedHand)
       }
@@ -89,18 +80,14 @@ case class Player(playerNumber: Int = Constants.INT_UNINIT, hand: List[Card] = N
           (changingBoard, oldCard) =>
             val equalTo = oldCard == card
             val greaterThan = oldCard.boardPosition > card.boardPosition
-            val lessThan = oldCard.boardPosition < card.boardPosition
 
-            true match {
-              case `equalTo` =>
-                changingBoard diff List(oldCard)
+            if(equalTo)
+              changingBoard diff List(oldCard)
+            else if (greaterThan)
+              (changingBoard diff List(oldCard)) ::: List(oldCard.copy(boardPosition = oldCard.boardPosition-1))
+            else
+            changingBoard
 
-              case `greaterThan` =>
-                (changingBoard diff List(oldCard)) ::: List(oldCard.copy(boardPosition = oldCard.boardPosition-1))
-
-              case `lessThan` =>
-                changingBoard
-            }
         }
         this.copy(board = shiftedBoard)
       }
