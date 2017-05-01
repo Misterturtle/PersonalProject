@@ -43,6 +43,7 @@ Current State of project:
 History:
 - This has been an ongoing project for me for quite a while. I've mainly been using it as a project that expands my programming knowledge.
 - I've restarted a few times as I've learned better ways to implement code and developed good test practices.
+- Ideally I want it to be immutable. Thr branch name is misleading. I've tried to isolate state, but there currently is mutability.
 
 
 Explanation of internal structure:
